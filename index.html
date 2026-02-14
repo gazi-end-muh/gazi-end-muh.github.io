@@ -16,37 +16,54 @@
 <body>
   <header class="site-header">
     <div class="brand-wrap">
-      <img class="brand-logo" src="assets/gazi-university-logo-en.png"
-        alt="Gazi University logo" />
+      <img class="brand-logo" src="assets/gazi-university-logo-en.png" alt="Gazi University logo" />
       <div>
         <p class="brand-top">Gazi University</p>
         <h1 class="brand-main">Industrial Engineering Course Portal</h1>
       </div>
     </div>
-    <p class="term-note">Spring 2026 </p>
+    <p class="term-note">2026</p>
   </header>
 
   <main class="home-main">
-    <h2>Choose Your Course</h2>
+    <h2>Click On Your Course</h2>
     <section class="course-grid" aria-label="Courses">
-      <article class="course-card">
-        <p class="course-code">IE104</p>
-        <h2>Computer Programming I</h2>
-        <p class="course-meta">Mondays • 09:30 - 12:30 • 3 Hours • Room 403</p>
-        <a class="action-link" href="comprog/index.html">Open Course Page</a>
-      </article>
+      <a class="course-card-link" href="comprog/index.html" aria-label="Open Computer Programming I course page">
+        <article class="course-card">
+          <div class="course-visual" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img">
+              <path d="M4 6h16v10H4z" />
+              <path d="M2.5 18h19" />
+              <path d="M10 21h4" />
+            </svg>
+          </div>
+          <p class="course-code">IE104</p>
+          <h2>Computer Programming I</h2>
+          <p class="course-meta">Mondays • 09:30 - 12:30 • 3 Hours • Room 403</p>
+        </article>
+      </a>
 
-      <article class="course-card">
-        <p class="course-code">IE326</p>
-        <h2>Database Management Systems</h2>
-        <p class="course-meta">Mondays • 13:30 - 16:30 • 3 Hours • Room 401</p>
-        <a class="action-link" href="dbms/index.html">Open Course Page</a>
-      </article>
+      <a class="course-card-link" href="dbms/index.html" aria-label="Open Database Management Systems course page">
+        <article class="course-card">
+          <div class="course-visual" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img">
+              <ellipse cx="12" cy="6.5" rx="7.5" ry="3.5" />
+              <path d="M4.5 6.5V17.5C4.5 19.4 7.9 21 12 21C16.1 21 19.5 19.4 19.5 17.5V6.5" />
+              <path d="M4.5 12C4.5 13.9 7.9 15.5 12 15.5C16.1 15.5 19.5 13.9 19.5 12" />
+            </svg>
+          </div>
+          <p class="course-code">IE326</p>
+          <h2>Database Management Systems</h2>
+          <p class="course-meta">Mondays • 13:30 - 16:30 • 3 Hours • Room 401</p>
+        </article>
+      </a>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>Department of Industrial Engineering • Gazi University • 2026 • Ankara • Türkiye</p>
+    <p>Gazi University • Department of Industrial Engineering </p></br>
+    <p>Ankara • Türkiye • 2026</p></br>
+
   </footer>
 </body>
 
