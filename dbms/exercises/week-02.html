@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DBMS Week 2 Exercise | Gazi University IE</title>
+  <link rel="icon" type="image/png" href="../../assets/gazi-university-logo-en.png" />
+  <style>
+    :root {
+      --gazi-red: #c8102e;
+      --gazi-deep-red: #9f0f25;
+      --gazi-navy: #003366;
+      --ink: #1a2a3a;
+      --line: #d1dbe6;
+      --panel: #ffffff;
+      --ok: #1f7a3e;
+      --bad: #a0142a;
+      --soft-ok: #e8f7ee;
+      --soft-bad: #ffecef;
+      --soft-neutral: #f6f9fd;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans", "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(0, 51, 102, 0.14), transparent 32%),
+        radial-gradient(circle at 92% 12%, rgba(200, 16, 46, 0.14), transparent 34%),
+        linear-gradient(170deg, #f8fbff 0%, #f2f7fc 58%, #edf3fa 100%);
+      min-height: 100vh;
+    }
+
+    .site-header {
+      background: linear-gradient(108deg, var(--gazi-red), var(--gazi-navy));
+      color: #fff;
+      padding: 1rem clamp(1rem, 4vw, 3.5rem);
+      border-bottom: 4px solid #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      padding: 4px;
+    }
+
+    .brand-top,
+    .term-note,
+    .brand-main {
+      margin: 0;
+    }
+
+    .brand-main {
+      margin-top: 0.15rem;
+      font-size: clamp(1.05rem, 2.4vw, 1.7rem);
+      font-weight: 700;
+    }
+
+    .page-wrap {
+      width: min(1100px, 92%);
+      margin: 1.25rem auto 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 10px 22px rgba(0, 51, 102, 0.08);
+    }
+
+    .stats-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      padding: 0.95rem 1rem;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 0.6rem;
+      width: min(680px, 100%);
+    }
+
+    .stat {
+      border: 1px solid #d6e2f0;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 0.58rem 0.66rem;
+      text-align: center;
+    }
+
+    .stat .label {
+      display: block;
+      font-size: 0.78rem;
+      color: #4f5c6d;
+      margin-bottom: 0.2rem;
+    }
+
+    .stat .value {
+      font-weight: 700;
+      font-size: 1.08rem;
+      color: var(--gazi-navy);
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    button,
+    .back-link {
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 0.56rem 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 0.92rem;
+    }
+
+    .btn-reset {
+      background: var(--gazi-red);
+      color: #fff;
+    }
+
+    .btn-reset:hover {
+      background: var(--gazi-deep-red);
+    }
+
+    .back-link {
+      background: #eaf2fb;
+      color: var(--gazi-navy);
+      border-color: #cad9ea;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .intro {
+      padding: 1rem;
+      line-height: 1.45;
+    }
+
+    .intro p {
+      margin: 0;
+    }
+
+    .quiz-list {
+      padding: 0.2rem 0.8rem 0.9rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .question-card {
+      border: 1px solid #dce6f2;
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 0.85rem;
+    }
+
+    .q-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.8rem;
+      margin-bottom: 0.62rem;
+    }
+
+    .q-text {
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .btn-reveal {
+      background: #eff5fc;
+      color: var(--gazi-navy);
+      border-color: #c8d9eb;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .opt-list {
+      display: grid;
+      gap: 0.42rem;
+      margin-bottom: 0.58rem;
+    }
+
+    .opt {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      border: 1px solid #dce6f2;
+      background: #fff;
+      border-radius: 9px;
+      padding: 0.46rem 0.56rem;
+    }
+
+    .opt input {
+      margin-top: 0.2rem;
+    }
+
+    .opt.correct-opt {
+      border-color: #8bc8a2;
+      background: #f1fbf5;
+    }
+
+    .opt.wrong-opt {
+      border-color: #e8a3b0;
+      background: #fff4f6;
+    }
+
+    .feedback,
+    .answer-box {
+      border: 1px solid #dbe7f4;
+      border-radius: 9px;
+      padding: 0.5rem 0.62rem;
+      background: var(--soft-neutral);
+      font-size: 0.92rem;
+      line-height: 1.42;
+      display: none;
+      margin-top: 0.52rem;
+    }
+
+    .feedback.show,
+    .answer-box.show {
+      display: block;
+    }
+
+    .feedback.good {
+      background: var(--soft-ok);
+      border-color: #a9d7b9;
+      color: var(--ok);
+      font-weight: 600;
+    }
+
+    .feedback.bad {
+      background: var(--soft-bad);
+      border-color: #e9b4bf;
+      color: var(--bad);
+      font-weight: 600;
+    }
+
+    .answer-box b {
+      color: var(--gazi-navy);
+    }
+
+    @media (max-width: 720px) {
+      .stat-grid {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+      }
+
+      .q-head {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="brand-wrap">
+      <img class="brand-logo" src="../../assets/gazi-university-logo-en.png" alt="Gazi University logo" />
+      <div>
+        <p class="brand-top">Gazi University • Department of Industrial Engineering</p>
+        <h1 class="brand-main">IE326 Week 2 Exercise Test</h1>
+      </div>
+    </div>
+    <p class="term-note">Database Management Systems</p>
+  </header>
+
+  <main class="page-wrap">
+    <section class="panel stats-panel">
+      <div class="stat-grid">
+        <div class="stat"><span class="label">Questions</span><span class="value" id="total-count">20</span></div>
+        <div class="stat"><span class="label">Correct</span><span class="value" id="correct-count">0</span></div>
+        <div class="stat"><span class="label">Wrong</span><span class="value" id="wrong-count">0</span></div>
+        <div class="stat"><span class="label">Score (0-100)</span><span class="value" id="score-count">0</span></div>
+      </div>
+      <div class="actions">
+        <button id="reset-btn" class="btn-reset" type="button">Reset Test</button>
+        <a class="back-link" href="../index.html">Back to DBMS Page</a>
+      </div>
+    </section>
+
+    <section class="panel intro">
+      <p>
+        Select one option for each question. You will instantly see whether your selected option is correct or wrong.
+        Use <b>Show Answer</b> to see the correct answer, explanation, and exact slide reference from
+        <b>week2.pdf</b>.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="quiz-list" id="quiz-list"></div>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        q: "According to the slides, what does the term DATA consist of?",
+        options: [
+          "Interpreted results prepared for final reporting",
+          "Unprocessed facts used in the production of information",
+          "Only numeric values stored in binary form",
+          "Only symbols and graphics without numeric data"
+        ],
+        answer: 1,
+        why: "Slide states DATA consists of unprocessed facts used in producing information (numeric, alphanumeric, symbols, or graphical).",
+        slide: 4
+      },
+      {
+        id: 2,
+        q: "How is INFORMATION defined in the course slides?",
+        options: [
+          "Raw values before classification",
+          "Data that is never processed",
+          "Result obtained by analyzing and processing data to make it meaningful",
+          "A backup copy of the source data"
+        ],
+        answer: 2,
+        why: "Information is defined as the result obtained by analyzing and processing data to support decisions.",
+        slide: 4
+      },
+      {
+        id: 3,
+        q: "Which types can an information system be, according to the slides?",
+        options: [
+          "Manual and computer based",
+          "Only cloud based",
+          "Only paper based",
+          "Only AI based"
+        ],
+        answer: 0,
+        why: "The slide explicitly lists two types: Manual and Computer based.",
+        slide: 6
+      },
+      {
+        id: 4,
+        q: "What is identified as the most important atomic component of an information system?",
+        options: [
+          "Software",
+          "Data",
+          "Network",
+          "User interface"
+        ],
+        answer: 1,
+        why: "The slide says data is the most important atomic component of the information system.",
+        slide: 7
+      },
+      {
+        id: 5,
+        q: "Which of the following is listed as a DBMS function?",
+        options: [
+          "Compiler optimization",
+          "Data sharing",
+          "Operating system patching",
+          "Hardware virtualization"
+        ],
+        answer: 1,
+        why: "DBMS functions listed include data sharing, conceptual organization, backup/recover, and rights management.",
+        slide: 9
+      },
+      {
+        id: 6,
+        q: "In the Flat Model, how is a searched item located?",
+        options: [
+          "By jumping directly through indexed trees",
+          "By starting from the beginning and checking items sequentially",
+          "By using graph traversal with parent pointers",
+          "By matching object references"
+        ],
+        answer: 1,
+        why: "The Flat Model slide says search starts from the beginning and checks items one-by-one sequentially.",
+        slide: 13
+      },
+      {
+        id: 7,
+        q: "Which statement is true for the Hierarchical Model?",
+        options: [
+          "Child nodes can have unlimited parents",
+          "Parent-child links are optional and unused",
+          "Multiple parents are not allowed for a child node",
+          "Deletion of parent never affects children"
+        ],
+        answer: 2,
+        why: "Features slide states each child has one parent, and multiple parents are not allowed.",
+        slide: 16
+      },
+      {
+        id: 8,
+        q: "What is the key difference between Network and Hierarchical models in the slides?",
+        options: [
+          "Network model stores only multimedia",
+          "Network model allows a record to have more than one parent",
+          "Network model removes relationships entirely",
+          "Hierarchical model uses graphs while Network uses trees"
+        ],
+        answer: 1,
+        why: "The slide says Network model extends hierarchical model and allows a record to have more than one parent.",
+        slide: 20
+      },
+      {
+        id: 9,
+        q: "How is data maintained in the Relational Model according to the slides?",
+        options: [
+          "As a two-dimensional table of rows and columns",
+          "As a single sequential file only",
+          "As a strict parent-child tree only",
+          "As unstructured text blocks"
+        ],
+        answer: 0,
+        why: "Relational model slide says data is maintained in two-dimensional tables and stored as rows and columns.",
+        slide: 25
+      },
+      {
+        id: 10,
+        q: "Which advantage of the Relational Model means structure changes can be made without changing data access?",
+        options: [
+          "Scalability",
+          "Structural Independence",
+          "Hardware Overheads",
+          "Bad Design"
+        ],
+        answer: 1,
+        why: "Structural Independence is defined exactly as changing structure without changing access method.",
+        slide: 27
+      },
+      {
+        id: 11,
+        q: "What does ER Model stand for in the slides?",
+        options: [
+          "Execution-Resource Model",
+          "Entity-Relationship Model",
+          "External-Relational Model",
+          "Entity-Rule Model"
+        ],
+        answer: 1,
+        why: "The slide introduces Entity-Relationship Model (ER Model) as a high-level data model diagram.",
+        slide: 29
+      },
+      {
+        id: 12,
+        q: "Which three components are listed for an ER diagram?",
+        options: [
+          "Tables, indexes, transactions",
+          "Entities, attributes, relationship",
+          "Objects, methods, inheritance",
+          "Domains, triggers, views"
+        ],
+        answer: 1,
+        why: "The ER component slide lists Entities, Attributes, and Relationship.",
+        slide: 30
+      },
+      {
+        id: 13,
+        q: "Which item is listed as a must-have feature of relationships?",
+        options: [
+          "Row order is unimportant",
+          "Attributes must be sorted alphabetically",
+          "Table names must be plural",
+          "Every relation must have composite keys only"
+        ],
+        answer: 0,
+        why: "Must-have features include row order unimportant, order of attributes unimportant, singular names, and at least one key.",
+        slide: 36
+      },
+      {
+        id: 14,
+        q: "Which notation is used for representing a relation schema with n attributes?",
+        options: [
+          "R[n]",
+          "R{A1:A2:...:An}",
+          "R(A1, A2, ..., An)",
+          "Relation = A1 + A2 + ... + An"
+        ],
+        answer: 2,
+        why: "The slide explicitly gives the representation R(A1, A2, ..., An) and calls it Relation Schema.",
+        slide: 37
+      },
+      {
+        id: 15,
+        q: "How is Primary Key described relative to Candidate Keys?",
+        options: [
+          "A primary key is any key with NULL allowed",
+          "Every candidate key is automatically primary key",
+          "One selected candidate key used to express the relationship",
+          "A key used only for ordering rows"
+        ],
+        answer: 2,
+        why: "Slide says when more than one key exists, each is candidate key; one selected candidate key is the primary key.",
+        slide: 42
+      },
+      {
+        id: 16,
+        q: "According to the slides, a foreign key is best described as:",
+        options: [
+          "A field/set of fields indicating a row of same or another relation",
+          "A mandatory text description for each row",
+          "A backup-only identifier",
+          "An index that cannot reference any other table"
+        ],
+        answer: 0,
+        why: "Foreign key slide defines it as field(s) uniquely indicating a row in same or another relationship; it uses the indicated table's primary key.",
+        slide: 43
+      },
+      {
+        id: 17,
+        q: "What does the Entity Constraint state?",
+        options: [
+          "Foreign key cannot be null",
+          "Primary key value cannot be null",
+          "All columns must be unique",
+          "Every table must include exactly one date field"
+        ],
+        answer: 1,
+        why: "Entity constraint slide states primary key value cannot be null because rows must be identifiable.",
+        slide: 51
+      },
+      {
+        id: 18,
+        q: "In Referential Constraint, if Table1 FK refers to Table2 PK, FK values in Table1 must:",
+        options: [
+          "Always be greater than 0",
+          "Always be unique",
+          "Be null or exist in Table2",
+          "Match only the latest row in Table2"
+        ],
+        answer: 2,
+        why: "Slide states FK in Table1 must be null or available in referenced Table2.",
+        slide: 52
+      },
+      {
+        id: 19,
+        q: "Which statement appears in requirement analysis for quality database applications?",
+        options: [
+          "Database purpose can be left ambiguous initially",
+          "Determine application purpose with sufficient scope and clarity",
+          "Ignore report needs until after implementation",
+          "Skip user location analysis"
+        ],
+        answer: 1,
+        why: "Requirement Analysis slide says prerequisite is determining application purpose with sufficient scope and clarity.",
+        slide: 59
+      },
+      {
+        id: 20,
+        q: "How does the slide define normalization in schema editing?",
+        options: [
+          "Encrypting all tables before deployment",
+          "Organizing data by creating tables and relationships to eliminate redundancy and inconsistent dependency",
+          "Only indexing numeric columns",
+          "Duplicating values for faster read speed"
+        ],
+        answer: 1,
+        why: "Normalization is defined as organizing data via tables/relationships to protect data and eliminate redundancy and inconsistent dependency.",
+        slide: 65
+      }
+    ];
+
+    const quizList = document.getElementById("quiz-list");
+    const totalCount = document.getElementById("total-count");
+    const correctCount = document.getElementById("correct-count");
+    const wrongCount = document.getElementById("wrong-count");
+    const scoreCount = document.getElementById("score-count");
+    const resetBtn = document.getElementById("reset-btn");
+
+    const state = {
+      selections: {}
+    };
+
+    function renderQuiz() {
+      totalCount.textContent = String(questions.length);
+      quizList.innerHTML = "";
+
+      questions.forEach((item, idx) => {
+        const card = document.createElement("article");
+        card.className = "question-card";
+        card.dataset.qid = String(item.id);
+
+        const head = document.createElement("div");
+        head.className = "q-head";
+
+        const qText = document.createElement("p");
+        qText.className = "q-text";
+        qText.textContent = `${idx + 1}. ${item.q}`;
+
+        const revealBtn = document.createElement("button");
+        revealBtn.type = "button";
+        revealBtn.className = "btn-reveal";
+        revealBtn.textContent = "Show Answer";
+
+        head.appendChild(qText);
+        head.appendChild(revealBtn);
+
+        const optList = document.createElement("div");
+        optList.className = "opt-list";
+
+        item.options.forEach((optText, optIdx) => {
+          const optionLabel = document.createElement("label");
+          optionLabel.className = "opt";
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `q-${item.id}`;
+          radio.value = String(optIdx);
+
+          const txt = document.createElement("span");
+          txt.textContent = optText;
+
+          optionLabel.appendChild(radio);
+          optionLabel.appendChild(txt);
+          optList.appendChild(optionLabel);
+        });
+
+        const feedback = document.createElement("div");
+        feedback.className = "feedback";
+
+        const answerBox = document.createElement("div");
+        answerBox.className = "answer-box";
+
+        revealBtn.addEventListener("click", () => {
+          const correctText = item.options[item.answer];
+          answerBox.innerHTML = `<b>Correct Answer:</b> ${correctText}<br><b>Why:</b> ${item.why}<br><b>Slide Reference:</b> Week2 PDF - Slide ${item.slide}`;
+          answerBox.classList.add("show");
+        });
+
+        optList.addEventListener("change", (e) => {
+          const target = e.target;
+          if (!(target instanceof HTMLInputElement) || target.type !== "radio") {
+            return;
+          }
+
+          const selected = Number(target.value);
+          state.selections[item.id] = selected;
+          updateQuestionVisual(item.id);
+          updateStats();
+        });
+
+        card.appendChild(head);
+        card.appendChild(optList);
+        card.appendChild(feedback);
+        card.appendChild(answerBox);
+        quizList.appendChild(card);
+      });
+
+      updateStats();
+    }
+
+    function updateQuestionVisual(questionId) {
+      const item = questions.find((q) => q.id === questionId);
+      const card = quizList.querySelector(`[data-qid=\"${questionId}\"]`);
+      if (!item || !card) {
+        return;
+      }
+
+      const selected = state.selections[questionId];
+      const labels = Array.from(card.querySelectorAll(".opt"));
+      const feedback = card.querySelector(".feedback");
+
+      labels.forEach((label, idx) => {
+        label.classList.remove("correct-opt", "wrong-opt");
+        if (selected === idx) {
+          if (idx === item.answer) {
+            label.classList.add("correct-opt");
+          } else {
+            label.classList.add("wrong-opt");
+          }
+        }
+      });
+
+      if (!(feedback instanceof HTMLElement)) {
+        return;
+      }
+
+      if (selected === undefined) {
+        feedback.className = "feedback";
+        feedback.textContent = "";
+        return;
+      }
+
+      if (selected === item.answer) {
+        feedback.className = "feedback show good";
+        feedback.textContent = `Correct. (Slide ${item.slide})`;
+      } else {
+        feedback.className = "feedback show bad";
+        feedback.textContent = `Wrong. Correct option is \"${item.options[item.answer]}\". (Slide ${item.slide})`;
+      }
+    }
+
+    function updateStats() {
+      let correct = 0;
+      let wrong = 0;
+
+      questions.forEach((item) => {
+        const selected = state.selections[item.id];
+        if (selected === undefined) {
+          return;
+        }
+        if (selected === item.answer) {
+          correct += 1;
+        } else {
+          wrong += 1;
+        }
+      });
+
+      const score = Math.round((correct / questions.length) * 100);
+
+      correctCount.textContent = String(correct);
+      wrongCount.textContent = String(wrong);
+      scoreCount.textContent = String(score);
+    }
+
+    function resetQuiz() {
+      state.selections = {};
+
+      quizList.querySelectorAll("input[type='radio']").forEach((el) => {
+        el.checked = false;
+      });
+
+      quizList.querySelectorAll(".opt").forEach((el) => {
+        el.classList.remove("correct-opt", "wrong-opt");
+      });
+
+      quizList.querySelectorAll(".feedback").forEach((el) => {
+        el.className = "feedback";
+        el.textContent = "";
+      });
+
+      quizList.querySelectorAll(".answer-box").forEach((el) => {
+        el.classList.remove("show");
+        el.textContent = "";
+      });
+
+      updateStats();
+    }
+
+    resetBtn.addEventListener("click", resetQuiz);
+    renderQuiz();
+  </script>
+</body>
+
+</html>
