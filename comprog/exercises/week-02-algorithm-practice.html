@@ -233,6 +233,74 @@
       background: #fff;
     }
 
+    .password-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 18, 35, 0.62);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 50;
+    }
+
+    .password-overlay.show {
+      display: flex;
+    }
+
+    .password-dialog {
+      width: min(420px, 100%);
+      background: #fff;
+      border: 1px solid #c8d9eb;
+      border-radius: 12px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+      padding: 1rem;
+    }
+
+    .password-dialog h3 {
+      margin: 0 0 0.45rem;
+      color: var(--gazi-navy);
+      font-size: 1.05rem;
+    }
+
+    .password-dialog p {
+      margin: 0 0 0.6rem;
+      font-size: 0.92rem;
+    }
+
+    .password-input {
+      width: 100%;
+      border-radius: 9px;
+      border: 1px solid #cfddee;
+      padding: 0.55rem;
+      font: inherit;
+      margin-bottom: 0.6rem;
+    }
+
+    .password-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+    }
+
+    .password-msg {
+      min-height: 1.2em;
+      margin: 0 0 0.4rem;
+      color: var(--gazi-red);
+      font-size: 0.86rem;
+    }
+
+    .btn-pass-cancel {
+      background: #eef4fb;
+      color: var(--gazi-navy);
+      border-color: #cad9ea;
+    }
+
+    .btn-pass-submit {
+      background: var(--gazi-red);
+      color: #fff;
+    }
+
     @media (max-width: 720px) {
       .top-panel {
         align-items: flex-start;
@@ -270,6 +338,19 @@
       <div class="question-list" id="question-list"></div>
     </section>
   </main>
+
+  <div id="password-overlay" class="password-overlay" aria-hidden="true">
+    <div class="password-dialog" role="dialog" aria-modal="true" aria-labelledby="password-title">
+      <h3 id="password-title">Solution Access</h3>
+      <p>Enter classroom password to view solutions.</p>
+      <input id="password-input" class="password-input" type="password" autocomplete="off" />
+      <p id="password-msg" class="password-msg"></p>
+      <div class="password-actions">
+        <button id="password-cancel" class="btn-pass-cancel" type="button">Cancel</button>
+        <button id="password-submit" class="btn-pass-submit" type="button">Unlock</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     const PA = "!G7";
@@ -345,6 +426,11 @@
     ];
 
     const list = document.getElementById("question-list");
+    const passwordOverlay = document.getElementById("password-overlay");
+    const passwordInput = document.getElementById("password-input");
+    const passwordMsg = document.getElementById("password-msg");
+    const passwordCancel = document.getElementById("password-cancel");
+    const passwordSubmit = document.getElementById("password-submit");
     let answersUnlockedInSession = false;
 
     function getLocalDateString() {
@@ -359,12 +445,50 @@
       return getLocalDateString() >= PASSWORD_DISABLED_FROM_DATE;
     }
 
-    function ensureAnswerAccess() {
+    function askPasswordMasked() {
+      return new Promise((resolve) => {
+        function close(result) {
+          passwordOverlay.classList.remove("show");
+          passwordOverlay.setAttribute("aria-hidden", "true");
+          passwordMsg.textContent = "";
+          passwordInput.value = "";
+          passwordCancel.removeEventListener("click", onCancel);
+          passwordSubmit.removeEventListener("click", onSubmit);
+          passwordInput.removeEventListener("keydown", onKeyDown);
+          resolve(result);
+        }
+
+        function onCancel() {
+          close(null);
+        }
+
+        function onSubmit() {
+          close(passwordInput.value);
+        }
+
+        function onKeyDown(e) {
+          if (e.key === "Enter") {
+            onSubmit();
+          } else if (e.key === "Escape") {
+            onCancel();
+          }
+        }
+
+        passwordOverlay.classList.add("show");
+        passwordOverlay.setAttribute("aria-hidden", "false");
+        passwordCancel.addEventListener("click", onCancel);
+        passwordSubmit.addEventListener("click", onSubmit);
+        passwordInput.addEventListener("keydown", onKeyDown);
+        passwordInput.focus();
+      });
+    }
+
+    async function ensureAnswerAccess() {
       if (isPasswordDisabled() || answersUnlockedInSession) {
         return true;
       }
 
-      const enteredPassword = window.prompt("Enter classroom password to view solutions:");
+      const enteredPassword = await askPasswordMasked();
       if (enteredPassword === null) {
         return false;
       }
@@ -425,8 +549,8 @@
           hintBox.classList.toggle("show");
         });
 
-        showBtn.addEventListener("click", () => {
-          if (!ensureAnswerAccess()) {
+        showBtn.addEventListener("click", async () => {
+          if (!(await ensureAnswerAccess())) {
             return;
           }
           answerBox.classList.toggle("show");
