@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IE104 Week 2 Algorithm Exercises | Gazi University IE</title>
+  <link rel="icon" type="image/png" href="../../assets/gazi-university-logo-en.png" />
+  <style>
+    :root {
+      --gazi-red: #c8102e;
+      --gazi-deep-red: #9f0f25;
+      --gazi-navy: #003366;
+      --ink: #1a2a3a;
+      --line: #d1dbe6;
+      --panel: #ffffff;
+      --soft: #f6f9fd;
+      --hint: #fff8e7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans", "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(0, 51, 102, 0.14), transparent 32%),
+        radial-gradient(circle at 92% 12%, rgba(200, 16, 46, 0.14), transparent 34%),
+        linear-gradient(170deg, #f8fbff 0%, #f2f7fc 58%, #edf3fa 100%);
+      min-height: 100vh;
+    }
+
+    .site-header {
+      background: linear-gradient(108deg, var(--gazi-red), var(--gazi-navy));
+      color: #fff;
+      padding: 1rem clamp(1rem, 4vw, 3.5rem);
+      border-bottom: 4px solid #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      padding: 4px;
+    }
+
+    .brand-top,
+    .term-note,
+    .brand-main {
+      margin: 0;
+    }
+
+    .brand-main {
+      margin-top: 0.15rem;
+      font-size: clamp(1.05rem, 2.4vw, 1.7rem);
+      font-weight: 700;
+    }
+
+    .page-wrap {
+      width: min(1100px, 92%);
+      margin: 1.25rem auto 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 10px 22px rgba(0, 51, 102, 0.08);
+    }
+
+    .top-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      padding: 0.95rem 1rem;
+    }
+
+    .pill-row {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      border: 1px solid #d6e2f0;
+      border-radius: 999px;
+      background: #f8fbff;
+      padding: 0.35rem 0.72rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--gazi-navy);
+    }
+
+    .back-link {
+      border: 1px solid #cad9ea;
+      border-radius: 9px;
+      padding: 0.56rem 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      background: #eaf2fb;
+      color: var(--gazi-navy);
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.92rem;
+    }
+
+    .intro {
+      padding: 1rem;
+      line-height: 1.45;
+    }
+
+    .intro p {
+      margin: 0;
+    }
+
+    .question-list {
+      padding: 0.2rem 0.8rem 1rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .question-card {
+      border: 1px solid #dce6f2;
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 0.85rem;
+    }
+
+    .q-head {
+      margin-bottom: 0.55rem;
+    }
+
+    .q-text {
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .answer-area {
+      width: 100%;
+      min-height: 82px;
+      resize: vertical;
+      border-radius: 9px;
+      border: 1px solid #cfddee;
+      background: #fff;
+      padding: 0.55rem;
+      font: inherit;
+      margin-top: 0.4rem;
+    }
+
+    .btn-row {
+      margin-top: 0.55rem;
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 0.5rem 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-hint {
+      background: #fff4d7;
+      border-color: #ecd8a4;
+      color: #6c4f00;
+    }
+
+    .btn-show {
+      background: #eff5fc;
+      border-color: #c8d9eb;
+      color: var(--gazi-navy);
+    }
+
+    .hint-box,
+    .answer-box {
+      border: 1px solid #dbe7f4;
+      border-radius: 9px;
+      padding: 0.58rem 0.66rem;
+      background: var(--soft);
+      font-size: 0.92rem;
+      line-height: 1.42;
+      display: none;
+      margin-top: 0.55rem;
+    }
+
+    .hint-box.show,
+    .answer-box.show {
+      display: block;
+    }
+
+    .hint-box {
+      background: var(--hint);
+      border-color: #e8d8ad;
+    }
+
+    .answer-box b {
+      color: var(--gazi-navy);
+    }
+
+    .solution-img {
+      width: min(760px, 100%);
+      display: block;
+      margin-top: 0.5rem;
+      border-radius: 10px;
+      border: 1px solid #d4e0ee;
+      background: #fff;
+    }
+
+    @media (max-width: 720px) {
+      .top-panel {
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="brand-wrap">
+      <img class="brand-logo" src="../../assets/gazi-university-logo-en.png" alt="Gazi University logo" />
+      <div>
+        <p class="brand-top">Gazi University • Department of Industrial Engineering</p>
+        <h1 class="brand-main">IE104 Week 2 Algorithm Exercise Set</h1>
+      </div>
+    </div>
+    <p class="term-note">Computer Programming I</p>
+  </header>
+
+  <main class="page-wrap">
+    <section class="panel top-panel">
+      <a class="back-link" href="../index.html">Back to Programming Page</a>
+    </section>
+
+    <section class="panel intro">
+      <p>
+        Questions below are given for you to practice. Try to solve each question in your own words,
+        then use <b>Give Me a Hint</b> if needed. Click <b>Show Me Answer</b> to reveal a concise explanation and the
+        full solution slide.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="question-list" id="question-list"></div>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        text: "Develop an algorithm that lists all the natural numbers from the X value to the N value which were entered from the keyboard.",
+        hint: "Think of X as a moving counter. Print current X, then increase it by 1, and continue while X is less than or equal to N.",
+        explanation: "The solution uses a simple counting loop: read X and N, display X, increment X, and repeat until X becomes greater than N.",
+        solutionImage: "week2_files/Solution1.jpeg",
+        sourceRef: "Question slide: Q1.jpeg, item 1"
+      },
+      {
+        id: 2,
+        text: "Develop an algorithm that finds and lists all the divisors of a number entered from the keyboard and prints them to the screen. (Use % operator for division)",
+        hint: "Test every candidate divisor X starting from 1 up to N. A value is a divisor only when N % X equals 0.",
+        explanation: "The algorithm iterates X through possible divisors and checks the remainder. When N % X is 0, X is printed as a divisor.",
+        solutionImage: "week2_files/Solution2.jpeg",
+        sourceRef: "Question slide: Q1.jpeg, item 2"
+      },
+      {
+        id: 3,
+        text: "Develop an algorithm that finds and displays the Fibonacci sequence up to N value which was entered from the keyboard. The Fibonacci sequence starts with the values of 1 1 and the new value is found as the sum of the two values before it. (1 1 2 3 5 8 13 21...)",
+        hint: "Start with two seed values A=1 and B=1. Repeatedly compute C=A+B, print it when it is not above N, then shift values forward (A=B, B=C).",
+        explanation: "The slide solution initializes A and B to 1, prints seeds, then keeps generating the next value C as A+B. It stops when C exceeds N.",
+        solutionImage: "week2_files/Solution3.jpeg",
+        sourceRef: "Question slide: Q1.jpeg, item 3"
+      },
+      {
+        id: 4,
+        text: "Develop an algorithm that makes a division with a remainder using only addition and subtraction without a division operation. The quotient and remainder will be displayed on screen, and two numbers should be entered from the keyboard, such as A and B.",
+        hint: "Repeatedly subtract B from A while A is still at least B. Count each subtraction as one quotient unit; what remains in A is the remainder.",
+        explanation: "This is repeated subtraction: quotient starts at 0 and increases each loop while A is reduced by B. Final A is the remainder.",
+        solutionImage: "week2_files/Solution4.jpeg",
+        sourceRef: "Question slide: Q1.jpeg, item 4"
+      },
+      {
+        id: 5,
+        text: "Develop an algorithm that displays the result on the screen by simply multiplying two numbers (such as A and B) entered from the keyboard by add and subtract operations, without performing multiplication.",
+        hint: "Model multiplication as repeated addition: add A to a running sum exactly B times using a counter.",
+        explanation: "The solution uses SUM and COUNTER. SUM accumulates A in each iteration until COUNTER reaches B, then SUM is displayed.",
+        solutionImage: "week2_files/Solution5.jpeg",
+        sourceRef: "Question slide: Q2.jpeg, item 5"
+      },
+      {
+        id: 6,
+        text: "Develop an algorithm that calculates the average of the values read from the keyboard until 0 (zero) is entered and prints it to the screen.",
+        hint: "Maintain total sum S and count C. Keep reading N; stop when N is 0. For non-zero values, update S and C, then compute AV=S/C.",
+        explanation: "It is a sentinel-controlled loop: input continues until 0. The algorithm stores cumulative sum and count, then prints average.",
+        solutionImage: "week2_files/Solution6.jpeg",
+        sourceRef: "Question slide: Q2.jpeg, item 6"
+      },
+      {
+        id: 7,
+        text: "Develop an algorithm that prints to the screen by changing the places of two values entered from the keyboard, such as A and B.",
+        hint: "Use a temporary variable. Save A into TMP first, otherwise A will be lost when you assign B into A.",
+        explanation: "Swap logic is TMP=A, then A=B, then B=TMP. Finally display A and B after the exchange.",
+        solutionImage: "week2_files/Solution7.jpeg",
+        sourceRef: "Question slide: Q2.jpeg, item 7"
+      },
+      {
+        id: 8,
+        text: "Develop an algorithm that calculates the value of the function F(x)=Σx=1..n (1/x²) for the n value entered from the keyboard and prints it to the screen.",
+        hint: "Initialize F=0 and X=1. In each iteration add 1/(X*X) to F, then increase X. Continue while X is less than or equal to N.",
+        explanation: "The algorithm computes a finite summation from x=1 to n. Each term 1/(x^2) is added into F, and F is printed at the end.",
+        solutionImage: "week2_files/Solution8.jpeg",
+        sourceRef: "Question slide: Q2.jpeg, item 8"
+      }
+    ];
+
+    const list = document.getElementById("question-list");
+
+    function render() {
+      list.innerHTML = "";
+      questions.forEach((item, idx) => {
+        const card = document.createElement("article");
+        card.className = "question-card";
+
+        const head = document.createElement("div");
+        head.className = "q-head";
+
+        const qText = document.createElement("p");
+        qText.className = "q-text";
+        qText.textContent = `${idx + 1}. ${item.text}`;
+        head.appendChild(qText);
+
+        const input = document.createElement("textarea");
+        input.className = "answer-area";
+        input.placeholder = "Write your algorithm / pseudocode attempt here...";
+
+        const btnRow = document.createElement("div");
+        btnRow.className = "btn-row";
+
+        const hintBtn = document.createElement("button");
+        hintBtn.type = "button";
+        hintBtn.className = "btn-hint";
+        hintBtn.textContent = "Give Me a Hint";
+
+        const showBtn = document.createElement("button");
+        showBtn.type = "button";
+        showBtn.className = "btn-show";
+        showBtn.textContent = "Show Me Answer";
+
+        btnRow.appendChild(hintBtn);
+        btnRow.appendChild(showBtn);
+
+        const hintBox = document.createElement("div");
+        hintBox.className = "hint-box";
+        hintBox.innerHTML = `<b>Hint:</b> ${item.hint}`;
+
+        const answerBox = document.createElement("div");
+        answerBox.className = "answer-box";
+        answerBox.innerHTML = `<b>Explanation:</b> ${item.explanation}<br><b>Slide Reference:</b> ${item.sourceRef}<br><b>Solution Slide:</b><br><img class="solution-img" src="${item.solutionImage}" alt="Solution slide for question ${item.id}" />`;
+
+        hintBtn.addEventListener("click", () => {
+          hintBox.classList.toggle("show");
+        });
+
+        showBtn.addEventListener("click", () => {
+          answerBox.classList.toggle("show");
+        });
+
+        card.appendChild(head);
+        card.appendChild(input);
+        card.appendChild(btnRow);
+        card.appendChild(hintBox);
+        card.appendChild(answerBox);
+        list.appendChild(card);
+      });
+    }
+
+    render();
+  </script>
+</body>
+
+</html>
