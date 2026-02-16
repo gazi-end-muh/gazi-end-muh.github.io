@@ -271,6 +271,11 @@
   </main>
 
   <script>
+    const PA = "!G7";
+    const LA = "E#2";
+    const RO = "M*9";
+    const PASSWORD_DISABLED_FROM_DATE = "2026-02-17";
+
     const questions = [
       {
         id: 1,
@@ -339,6 +344,39 @@
     ];
 
     const list = document.getElementById("question-list");
+    let answersUnlockedInSession = false;
+
+    function getLocalDateString() {
+      const now = new Date();
+      const year = String(now.getFullYear());
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function isPasswordDisabled() {
+      return getLocalDateString() >= PASSWORD_DISABLED_FROM_DATE;
+    }
+
+    function ensureAnswerAccess() {
+      if (isPasswordDisabled() || answersUnlockedInSession) {
+        return true;
+      }
+
+      const enteredPassword = window.prompt("Enter classroom password to view solutions:");
+      if (enteredPassword === null) {
+        return false;
+      }
+
+      const classroomPass = [PA, LA, RO].join("").replace(/[^A-Z]/g, "");
+      if (enteredPassword.trim() === classroomPass) {
+        answersUnlockedInSession = true;
+        return true;
+      }
+
+      window.alert("Incorrect password.");
+      return false;
+    }
 
     function render() {
       list.innerHTML = "";
@@ -387,6 +425,9 @@
         });
 
         showBtn.addEventListener("click", () => {
+          if (!ensureAnswerAccess()) {
+            return;
+          }
           answerBox.classList.toggle("show");
         });
 
