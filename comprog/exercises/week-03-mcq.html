@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IE104 Week 3 MCQ Test | Gazi University IE</title>
+  <link rel="icon" type="image/png" href="../../assets/gazi-university-logo-en.png" />
+  <style>
+    :root {
+      --gazi-red: #c8102e;
+      --gazi-deep-red: #9f0f25;
+      --gazi-navy: #003366;
+      --ink: #1a2a3a;
+      --line: #d1dbe6;
+      --panel: #ffffff;
+      --ok: #1f7a3e;
+      --bad: #a0142a;
+      --soft-ok: #e8f7ee;
+      --soft-bad: #ffecef;
+      --soft-neutral: #f6f9fd;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans", "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(0, 51, 102, 0.14), transparent 32%),
+        radial-gradient(circle at 92% 12%, rgba(200, 16, 46, 0.14), transparent 34%),
+        linear-gradient(170deg, #f8fbff 0%, #f2f7fc 58%, #edf3fa 100%);
+      min-height: 100vh;
+    }
+
+    .site-header {
+      background: linear-gradient(108deg, var(--gazi-red), var(--gazi-navy));
+      color: #fff;
+      padding: 1rem clamp(1rem, 4vw, 3.5rem);
+      border-bottom: 4px solid #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      padding: 4px;
+    }
+
+    .brand-top,
+    .term-note,
+    .brand-main {
+      margin: 0;
+    }
+
+    .brand-main {
+      margin-top: 0.15rem;
+      font-size: clamp(1.05rem, 2.4vw, 1.7rem);
+      font-weight: 700;
+    }
+
+    .page-wrap {
+      width: min(1100px, 92%);
+      margin: 1.25rem auto 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 10px 22px rgba(0, 51, 102, 0.08);
+    }
+
+    .stats-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      padding: 0.95rem 1rem;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 0.6rem;
+      width: min(680px, 100%);
+    }
+
+    .stat {
+      border: 1px solid #d6e2f0;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 0.58rem 0.66rem;
+      text-align: center;
+    }
+
+    .stat .label {
+      display: block;
+      font-size: 0.78rem;
+      color: #4f5c6d;
+      margin-bottom: 0.2rem;
+    }
+
+    .stat .value {
+      font-weight: 700;
+      font-size: 1.08rem;
+      color: var(--gazi-navy);
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    button,
+    .back-link {
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 0.56rem 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 0.92rem;
+    }
+
+    .btn-reset {
+      background: var(--gazi-red);
+      color: #fff;
+    }
+
+    .btn-reset:hover {
+      background: var(--gazi-deep-red);
+    }
+
+    .back-link {
+      background: #eaf2fb;
+      color: var(--gazi-navy);
+      border-color: #cad9ea;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .intro {
+      padding: 1rem;
+      line-height: 1.45;
+    }
+
+    .intro p {
+      margin: 0;
+    }
+
+    .quiz-list {
+      padding: 0.2rem 0.8rem 0.9rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .question-card {
+      border: 1px solid #dce6f2;
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 0.85rem;
+    }
+
+    .q-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.8rem;
+      margin-bottom: 0.62rem;
+    }
+
+    .q-text {
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .btn-reveal {
+      background: #eff5fc;
+      color: var(--gazi-navy);
+      border-color: #c8d9eb;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .opt-list {
+      display: grid;
+      gap: 0.42rem;
+      margin-bottom: 0.58rem;
+    }
+
+    .opt {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      border: 1px solid #dce6f2;
+      background: #fff;
+      border-radius: 9px;
+      padding: 0.46rem 0.56rem;
+    }
+
+    .opt input {
+      margin-top: 0.2rem;
+    }
+
+    .opt.correct-opt {
+      border-color: #8bc8a2;
+      background: #f1fbf5;
+    }
+
+    .opt.wrong-opt {
+      border-color: #e8a3b0;
+      background: #fff4f6;
+    }
+
+    .feedback,
+    .answer-box {
+      border: 1px solid #dbe7f4;
+      border-radius: 9px;
+      padding: 0.5rem 0.62rem;
+      background: var(--soft-neutral);
+      font-size: 0.92rem;
+      line-height: 1.42;
+      display: none;
+      margin-top: 0.52rem;
+    }
+
+    .feedback.show,
+    .answer-box.show {
+      display: block;
+    }
+
+    .feedback.good {
+      background: var(--soft-ok);
+      border-color: #a9d7b9;
+      color: var(--ok);
+      font-weight: 600;
+    }
+
+    .feedback.bad {
+      background: var(--soft-bad);
+      border-color: #e9b4bf;
+      color: var(--bad);
+      font-weight: 600;
+    }
+
+    .answer-box b {
+      color: var(--gazi-navy);
+    }
+
+    .password-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 18, 35, 0.62);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 50;
+    }
+
+    .password-overlay.show {
+      display: flex;
+    }
+
+    .password-dialog {
+      width: min(420px, 100%);
+      background: #fff;
+      border: 1px solid #c8d9eb;
+      border-radius: 12px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+      padding: 1rem;
+    }
+
+    .password-dialog h3 {
+      margin: 0 0 0.45rem;
+      color: var(--gazi-navy);
+      font-size: 1.05rem;
+    }
+
+    .password-dialog p {
+      margin: 0 0 0.6rem;
+      font-size: 0.92rem;
+    }
+
+    .password-input {
+      width: 100%;
+      border-radius: 9px;
+      border: 1px solid #cfddee;
+      padding: 0.55rem;
+      font: inherit;
+      margin-bottom: 0.6rem;
+    }
+
+    .password-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+    }
+
+    .password-msg {
+      min-height: 1.2em;
+      margin: 0 0 0.4rem;
+      color: var(--gazi-red);
+      font-size: 0.86rem;
+    }
+
+    .btn-pass-cancel {
+      background: #eef4fb;
+      color: var(--gazi-navy);
+      border-color: #cad9ea;
+    }
+
+    .btn-pass-submit {
+      background: var(--gazi-red);
+      color: #fff;
+    }
+
+    @media (max-width: 720px) {
+      .stat-grid {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+      }
+
+      .q-head {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="brand-wrap">
+      <img class="brand-logo" src="../../assets/gazi-university-logo-en.png" alt="Gazi University logo" />
+      <div>
+        <p class="brand-top">Gazi University • Department of Industrial Engineering</p>
+        <h1 class="brand-main">IE104 Week 3 MCQ Test</h1>
+      </div>
+    </div>
+    <p class="term-note">Computer Programming I</p>
+  </header>
+
+  <main class="page-wrap">
+    <section class="panel stats-panel">
+      <div class="stat-grid">
+        <div class="stat"><span class="label">Questions</span><span class="value" id="total-count">10</span></div>
+        <div class="stat"><span class="label">Correct</span><span class="value" id="correct-count">0</span></div>
+        <div class="stat"><span class="label">Wrong</span><span class="value" id="wrong-count">0</span></div>
+        <div class="stat"><span class="label">Score (0-100)</span><span class="value" id="score-count">0</span></div>
+      </div>
+      <div class="actions">
+        <button id="reset-btn" class="btn-reset" type="button">Reset Test</button>
+        <a class="back-link" href="../index.html">Back to Programming Page</a>
+      </div>
+    </section>
+
+    <section class="panel intro">
+      <p>
+        This test is based strictly on <b>comprog/slides/week3-prog.pdf</b>. Answer keys are free after midnight of
+        <b>23 Feb 2026</b>; before that they require classroom password.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="quiz-list" id="quiz-list"></div>
+    </section>
+  </main>
+
+  <div id="password-overlay" class="password-overlay" aria-hidden="true">
+    <div class="password-dialog" role="dialog" aria-modal="true" aria-labelledby="password-title">
+      <h3 id="password-title">Answer Key Access</h3>
+      <p>Enter classroom password to reveal answer explanations before 24 Feb 2026.</p>
+      <input id="password-input" class="password-input" type="password" autocomplete="off" />
+      <p id="password-msg" class="password-msg"></p>
+      <div class="password-actions">
+        <button id="password-cancel" class="btn-pass-cancel" type="button">Cancel</button>
+        <button id="password-submit" class="btn-pass-submit" type="button">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PA = "G_A";
+    const LA = "Z";
+    const RO = "MUH*9";
+    const PASSWORD_DISABLED_FROM_DATE = "2026-02-24";
+
+    const questions = [
+      {
+        id: 1,
+        q: "According to the slides, what is a computer program?",
+        options: [
+          "A hardware component used for calculations",
+          "A set of expressions/instructions created to solve a problem",
+          "A network protocol definition",
+          "Only a graphical user interface"
+        ],
+        answer: 1,
+        why: "The lecture defines a program as a set of expressions/instructions to solve an existing problem.",
+        slide: 4
+      },
+      {
+        id: 2,
+        q: "Which item is listed as an Integrated Development Environment (IDE)?",
+        options: [
+          "Eclipse",
+          "SQL Server",
+          "Ubuntu",
+          "Postman"
+        ],
+        answer: 0,
+        why: "Eclipse is explicitly listed among known IDEs in the slides.",
+        slide: 9
+      },
+      {
+        id: 3,
+        q: "Which statement best matches an interpreter?",
+        options: [
+          "It always generates a standard executable file",
+          "It executes source code part by part",
+          "It only works for C#",
+          "It ignores runtime conditions"
+        ],
+        answer: 1,
+        why: "The interpreter slide says it executes source code directly, step by step.",
+        slide: 11
+      },
+      {
+        id: 4,
+        q: "Which process combines object files into one executable file?",
+        options: [
+          "Debugging",
+          "Interpreting",
+          "Linking",
+          "Scanning"
+        ],
+        answer: 2,
+        why: "The linker associates object files and converts them to a single executable.",
+        slide: 12
+      },
+      {
+        id: 5,
+        q: "Which of the following is a syntax error example?",
+        options: [
+          "Program gives wrong business result with no crash",
+          "Missing semicolon in a statement",
+          "Trying to open a file that does not exist",
+          "Using an incorrect algorithm formula"
+        ],
+        answer: 1,
+        why: "Syntax errors violate language rules, such as missing required punctuation.",
+        slide: 15
+      },
+      {
+        id: 6,
+        q: "What is debugging used for in the slides?",
+        options: [
+          "To package software for release",
+          "To design user interfaces",
+          "To find and fix logical errors/bugs",
+          "To replace the compiler"
+        ],
+        answer: 2,
+        why: "Debugging is described as finding/fixing bugs by controlled step-by-step execution.",
+        slide: 18
+      },
+      {
+        id: 7,
+        q: "Which statement about C# is given in class?",
+        options: [
+          "C# is not object oriented",
+          "C# is fully object oriented and on .NET platform",
+          "C# can only run with interpreters",
+          "C# is older than C language"
+        ],
+        answer: 1,
+        why: "Slides describe C# as 100% object oriented and tied to the .NET platform.",
+        slide: 19
+      },
+      {
+        id: 8,
+        q: "In .NET execution flow, compiled code is stored in which form?",
+        options: [
+          "Assemblies (.dll or .exe)",
+          "Only in RAM",
+          "HTML pages",
+          "SQL tables"
+        ],
+        answer: 0,
+        why: "The .NET framework slide says compiled code is stored in assemblies (.dll/.exe).",
+        slide: 25
+      },
+      {
+        id: 9,
+        q: "Which namespace is mainly used for file read/write operations?",
+        options: [
+          "System.Net",
+          "System.IO",
+          "System.Data",
+          "System.Xml"
+        ],
+        answer: 1,
+        why: "System.IO is listed for file operations (read/write).",
+        slide: 30
+      },
+      {
+        id: 10,
+        q: "Which statement about Main() is correct in C#?",
+        options: [
+          "Main() is optional",
+          "Main() must be outside all classes",
+          "Main() is the starting point and is inside a class",
+          "Main() can exist only in interfaces"
+        ],
+        answer: 2,
+        why: "Slides state program starts at Main() and C# programs are class-based.",
+        slide: 34
+      }
+    ];
+
+    const quizList = document.getElementById("quiz-list");
+    const totalCount = document.getElementById("total-count");
+    const correctCount = document.getElementById("correct-count");
+    const wrongCount = document.getElementById("wrong-count");
+    const scoreCount = document.getElementById("score-count");
+    const resetBtn = document.getElementById("reset-btn");
+
+    const passwordOverlay = document.getElementById("password-overlay");
+    const passwordInput = document.getElementById("password-input");
+    const passwordMsg = document.getElementById("password-msg");
+    const passwordCancel = document.getElementById("password-cancel");
+    const passwordSubmit = document.getElementById("password-submit");
+
+    let answersUnlockedInSession = false;
+
+    const state = {
+      selections: {}
+    };
+
+    function getLocalDateString() {
+      const now = new Date();
+      const year = String(now.getFullYear());
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function isPasswordDisabled() {
+      return getLocalDateString() >= PASSWORD_DISABLED_FROM_DATE;
+    }
+
+    function askPasswordMasked() {
+      return new Promise((resolve) => {
+        function close(result) {
+          passwordOverlay.classList.remove("show");
+          passwordOverlay.setAttribute("aria-hidden", "true");
+          passwordMsg.textContent = "";
+          passwordInput.value = "";
+          passwordCancel.removeEventListener("click", onCancel);
+          passwordSubmit.removeEventListener("click", onSubmit);
+          passwordInput.removeEventListener("keydown", onKeyDown);
+          resolve(result);
+        }
+
+        function onCancel() {
+          close(null);
+        }
+
+        function onSubmit() {
+          close(passwordInput.value);
+        }
+
+        function onKeyDown(e) {
+          if (e.key === "Enter") {
+            onSubmit();
+          } else if (e.key === "Escape") {
+            onCancel();
+          }
+        }
+
+        passwordOverlay.classList.add("show");
+        passwordOverlay.setAttribute("aria-hidden", "false");
+        passwordCancel.addEventListener("click", onCancel);
+        passwordSubmit.addEventListener("click", onSubmit);
+        passwordInput.addEventListener("keydown", onKeyDown);
+        passwordInput.focus();
+      });
+    }
+
+    async function ensureAnswerAccess() {
+      if (isPasswordDisabled() || answersUnlockedInSession) {
+        return true;
+      }
+
+      const enteredPassword = await askPasswordMasked();
+      if (enteredPassword === null) {
+        return false;
+      }
+
+      const classroomPass = [PA, LA, RO].join("").replace(/[^A-Z]/g, "");
+      if (enteredPassword.trim() === classroomPass) {
+        answersUnlockedInSession = true;
+        return true;
+      }
+
+      window.alert("Incorrect password.");
+      return false;
+    }
+
+    function renderQuiz() {
+      totalCount.textContent = String(questions.length);
+      quizList.innerHTML = "";
+
+      questions.forEach((item, idx) => {
+        const card = document.createElement("article");
+        card.className = "question-card";
+        card.dataset.qid = String(item.id);
+
+        const head = document.createElement("div");
+        head.className = "q-head";
+
+        const qText = document.createElement("p");
+        qText.className = "q-text";
+        qText.textContent = `${idx + 1}. ${item.q}`;
+
+        const revealBtn = document.createElement("button");
+        revealBtn.type = "button";
+        revealBtn.className = "btn-reveal";
+        revealBtn.textContent = "Show Answer";
+
+        head.appendChild(qText);
+        head.appendChild(revealBtn);
+
+        const optList = document.createElement("div");
+        optList.className = "opt-list";
+
+        item.options.forEach((optText, optIdx) => {
+          const optionLabel = document.createElement("label");
+          optionLabel.className = "opt";
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `q-${item.id}`;
+          radio.value = String(optIdx);
+
+          const txt = document.createElement("span");
+          txt.textContent = optText;
+
+          optionLabel.appendChild(radio);
+          optionLabel.appendChild(txt);
+          optList.appendChild(optionLabel);
+        });
+
+        const feedback = document.createElement("div");
+        feedback.className = "feedback";
+
+        const answerBox = document.createElement("div");
+        answerBox.className = "answer-box";
+
+        revealBtn.addEventListener("click", async () => {
+          if (!(await ensureAnswerAccess())) {
+            return;
+          }
+          const correctText = item.options[item.answer];
+          answerBox.innerHTML = `<b>Correct Answer:</b> ${correctText}<br><b>Why:</b> ${item.why}<br><b>Slide Reference:</b> week3-prog.pdf - Page ${item.slide}`;
+          answerBox.classList.add("show");
+        });
+
+        optList.addEventListener("change", (e) => {
+          const target = e.target;
+          if (!(target instanceof HTMLInputElement) || target.type !== "radio") {
+            return;
+          }
+
+          const selected = Number(target.value);
+          state.selections[item.id] = selected;
+          updateQuestionVisual(item.id);
+          updateStats();
+        });
+
+        card.appendChild(head);
+        card.appendChild(optList);
+        card.appendChild(feedback);
+        card.appendChild(answerBox);
+        quizList.appendChild(card);
+      });
+
+      updateStats();
+    }
+
+    function updateQuestionVisual(questionId) {
+      const item = questions.find((q) => q.id === questionId);
+      const card = quizList.querySelector(`[data-qid="${questionId}"]`);
+      if (!item || !card) {
+        return;
+      }
+
+      const selected = state.selections[questionId];
+      const labels = Array.from(card.querySelectorAll(".opt"));
+      const feedback = card.querySelector(".feedback");
+
+      labels.forEach((label, idx) => {
+        label.classList.remove("correct-opt", "wrong-opt");
+        if (selected === idx) {
+          if (idx === item.answer) {
+            label.classList.add("correct-opt");
+          } else {
+            label.classList.add("wrong-opt");
+          }
+        }
+      });
+
+      if (!(feedback instanceof HTMLElement)) {
+        return;
+      }
+
+      if (selected === undefined) {
+        feedback.className = "feedback";
+        feedback.textContent = "";
+        return;
+      }
+
+      if (selected === item.answer) {
+        feedback.className = "feedback show good";
+        feedback.textContent = `Correct. (Page ${item.slide})`;
+      } else {
+        feedback.className = "feedback show bad";
+        feedback.textContent = `Wrong. Correct option is \"${item.options[item.answer]}\". (Page ${item.slide})`;
+      }
+    }
+
+    function updateStats() {
+      let correct = 0;
+      let wrong = 0;
+
+      questions.forEach((item) => {
+        const selected = state.selections[item.id];
+        if (selected === undefined) {
+          return;
+        }
+        if (selected === item.answer) {
+          correct += 1;
+        } else {
+          wrong += 1;
+        }
+      });
+
+      const score = Math.round((correct / questions.length) * 100);
+
+      correctCount.textContent = String(correct);
+      wrongCount.textContent = String(wrong);
+      scoreCount.textContent = String(score);
+    }
+
+    function resetQuiz() {
+      state.selections = {};
+
+      quizList.querySelectorAll("input[type='radio']").forEach((el) => {
+        el.checked = false;
+      });
+
+      quizList.querySelectorAll(".opt").forEach((el) => {
+        el.classList.remove("correct-opt", "wrong-opt");
+      });
+
+      quizList.querySelectorAll(".feedback").forEach((el) => {
+        el.className = "feedback";
+        el.textContent = "";
+      });
+
+      quizList.querySelectorAll(".answer-box").forEach((el) => {
+        el.classList.remove("show");
+        el.textContent = "";
+      });
+
+      updateStats();
+    }
+
+    resetBtn.addEventListener("click", resetQuiz);
+    renderQuiz();
+  </script>
+</body>
+
+</html>
