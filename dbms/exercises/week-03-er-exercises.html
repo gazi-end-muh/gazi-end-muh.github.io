@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DBMS Week 3 ER Exercises | Gazi University IE</title>
+  <link rel="icon" type="image/png" href="../../assets/gazi-university-logo-en.png" />
+  <style>
+    :root {
+      --gazi-red: #c8102e;
+      --gazi-navy: #003366;
+      --ink: #1a2a3a;
+      --line: #d1dbe6;
+      --panel: #ffffff;
+      --soft: #f6f9fd;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans", "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(0, 51, 102, 0.14), transparent 32%),
+        radial-gradient(circle at 92% 12%, rgba(200, 16, 46, 0.14), transparent 34%),
+        linear-gradient(170deg, #f8fbff 0%, #f2f7fc 58%, #edf3fa 100%);
+      min-height: 100vh;
+    }
+
+    .site-header {
+      background: linear-gradient(108deg, var(--gazi-red), var(--gazi-navy));
+      color: #fff;
+      padding: 1rem clamp(1rem, 4vw, 3.5rem);
+      border-bottom: 4px solid #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-wrap { display: flex; align-items: center; gap: 0.85rem; }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      padding: 4px;
+    }
+
+    .brand-top,
+    .term-note,
+    .brand-main { margin: 0; }
+
+    .brand-main {
+      margin-top: 0.15rem;
+      font-size: clamp(1.05rem, 2.4vw, 1.7rem);
+      font-weight: 700;
+    }
+
+    .page-wrap {
+      width: min(1100px, 92%);
+      margin: 1.25rem auto 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 10px 22px rgba(0, 51, 102, 0.08);
+    }
+
+    .top-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      padding: 0.95rem 1rem;
+    }
+
+    .back-link,
+    .tool-link {
+      border: 1px solid #cad9ea;
+      border-radius: 9px;
+      padding: 0.56rem 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      background: #eaf2fb;
+      color: var(--gazi-navy);
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.92rem;
+    }
+
+    .intro { padding: 1rem; line-height: 1.45; }
+    .intro p { margin: 0; }
+
+    .question-list {
+      padding: 0.2rem 0.8rem 1rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .question-card {
+      border: 1px solid #dce6f2;
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 0.85rem;
+    }
+
+    .q-text {
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .q-body {
+      margin-top: 0.5rem;
+      border: 1px solid #dbe7f4;
+      border-radius: 9px;
+      padding: 0.6rem;
+      background: var(--soft);
+      font-size: 0.92rem;
+      line-height: 1.42;
+      white-space: pre-wrap;
+    }
+
+    .q-img {
+      width: min(900px, 100%);
+      display: block;
+      margin-top: 0.55rem;
+      border: 1px solid #d4e0ee;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .btn-row {
+      margin-top: 0.55rem;
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 0.5rem 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+      background: #eff5fc;
+      border-color: #c8d9eb;
+      color: var(--gazi-navy);
+    }
+
+    .answer-box {
+      border: 1px solid #dbe7f4;
+      border-radius: 9px;
+      padding: 0.58rem 0.66rem;
+      background: var(--soft);
+      font-size: 0.92rem;
+      line-height: 1.42;
+      display: none;
+      margin-top: 0.55rem;
+    }
+
+    .answer-box.show { display: block; }
+    .answer-box b { color: var(--gazi-navy); }
+
+    .password-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 18, 35, 0.62);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 50;
+    }
+
+    .password-overlay.show { display: flex; }
+
+    .password-dialog {
+      width: min(420px, 100%);
+      background: #fff;
+      border: 1px solid #c8d9eb;
+      border-radius: 12px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+      padding: 1rem;
+    }
+
+    .password-dialog h3 {
+      margin: 0 0 0.45rem;
+      color: var(--gazi-navy);
+      font-size: 1.05rem;
+    }
+
+    .password-dialog p { margin: 0 0 0.6rem; font-size: 0.92rem; }
+
+    .password-input {
+      width: 100%;
+      border-radius: 9px;
+      border: 1px solid #cfddee;
+      padding: 0.55rem;
+      font: inherit;
+      margin-bottom: 0.6rem;
+    }
+
+    .password-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+    .password-msg { min-height: 1.2em; margin: 0 0 0.4rem; color: var(--gazi-red); font-size: 0.86rem; }
+
+    .btn-pass-cancel { background: #eef4fb; color: var(--gazi-navy); border-color: #cad9ea; }
+    .btn-pass-submit { background: var(--gazi-red); color: #fff; }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="brand-wrap">
+      <img class="brand-logo" src="../../assets/gazi-university-logo-en.png" alt="Gazi University logo" />
+      <div>
+        <p class="brand-top">Gazi University • Department of Industrial Engineering</p>
+        <h1 class="brand-main">IE326 Week 3 ER Exercises</h1>
+      </div>
+    </div>
+    <p class="term-note">Database Management Systems</p>
+  </header>
+
+  <main class="page-wrap">
+    <section class="panel top-panel">
+      <a class="back-link" href="../index.html">Back to DBMS Page</a>
+      <a class="tool-link" href="https://app.diagrams.net/" target="_blank" rel="noopener noreferrer">Open Draw.io (External)</a>
+    </section>
+
+    <section class="panel intro">
+      <p>
+        Use these exercises from <b>week3.pdf</b>. Draw your ER diagram on external tools (recommended:
+        <b>https://app.diagrams.net/</b>). Answers are password protected. This page intentionally has no editor area.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="question-list" id="question-list"></div>
+    </section>
+  </main>
+
+  <div id="password-overlay" class="password-overlay" aria-hidden="true">
+    <div class="password-dialog" role="dialog" aria-modal="true" aria-labelledby="password-title">
+      <h3 id="password-title">Solution Access</h3>
+      <p>Enter classroom password to view solution diagrams.</p>
+      <input id="password-input" class="password-input" type="password" autocomplete="off" />
+      <p id="password-msg" class="password-msg"></p>
+      <div class="password-actions">
+        <button id="password-cancel" class="btn-pass-cancel" type="button">Cancel</button>
+        <button id="password-submit" class="btn-pass-submit" type="button">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PA = "G_A";
+    const LA = "Z";
+    const RO = "MUH*9";
+
+    const questions = [
+      {
+        id: 1,
+        title: "Exercise 1: Order-Entry System (Entities & Relations)",
+        text: "From the Week 3 order-entry scenario, identify entity types and relationship types only.\n\nScenario summary:\n- Customers place orders\n- Orders contain items\n- Items are stored in warehouses\n- A customer can place several orders\n- Order and Item relation is many-to-many",
+        questionImage: "week3_slide_jpegs/Presentation1/Slide1.jpeg",
+        answerText: "Expected structure is the first ER pass in the slides: Customer, Order, Item, Warehouse with relationship links defined before adding attributes.",
+        answerImage: "week3_slide_jpegs/Presentation1/Slide2.jpeg",
+        slide: "Exercise slides"
+      },
+      {
+        id: 2,
+        title: "Exercise 2: Order-Entry System (Add Attributes)",
+        text: "Extend Exercise 1 by adding attributes and key-like identifiers from the given text (customer number, item number, order date, ship-to address, quantity on hand, etc.).",
+        questionImage: "week3_slide_jpegs/Presentation1/Slide2.jpeg",
+        answerText: "Expected answer is the attribute-enriched ER model shown in the follow-up exercise slide.",
+        answerImage: "week3_slide_jpegs/Presentation1/Slide3.jpeg",
+        slide: "Exercise slides"
+      },
+      {
+        id: 3,
+        title: "Exercise 3: Order-Entry System (Complete ER)",
+        text: "Complete the order-entry ER diagram including cardinalities and relationship details using the scenario constraints.",
+        questionImage: "week3_slide_jpegs/Presentation1/Slide3.jpeg",
+        answerText: "Expected answer is the complete ER diagram solution shown in class.",
+        answerImage: "week3_slide_jpegs/Presentation1/Slide4.jpeg",
+        slide: "Exercise slides"
+      },
+      {
+        id: 4,
+        title: "Exercise 4: Person/Employee/Student/Alumnus Specialization",
+        text: "Use the textual exercise about person types and employee/student subtypes. Build an EER diagram with specialization/generalization, subtype constraints, and subtype-specific attributes.",
+        questionImage: "week3_slide_jpegs/Presentation1/Slide5.jpeg",
+        answerText: "Expected solution is the specialization-focused EER structure shown in the answer slide.",
+        answerImage: "week3_slide_jpegs/Presentation1/Slide6.jpeg",
+        slide: "Exercise slides"
+      },
+      {
+        id: 5,
+        title: "Exercise 5: Employee-Department-Project ER",
+        text: "Question text (from slide): Store employee name/SSN/address/salary/sex/birthdate; each employee assigned to one department; employees may work on several projects; keep weekly hours on each project; keep direct supervisor relationship among employees.",
+        questionImage: "week3_slide_jpegs/Presentation1/ER_diagram_Question.png",
+        answerText: "Expected answer is the ER diagram with Employee, Department, Project, Works_On (with hours), Assigned_To and recursive supervisor relationship.",
+        answerImage: "week3_slide_jpegs/Presentation1/Er_diagram-solution.png",
+        slide: "Exercise slides"
+      }
+    ];
+
+    const list = document.getElementById("question-list");
+    const passwordOverlay = document.getElementById("password-overlay");
+    const passwordInput = document.getElementById("password-input");
+    const passwordMsg = document.getElementById("password-msg");
+    const passwordCancel = document.getElementById("password-cancel");
+    const passwordSubmit = document.getElementById("password-submit");
+    let answersUnlockedInSession = false;
+
+    function askPasswordMasked() {
+      return new Promise((resolve) => {
+        function close(result) {
+          passwordOverlay.classList.remove("show");
+          passwordOverlay.setAttribute("aria-hidden", "true");
+          passwordMsg.textContent = "";
+          passwordInput.value = "";
+          passwordCancel.removeEventListener("click", onCancel);
+          passwordSubmit.removeEventListener("click", onSubmit);
+          passwordInput.removeEventListener("keydown", onKeyDown);
+          resolve(result);
+        }
+
+        function onCancel() { close(null); }
+        function onSubmit() { close(passwordInput.value); }
+        function onKeyDown(e) {
+          if (e.key === "Enter") onSubmit();
+          if (e.key === "Escape") onCancel();
+        }
+
+        passwordOverlay.classList.add("show");
+        passwordOverlay.setAttribute("aria-hidden", "false");
+        passwordCancel.addEventListener("click", onCancel);
+        passwordSubmit.addEventListener("click", onSubmit);
+        passwordInput.addEventListener("keydown", onKeyDown);
+        passwordInput.focus();
+      });
+    }
+
+    async function ensureAnswerAccess() {
+      if (answersUnlockedInSession) return true;
+
+      const enteredPassword = await askPasswordMasked();
+      if (enteredPassword === null) return false;
+
+      const classroomPass = [PA, LA, RO].join("").replace(/[^A-Z]/g, "");
+      if (enteredPassword.trim() === classroomPass) {
+        answersUnlockedInSession = true;
+        return true;
+      }
+
+      window.alert("Incorrect password.");
+      return false;
+    }
+
+    function render() {
+      list.innerHTML = "";
+      questions.forEach((item, idx) => {
+        const card = document.createElement("article");
+        card.className = "question-card";
+
+        const qTitle = document.createElement("p");
+        qTitle.className = "q-text";
+        qTitle.textContent = `${idx + 1}. ${item.title}`;
+
+        const qBody = document.createElement("div");
+        qBody.className = "q-body";
+        qBody.textContent = item.text;
+
+        const qImg = document.createElement("img");
+        qImg.className = "q-img";
+        qImg.src = item.questionImage;
+        qImg.alt = `Question reference image for exercise ${item.id}`;
+
+        const btnRow = document.createElement("div");
+        btnRow.className = "btn-row";
+
+        const showBtn = document.createElement("button");
+        showBtn.type = "button";
+        showBtn.textContent = "Show Solution";
+
+        const answerBox = document.createElement("div");
+        answerBox.className = "answer-box";
+        answerBox.innerHTML = `<b>Expected Solution:</b> ${item.answerText}<br><b>Slide Reference:</b> ${item.slide}<br><img class="q-img" src="${item.answerImage}" alt="Solution image for exercise ${item.id}" />`;
+
+        showBtn.addEventListener("click", async () => {
+          if (!(await ensureAnswerAccess())) return;
+          answerBox.classList.toggle("show");
+        });
+
+        btnRow.appendChild(showBtn);
+        card.appendChild(qTitle);
+        card.appendChild(qBody);
+        card.appendChild(qImg);
+        card.appendChild(btnRow);
+        card.appendChild(answerBox);
+        list.appendChild(card);
+      });
+    }
+
+    render();
+  </script>
+</body>
+
+</html>
