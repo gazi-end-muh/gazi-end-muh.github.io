@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IE104 Week 4 Programming Exercises | Gazi University IE</title>
+  <link rel="icon" type="image/png" href="../../assets/gazi-university-logo-en.png" />
+  <style>
+    :root {
+      --gazi-red: #c8102e;
+      --gazi-deep-red: #9f0f25;
+      --gazi-navy: #003366;
+      --ink: #1a2a3a;
+      --line: #d1dbe6;
+      --panel: #ffffff;
+      --soft: #f6f9fd;
+      --hint: #fff8e7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans", "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(0, 51, 102, 0.14), transparent 32%),
+        radial-gradient(circle at 92% 12%, rgba(200, 16, 46, 0.14), transparent 34%),
+        linear-gradient(170deg, #f8fbff 0%, #f2f7fc 58%, #edf3fa 100%);
+      min-height: 100vh;
+    }
+
+    .site-header {
+      background: linear-gradient(108deg, var(--gazi-red), var(--gazi-navy));
+      color: #fff;
+      padding: 1rem clamp(1rem, 4vw, 3.5rem);
+      border-bottom: 4px solid #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      padding: 4px;
+    }
+
+    .brand-top,
+    .term-note,
+    .brand-main {
+      margin: 0;
+    }
+
+    .brand-main {
+      margin-top: 0.15rem;
+      font-size: clamp(1.05rem, 2.4vw, 1.7rem);
+      font-weight: 700;
+    }
+
+    .page-wrap {
+      width: min(1100px, 92%);
+      margin: 1.25rem auto 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 10px 22px rgba(0, 51, 102, 0.08);
+    }
+
+    .top-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      padding: 0.95rem 1rem;
+    }
+
+    .back-link {
+      border: 1px solid #cad9ea;
+      border-radius: 9px;
+      padding: 0.56rem 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      background: #eaf2fb;
+      color: var(--gazi-navy);
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.92rem;
+    }
+
+    .intro {
+      padding: 1rem;
+      line-height: 1.45;
+    }
+
+    .intro p {
+      margin: 0;
+    }
+
+    .question-list {
+      padding: 0.2rem 0.8rem 1rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .question-card {
+      border: 1px solid #dce6f2;
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 0.85rem;
+    }
+
+    .question-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 0.8rem;
+      align-items: stretch;
+    }
+
+    .q-head {
+      margin-bottom: 0.55rem;
+    }
+
+    .q-text {
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .editor-panel {
+      border: 1px solid #dbe7f4;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 0.6rem;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .editor-title {
+      margin: 0 0 0.45rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--gazi-navy);
+    }
+
+    .answer-area {
+      width: 100%;
+      min-height: 220px;
+      resize: vertical;
+      border-radius: 9px;
+      border: 1px solid #cfddee;
+      background: #fff;
+      padding: 0.55rem;
+      font: inherit;
+      flex: 1;
+    }
+
+    .btn-row {
+      margin-top: 0.55rem;
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 0.5rem 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-show {
+      background: #eff5fc;
+      border-color: #c8d9eb;
+      color: var(--gazi-navy);
+    }
+
+    .hint-box,
+    .example-box,
+    .answer-box {
+      border: 1px solid #dbe7f4;
+      border-radius: 9px;
+      padding: 0.58rem 0.66rem;
+      background: var(--soft);
+      font-size: 0.92rem;
+      line-height: 1.42;
+      margin-top: 0.55rem;
+    }
+
+    .answer-box.show {
+      display: block;
+    }
+
+    .hint-box {
+      background: var(--hint);
+      border-color: #e8d8ad;
+    }
+
+    .example-box {
+      background: #f1f7ff;
+      border-color: #c8d9eb;
+    }
+
+    .answer-box {
+      display: none;
+    }
+
+    .answer-box b {
+      color: var(--gazi-navy);
+    }
+
+    .code-block {
+      margin-top: 0.5rem;
+      border: 1px solid #d6e2f0;
+      border-radius: 8px;
+      background: #fff;
+      padding: 0.55rem;
+      white-space: pre-wrap;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 0.86rem;
+    }
+    @media (max-width: 720px) {
+      .top-panel {
+        align-items: flex-start;
+      }
+
+      .question-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .answer-area {
+        min-height: 160px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="brand-wrap">
+      <img class="brand-logo" src="../../assets/gazi-university-logo-en.png" alt="Gazi University logo" />
+      <div>
+        <p class="brand-top">Gazi University • Department of Industrial Engineering</p>
+        <h1 class="brand-main">IE104 Week 4 Programming Exercise Set</h1>
+      </div>
+    </div>
+    <p class="term-note">Computer Programming I</p>
+  </header>
+
+  <main class="page-wrap">
+    <section class="panel top-panel">
+      <a class="back-link" href="../index.html">Back to Programming Page</a>
+    </section>
+
+    <section class="panel intro">
+      <p>
+        Questions below are based on <b>comprog/slides/week4-prog.pdf</b>. Every exercise is taken from a Week 4
+        slide that says <b>Try this</b> (or <b>Try these</b>) and adapted into a student task. Use the editor on each
+        card to write and test your own version first, then use <b>Show Me Answer</b> for a model solution.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="question-list" id="question-list"></div>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        text: "Create a C# program that initializes value types using constructors (`new bool()`, `new byte()`, `new char()`, `new decimal()`, `new double()`, `new float()`) and prints each default value. Then extend it by also printing defaults of `int` and `long`.",
+        hint: "Use exactly the slide style first, then add two extra value types. For `char`, cast to int to make the default visible.",
+        example: "class Program\n{\n  static void Main(string[] args)\n  {\n    bool a = new bool();\n    byte a1 = new byte();\n    char a2 = new char();\n    decimal a3 = new decimal();\n    double a4 = new double();\n    float a5 = new float();\n\n    System.Console.WriteLine(a);\n    System.Console.WriteLine(a1);\n    System.Console.WriteLine(a2);\n    System.Console.WriteLine(a3);\n    System.Console.WriteLine(a4);\n    System.Console.WriteLine(a5);\n  }\n}",
+        explanation: "Value-type constructors assign default values. `char` default is '\\0', so printing `(int)c` shows 0 clearly.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    bool b = new bool();\n    byte by = new byte();\n    char c = new char();\n    decimal dec = new decimal();\n    double d = new double();\n    float f = new float();\n    int i = new int();\n    long l = new long();\n\n    System.Console.WriteLine(\"bool: \" + b);\n    System.Console.WriteLine(\"byte: \" + by);\n    System.Console.WriteLine(\"char code: \" + (int)c);\n    System.Console.WriteLine(\"decimal: \" + dec);\n    System.Console.WriteLine(\"double: \" + d);\n    System.Console.WriteLine(\"float: \" + f);\n    System.Console.WriteLine(\"int: \" + i);\n    System.Console.WriteLine(\"long: \" + l);\n  }\n}",
+        sourceRef: "week4-prog.pdf - Slide 24 (An Example: Try this code yourself)"
+      },
+      {
+        id: 2,
+        text: "Write a program with `object obj` and assign these values in order: `5`, \"B\", `5.25f`, `false`, `12.75M`. Print both the value and `obj.GetType()` after each assignment.",
+        hint: "Object can hold different types at different moments; call `GetType()` each time after reassignment.",
+        example: "class Program\n{\n  static void Main(string[] args)\n  {\n    object obj;\n    obj = 5;\n    System.Console.WriteLine(obj.GetType());\n\n    obj = \"B\";\n    System.Console.WriteLine(obj.GetType());\n  }\n}",
+        explanation: "The runtime type changes with each assignment. This demonstrates how `object` can reference different concrete types.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    object obj;\n\n    obj = 5;\n    System.Console.WriteLine(\"Value: \" + obj + \" | Type: \" + obj.GetType());\n\n    obj = \"B\";\n    System.Console.WriteLine(\"Value: \" + obj + \" | Type: \" + obj.GetType());\n\n    obj = 5.25f;\n    System.Console.WriteLine(\"Value: \" + obj + \" | Type: \" + obj.GetType());\n\n    obj = false;\n    System.Console.WriteLine(\"Value: \" + obj + \" | Type: \" + obj.GetType());\n\n    obj = 12.75M;\n    System.Console.WriteLine(\"Value: \" + obj + \" | Type: \" + obj.GetType());\n  }\n}",
+        sourceRef: "week4-prog.pdf - Slide 28 (Data Types: Try this code yourself)"
+      },
+      {
+        id: 3,
+        text: "Implement the implicit-casting example with `int -> long -> float` and print all three values. Then add one more implicit conversion to `double` and print it too.",
+        hint: "Smaller compatible types can be assigned to larger compatible types without explicit casting.",
+        example: "class Program\n{\n  static void Main(string[] args)\n  {\n    int i = 25;\n    long l = i;\n    float f = l;\n    System.Console.WriteLine(\"Int value \" + i);\n    System.Console.WriteLine(\"Long value \" + l);\n    System.Console.WriteLine(\"Float value \" + f);\n  }\n}",
+        explanation: "Implicit conversion works from narrower to wider compatible types. Adding `double d = f;` follows the same rule.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    int i = 25;\n    long l = i;\n    float f = l;\n    double d = f;\n\n    System.Console.WriteLine(\"Int value \" + i);\n    System.Console.WriteLine(\"Long value \" + l);\n    System.Console.WriteLine(\"Float value \" + f);\n    System.Console.WriteLine(\"Double value \" + d);\n  }\n}",
+        sourceRef: "week4-prog.pdf - Slide 32 (Implicit Type Casting: Try this)"
+      },
+      {
+        id: 4,
+        text: "Use `ToString()` with these literals: `23` and `-12.34F`. Store each in string variables and print both strings with their lengths.",
+        hint: "Start from the slide expressions (`23.ToString()` and `-12.34F.ToString()`) and assign each result to a `string` variable.",
+        example: "class Program\n{\n  static void Main(string[] args)\n  {\n    string str = 123.45f.ToString();\n    System.Console.WriteLine(str);\n  }\n}",
+        explanation: "All base types can be converted to text with `ToString()`. Length check confirms string content was produced.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    string s1 = 23.ToString();\n    string s2 = (-12.34F).ToString();\n\n    System.Console.WriteLine(\"s1 = \" + s1 + \" | len = \" + s1.Length);\n    System.Console.WriteLine(\"s2 = \" + s2 + \" | len = \" + s2.Length);\n  }\n}",
+        sourceRef: "week4-prog.pdf - Slide 36 (ToString Method: Try these two)"
+      },
+      {
+        id: 5,
+        text: "Create a program with `int a = 5`, `int b = 7`. Convert both to string and print: (1) numeric sum `a + b`, and (2) string concatenation `a1 + b1`.",
+        hint: "Same values, different behavior: arithmetic with integers vs concatenation with strings.",
+        example: "class Program\n{\n  static void Main(string[] args)\n  {\n    int a = 5;\n    int b = 7;\n    string a1 = a.ToString();\n    string b1 = b.ToString();\n    System.Console.WriteLine(a + b);\n    System.Console.WriteLine(a1 + b1);\n  }\n}",
+        explanation: "Integer addition gives `12`, while string concatenation gives `57`.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    int a = 5;\n    int b = 7;\n\n    string a1 = a.ToString();\n    string b1 = b.ToString();\n\n    System.Console.WriteLine(\"Numeric sum: \" + (a + b));\n    System.Console.WriteLine(\"String concat: \" + (a1 + b1));\n  }\n}",
+        sourceRef: "week4-prog.pdf - Slide 37 (ToString Method: Try this)"
+      }
+    ];
+
+    const list = document.getElementById("question-list");
+
+    function render() {
+      list.innerHTML = "";
+      questions.forEach((item, idx) => {
+        const card = document.createElement("article");
+        card.className = "question-card";
+
+        const head = document.createElement("div");
+        head.className = "q-head";
+
+        const qText = document.createElement("p");
+        qText.className = "q-text";
+        qText.textContent = `${idx + 1}. ${item.text}`;
+        head.appendChild(qText);
+
+        const layout = document.createElement("div");
+        layout.className = "question-layout";
+
+        const leftCol = document.createElement("div");
+        const rightCol = document.createElement("div");
+        rightCol.className = "editor-panel";
+
+        const editorTitle = document.createElement("p");
+        editorTitle.className = "editor-title";
+        editorTitle.textContent = "Student Editor";
+
+        const input = document.createElement("textarea");
+        input.className = "answer-area";
+        input.placeholder = "Write your answer / pseudocode / C# code here...";
+        rightCol.appendChild(editorTitle);
+        rightCol.appendChild(input);
+
+        const hintBox = document.createElement("div");
+        hintBox.className = "hint-box";
+        hintBox.innerHTML = `<b>Hint:</b> ${item.hint}`;
+
+        const exampleBox = document.createElement("div");
+        exampleBox.className = "example-box";
+        exampleBox.innerHTML = `<b>Precursor Example Program:</b><div class="code-block">${item.example}</div>`;
+
+        const btnRow = document.createElement("div");
+        btnRow.className = "btn-row";
+
+        const showBtn = document.createElement("button");
+        showBtn.type = "button";
+        showBtn.className = "btn-show";
+        showBtn.textContent = "Show Me Answer";
+        btnRow.appendChild(showBtn);
+
+        const answerBox = document.createElement("div");
+        answerBox.className = "answer-box";
+        answerBox.innerHTML = `<b>Explanation:</b> ${item.explanation}<br><b>Slide Reference:</b> ${item.sourceRef}<div class="code-block">${item.sample}</div>`;
+
+        showBtn.addEventListener("click", () => {
+          answerBox.classList.toggle("show");
+        });
+
+        leftCol.appendChild(head);
+        leftCol.appendChild(hintBox);
+        leftCol.appendChild(exampleBox);
+        leftCol.appendChild(btnRow);
+        leftCol.appendChild(answerBox);
+
+        layout.appendChild(leftCol);
+        layout.appendChild(rightCol);
+        card.appendChild(layout);
+        list.appendChild(card);
+      });
+    }
+
+    render();
+  </script>
+</body>
+
+</html>
