@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IE104 Week 5 Programming Exercises | Gazi University IE</title>
+  <link rel="icon" type="image/png" href="../../assets/gazi-university-logo-en.png" />
+  <style>
+    :root {
+      --gazi-red: #c8102e;
+      --gazi-deep-red: #9f0f25;
+      --gazi-navy: #003366;
+      --ink: #1a2a3a;
+      --line: #d1dbe6;
+      --panel: #ffffff;
+      --soft: #f6f9fd;
+      --hint: #fff8e7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans", "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(0, 51, 102, 0.14), transparent 32%),
+        radial-gradient(circle at 92% 12%, rgba(200, 16, 46, 0.14), transparent 34%),
+        linear-gradient(170deg, #f8fbff 0%, #f2f7fc 58%, #edf3fa 100%);
+      min-height: 100vh;
+    }
+
+    .site-header {
+      background: linear-gradient(108deg, var(--gazi-red), var(--gazi-navy));
+      color: #fff;
+      padding: 1rem clamp(1rem, 4vw, 3.5rem);
+      border-bottom: 4px solid #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      padding: 4px;
+    }
+
+    .brand-top,
+    .term-note,
+    .brand-main {
+      margin: 0;
+    }
+
+    .brand-main {
+      margin-top: 0.15rem;
+      font-size: clamp(1.05rem, 2.4vw, 1.7rem);
+      font-weight: 700;
+    }
+
+    .page-wrap {
+      width: min(1100px, 92%);
+      margin: 1.25rem auto 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 10px 22px rgba(0, 51, 102, 0.08);
+    }
+
+    .top-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      padding: 0.95rem 1rem;
+    }
+
+    .back-link {
+      border: 1px solid #cad9ea;
+      border-radius: 9px;
+      padding: 0.56rem 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      background: #eaf2fb;
+      color: var(--gazi-navy);
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.92rem;
+    }
+
+    .intro {
+      padding: 1rem;
+      line-height: 1.45;
+    }
+
+    .intro p {
+      margin: 0;
+    }
+
+    .question-list {
+      padding: 0.2rem 0.8rem 1rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .question-card {
+      border: 1px solid #dce6f2;
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 0.85rem;
+    }
+
+    .question-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 0.8rem;
+      align-items: stretch;
+    }
+
+    .q-head {
+      margin-bottom: 0.55rem;
+    }
+
+    .q-text {
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .editor-panel {
+      border: 1px solid #dbe7f4;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 0.6rem;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .editor-title {
+      margin: 0 0 0.45rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--gazi-navy);
+    }
+
+    .answer-area {
+      width: 100%;
+      min-height: 220px;
+      resize: vertical;
+      border-radius: 9px;
+      border: 1px solid #cfddee;
+      background: #fff;
+      padding: 0.55rem;
+      font: inherit;
+      flex: 1;
+    }
+
+    .btn-row {
+      margin-top: 0.55rem;
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 0.5rem 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-show {
+      background: #eff5fc;
+      border-color: #c8d9eb;
+      color: var(--gazi-navy);
+    }
+
+    .hint-box,
+    .example-box,
+    .answer-box {
+      border: 1px solid #dbe7f4;
+      border-radius: 9px;
+      padding: 0.58rem 0.66rem;
+      background: var(--soft);
+      font-size: 0.92rem;
+      line-height: 1.42;
+      margin-top: 0.55rem;
+    }
+
+    .answer-box.show {
+      display: block;
+    }
+
+    .hint-box {
+      background: var(--hint);
+      border-color: #e8d8ad;
+    }
+
+    .example-box {
+      background: #f1f7ff;
+      border-color: #c8d9eb;
+    }
+
+    .answer-box {
+      display: none;
+    }
+
+    .answer-box b {
+      color: var(--gazi-navy);
+    }
+
+    .code-block {
+      margin-top: 0.5rem;
+      border: 1px solid #d6e2f0;
+      border-radius: 8px;
+      background: #fff;
+      padding: 0.55rem;
+      white-space: pre-wrap;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 0.86rem;
+    }
+
+    @media (max-width: 720px) {
+      .top-panel {
+        align-items: flex-start;
+      }
+
+      .question-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .answer-area {
+        min-height: 160px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="brand-wrap">
+      <img class="brand-logo" src="../../assets/gazi-university-logo-en.png" alt="Gazi University logo" />
+      <div>
+        <p class="brand-top">Gazi University • Department of Industrial Engineering</p>
+        <h1 class="brand-main">IE104 Week 5 Programming Exercise Set</h1>
+      </div>
+    </div>
+    <p class="term-note">Computer Programming I</p>
+  </header>
+
+  <main class="page-wrap">
+    <section class="panel top-panel">
+      <a class="back-link" href="../index.html">Back to Programming Page</a>
+    </section>
+
+    <section class="panel intro">
+      <p>
+        Questions below are based on <b>comprog/slides/week5-prog.pdf</b>. Each exercise is adapted from a week 5
+        code example or operator summary slide. Try your own version in the editor first, then use <b>Show Me
+          Answer</b> for a model solution.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="question-list" id="question-list"></div>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        text: "Write a program that prints the results of `int i = 6 / 2 * (1 + 2);`, then `i = 6 / (2 * (1 + 2));`, and finally `int j = 4 + -6;`.",
+        hint: "Keep everything as integers. The goal is to show how parentheses and unary minus change evaluation order.",
+        example: "class Program\n{\n  static void Main(string[] args)\n  {\n    int i = 6 / 2 * (1 + 2);\n    System.Console.WriteLine(i);\n    i = 6 / (2 * (1 + 2));\n    System.Console.WriteLine(i);\n  }\n}",
+        explanation: "The first expression is evaluated left to right after parentheses, the second changes the grouping, and `-6` is produced by the unary sign operator before addition.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    int i = 6 / 2 * (1 + 2);\n    System.Console.WriteLine(\"first = \" + i);\n\n    i = 6 / (2 * (1 + 2));\n    System.Console.WriteLine(\"second = \" + i);\n\n    int j = 4 + -6;\n    System.Console.WriteLine(\"third = \" + j);\n  }\n}",
+        sourceRef: "week5-prog.pdf - Pages 9-10 (Operator Priority examples)"
+      },
+      {
+        id: 2,
+        text: "Create a program that demonstrates integer division, floating-point division, and remainder by printing `6 / 4`, `6 / 4` stored in `float`, `6f / 4f`, `10 % 3`, `-7 % 4`, and `2.5f % 1.2f`.",
+        hint: "Use the slide's exact declarations first, then add the three remainder examples from the modulus slide.",
+        example: "class Program\n{\n  static void Main(string[] args)\n  {\n    int i = 6 / 4;\n    float f1 = 6 / 4;\n    float f2 = 6f / 4f;\n    System.Console.WriteLine(i);\n    System.Console.WriteLine(f1);\n    System.Console.WriteLine(f2);\n  }\n}",
+        explanation: "Integer division truncates the fraction, floating-point operands preserve it, and `%` returns the remainder after division.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    int i = 6 / 4;\n    float f1 = 6 / 4;\n    float f2 = 6f / 4f;\n\n    int x = 10 % 3;\n    int y = -7 % 4;\n    float z = 2.5f % 1.2f;\n\n    System.Console.WriteLine(\"int division = \" + i);\n    System.Console.WriteLine(\"float from int division = \" + f1);\n    System.Console.WriteLine(\"float division = \" + f2);\n    System.Console.WriteLine(\"10 % 3 = \" + x);\n    System.Console.WriteLine(\"-7 % 4 = \" + y);\n    System.Console.WriteLine(\"2.5f % 1.2f = \" + z);\n  }\n}",
+        sourceRef: "week5-prog.pdf - Pages 12 and 14 (Arithmetic Operators)"
+      },
+      {
+        id: 3,
+        text: "Start with `int a = 10; int b, c;`. Recreate the slide example `b = a++; c = ++a;`, print all values, then reset `a = 4` and show postfix and prefix decrement in two new variables.",
+        hint: "Print after each stage. Resetting `a` lets you compare increment and decrement behavior cleanly.",
+        example: "class Program\n{\n  static void Main(string[] args)\n  {\n    int a = 10;\n    int b, c;\n    b = a++;\n    c = ++a;\n    System.Console.WriteLine(\"a = {0}\", a);\n    System.Console.WriteLine(\"b = {0}\", b);\n    System.Console.WriteLine(\"c = {0}\", c);\n  }\n}",
+        explanation: "Postfix uses the current value before changing it, while prefix changes the value first and then uses it.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    int a = 10;\n    int b, c;\n\n    b = a++;\n    c = ++a;\n\n    System.Console.WriteLine(\"After increment example\");\n    System.Console.WriteLine(\"a = \" + a);\n    System.Console.WriteLine(\"b = \" + b);\n    System.Console.WriteLine(\"c = \" + c);\n\n    a = 4;\n    int d = a--;\n    int e = --a;\n\n    System.Console.WriteLine(\"After decrement example\");\n    System.Console.WriteLine(\"a = \" + a);\n    System.Console.WriteLine(\"d = \" + d);\n    System.Console.WriteLine(\"e = \" + e);\n  }\n}",
+        sourceRef: "week5-prog.pdf - Pages 15-16 (Increment and Decrement)"
+      },
+      {
+        id: 4,
+        text: "Write a program that stores the results of `1 > 2`, `2 == 2`, `1 < 2`, `true && false`, `true || false`, and `!false` in `bool` variables and prints all of them.",
+        hint: "Build the comparison results first, then create the logical results from Boolean values.",
+        example: "class Program\n{\n  static void Main(string[] args)\n  {\n    bool b1 = 1 > 2;\n    bool b2 = 2 == 2;\n    bool b3 = 1 < 2;\n    System.Console.WriteLine(b1);\n    System.Console.WriteLine(b2);\n    System.Console.WriteLine(b3);\n  }\n}",
+        explanation: "Comparison operators produce Boolean values, and logical operators combine or invert Boolean values.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    bool b1 = 1 > 2;\n    bool b2 = 2 == 2;\n    bool b3 = 1 < 2;\n\n    bool andResult = true && false;\n    bool orResult = true || false;\n    bool notResult = !false;\n\n    System.Console.WriteLine(\"1 > 2 = \" + b1);\n    System.Console.WriteLine(\"2 == 2 = \" + b2);\n    System.Console.WriteLine(\"1 < 2 = \" + b3);\n    System.Console.WriteLine(\"true && false = \" + andResult);\n    System.Console.WriteLine(\"true || false = \" + orResult);\n    System.Console.WriteLine(\"!false = \" + notResult);\n  }\n}",
+        sourceRef: "week5-prog.pdf - Pages 18, 20, and 21 (Comparison and Logical Operators)"
+      },
+      {
+        id: 5,
+        text: "Create a program with `int x = 20, y = 10;`. Apply `x += y;`, `y *= 3;`, then use a ternary operator to store a message showing which value is larger. Print final `x`, `y`, and the message.",
+        hint: "Do the operational assignments before the ternary expression so the comparison uses the updated values.",
+        example: "class Program\n{\n  static void Main(string[] args)\n  {\n    int x = 20, y = 10;\n    string result = x > y ? \"x is greater than y\" : \"x is less than y\";\n    System.Console.WriteLine(result);\n  }\n}",
+        explanation: "Operational assignment changes values in place, then the ternary operator chooses one of two messages based on the comparison.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    int x = 20, y = 10;\n\n    x += y;\n    y *= 3;\n\n    string result = x > y ? \"x is greater than y\" : x == y ? \"x is equal to y\" : \"x is less than y\";\n\n    System.Console.WriteLine(\"x = \" + x);\n    System.Console.WriteLine(\"y = \" + y);\n    System.Console.WriteLine(result);\n  }\n}",
+        sourceRef: "week5-prog.pdf - Pages 22-24 (Assignment and Ternary Operators)"
+      },
+      {
+        id: 6,
+        text: "Write one short program that uses these week 5 special-purpose operators together: `new`, `[]`, `()`, unary `-`, string `+`, and `.`. Use `new` to create an integer array, `[]` to access an element, `()` to cast `double value = 7.8` to `int`, apply unary `-` to that integer, then build a message string and print it.",
+        hint: "You can satisfy the dot operator with methods like `ToString()` or `Console.WriteLine()` while still using the other operators in the same program.",
+        example: "class Program\n{\n  static void Main(string[] args)\n  {\n    int[] numbers = new int[3];\n    numbers[0] = 3;\n    numbers[1] = 6;\n    numbers[2] = 9;\n    double value = 7.8;\n    int whole = (int)value;\n    System.Console.WriteLine(numbers[1]);\n  }\n}",
+        explanation: "This exercise combines array creation and indexing, type casting, sign operators, string merging, and member access in one small example.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    int[] numbers = new int[3];\n    numbers[0] = 3;\n    numbers[1] = 6;\n    numbers[2] = 9;\n\n    double value = 7.8;\n    int whole = (int)value;\n    int negative = -whole;\n\n    string message = \"numbers[1] = \" + numbers[1].ToString() + \", cast = \" + whole + \", negative = \" + negative;\n    System.Console.WriteLine(message);\n  }\n}",
+        sourceRef: "week5-prog.pdf - Pages 25-26 (Special Purpose Operators)"
+      }
+    ];
+
+    const list = document.getElementById("question-list");
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function render() {
+      list.innerHTML = "";
+      questions.forEach((item, idx) => {
+        const card = document.createElement("article");
+        card.className = "question-card";
+
+        const head = document.createElement("div");
+        head.className = "q-head";
+
+        const qText = document.createElement("p");
+        qText.className = "q-text";
+        qText.textContent = `${idx + 1}. ${item.text}`;
+        head.appendChild(qText);
+
+        const layout = document.createElement("div");
+        layout.className = "question-layout";
+
+        const leftCol = document.createElement("div");
+        const rightCol = document.createElement("div");
+        rightCol.className = "editor-panel";
+
+        const editorTitle = document.createElement("p");
+        editorTitle.className = "editor-title";
+        editorTitle.textContent = "Student Editor";
+
+        const input = document.createElement("textarea");
+        input.className = "answer-area";
+        input.placeholder = "Write your answer / pseudocode / C# code here...";
+        rightCol.appendChild(editorTitle);
+        rightCol.appendChild(input);
+
+        const hintBox = document.createElement("div");
+        hintBox.className = "hint-box";
+        hintBox.innerHTML = `<b>Hint:</b> ${escapeHtml(item.hint)}`;
+
+        const exampleBox = document.createElement("div");
+        exampleBox.className = "example-box";
+        exampleBox.innerHTML = `<b>Precursor Example Program:</b><div class="code-block">${escapeHtml(item.example)}</div>`;
+
+        const btnRow = document.createElement("div");
+        btnRow.className = "btn-row";
+
+        const showBtn = document.createElement("button");
+        showBtn.type = "button";
+        showBtn.className = "btn-show";
+        showBtn.textContent = "Show Me Answer";
+        btnRow.appendChild(showBtn);
+
+        const answerBox = document.createElement("div");
+        answerBox.className = "answer-box";
+        answerBox.innerHTML = `<b>Explanation:</b> ${escapeHtml(item.explanation)}<br><b>Slide Reference:</b> ${escapeHtml(item.sourceRef)}<div class="code-block">${escapeHtml(item.sample)}</div>`;
+
+        showBtn.addEventListener("click", () => {
+          answerBox.classList.toggle("show");
+        });
+
+        leftCol.appendChild(head);
+        leftCol.appendChild(hintBox);
+        leftCol.appendChild(exampleBox);
+        leftCol.appendChild(btnRow);
+        leftCol.appendChild(answerBox);
+
+        layout.appendChild(leftCol);
+        layout.appendChild(rightCol);
+        card.appendChild(layout);
+        list.appendChild(card);
+      });
+    }
+
+    render();
+  </script>
+</body>
+
+</html>
