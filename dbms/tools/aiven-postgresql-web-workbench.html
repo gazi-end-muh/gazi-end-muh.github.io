@@ -1,0 +1,2133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQL Studio | Gazi University IE</title>
+  <link rel="icon" type="image/png" href="../../assets/gazi-university-logo-en.png" />
+  <link rel="stylesheet" href="../../styles.css" />
+  <style>
+    :root {
+      --shell-border: #d6e1ec;
+      --shell-soft: #f5f8fc;
+      --shell-panel: rgba(255, 255, 255, 0.98);
+      --shell-shadow: 0 18px 36px rgba(0, 51, 102, 0.1);
+      --shell-ink: #17304a;
+      --shell-subtle: #61748a;
+      --shell-red: #c8102e;
+      --shell-navy: #003366;
+      --shell-green: #1f7a3e;
+      --shell-radius: 18px;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    .studio-header {
+      background: linear-gradient(110deg, var(--shell-red), var(--shell-navy));
+      color: #fff;
+      padding: 1rem clamp(1rem, 4vw, 3rem);
+      border-bottom: 4px solid #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .studio-header .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .studio-header .brand-logo {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      padding: 4px;
+    }
+
+    .studio-header .brand-top,
+    .studio-header .brand-main,
+    .studio-header .term-note {
+      margin: 0;
+    }
+
+    .studio-header .brand-main {
+      margin-top: 0.15rem;
+      font-size: clamp(1.05rem, 2.3vw, 1.65rem);
+    }
+
+    .studio-wrap {
+      width: min(1440px, 96%);
+      margin: 1rem auto 1.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .connection-status-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .connection-note {
+      color: var(--shell-subtle);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .connection-note.error {
+      color: #b42333;
+    }
+
+    .back-link,
+    .action-btn,
+    .ghost-btn,
+    .mini-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      padding: 0.58rem 0.82rem;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+    }
+
+    .back-link,
+    .ghost-btn {
+      color: var(--shell-navy);
+      background: #edf4fb;
+      border-color: #cfdeee;
+    }
+
+    .action-btn {
+      color: #fff;
+      background: var(--shell-red);
+    }
+
+    .mini-chip {
+      color: var(--shell-navy);
+      background: #f6f9fd;
+      border-color: #d5e0ed;
+      padding: 0.34rem 0.62rem;
+      font-size: 0.82rem;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      border-radius: 999px;
+      border: 1px solid #cfdeee;
+      background: #eff5fc;
+      color: var(--shell-navy);
+      padding: 0.35rem 0.72rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .status-chip::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.78;
+    }
+
+    .status-chip.connected {
+      color: var(--shell-green);
+      background: #eefaf2;
+      border-color: #c4e0cb;
+      animation: connectionPulse 1.35s ease-in-out infinite;
+    }
+
+    .status-chip.failed {
+      color: #9f0f25;
+      background: #fff3f5;
+      border-color: #e5c6cd;
+    }
+
+    @keyframes connectionPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(31, 122, 62, 0.12);
+        opacity: 1;
+      }
+
+      50% {
+        box-shadow: 0 0 0 6px rgba(31, 122, 62, 0.08);
+        opacity: 0.78;
+      }
+    }
+
+    .connection-drawer {
+      background: var(--shell-panel);
+      border: 1px solid var(--shell-border);
+      border-radius: var(--shell-radius);
+      box-shadow: var(--shell-shadow);
+      overflow: hidden;
+    }
+
+    .connection-drawer summary {
+      list-style: none;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.95rem 1rem;
+      background: linear-gradient(180deg, #ffffff, #f6f9fd);
+    }
+
+    .connection-drawer summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .connection-meta {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .drawer-title {
+      margin: 0;
+      color: var(--shell-navy);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .drawer-heading {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      min-width: 0;
+    }
+
+    .drawer-heading-text {
+      display: grid;
+      gap: 0.08rem;
+      min-width: 0;
+    }
+
+    .drawer-caret {
+      width: 12px;
+      height: 12px;
+      border-right: 2px solid var(--shell-navy);
+      border-bottom: 2px solid var(--shell-navy);
+      transform: rotate(45deg);
+      transition: transform 0.18s ease;
+    }
+
+    .connection-drawer[open] .drawer-caret {
+      transform: rotate(225deg);
+    }
+
+    .drawer-body {
+      border-top: 1px solid #dde6f0;
+      padding: 1rem;
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .connection-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) minmax(180px, 280px);
+      gap: 0.8rem;
+      align-items: start;
+    }
+
+    .connection-grid .wide {
+      min-width: 0;
+    }
+
+    .field {
+      display: grid;
+      gap: 0.42rem;
+    }
+
+    .field label {
+      font-size: 0.84rem;
+      color: var(--shell-subtle);
+      font-weight: 700;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      border: 1px solid #cfdaea;
+      border-radius: 12px;
+      background: #fff;
+      color: var(--shell-ink);
+      padding: 0.74rem 0.82rem;
+      font: inherit;
+    }
+
+    .field textarea {
+      min-height: 74px;
+      resize: vertical;
+    }
+
+    .protected-field {
+      position: relative;
+    }
+
+    .protected-field input,
+    .protected-field textarea {
+      padding-right: 2.8rem;
+    }
+
+    .reveal-btn {
+      position: absolute;
+      top: 0.7rem;
+      right: 0.7rem;
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #cfdeee;
+      border-radius: 999px;
+      background: #edf4fb;
+      color: var(--shell-navy);
+      font-size: 0;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .reveal-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .studio-grid {
+      height: calc(100vh - 200px);
+      min-height: 740px;
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      grid-template-rows: minmax(0, 0.52fr) minmax(340px, 0.48fr);
+      gap: 1rem;
+    }
+
+    .panel {
+      min-width: 0;
+      min-height: 0;
+      background: var(--shell-panel);
+      border: 1px solid var(--shell-border);
+      border-radius: var(--shell-radius);
+      box-shadow: var(--shell-shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar {
+      grid-column: 1;
+      grid-row: 1 / 3;
+    }
+
+    .editor-panel {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .result-panel {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .panel-head {
+      padding: 0.85rem 0.95rem;
+      border-bottom: 1px solid #dfe7f1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.7rem;
+      background: linear-gradient(180deg, #ffffff, #f6f9fd);
+    }
+
+    .panel-title {
+      margin: 0;
+      color: var(--shell-navy);
+      font-size: 0.98rem;
+    }
+
+    .panel-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .editor-panel .panel-title-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      column-gap: 0.8rem;
+      row-gap: 0.45rem;
+      width: 100%;
+    }
+
+    .editor-title-block,
+    .editor-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      min-width: 0;
+    }
+
+    .editor-title-block {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      justify-self: start;
+    }
+
+    .editor-actions {
+      justify-content: flex-end;
+      white-space: nowrap;
+      justify-self: end;
+      margin-left: auto;
+    }
+
+    .execution-slot {
+      display: flex;
+      justify-content: center;
+      min-width: 0;
+      width: 100%;
+      justify-self: stretch;
+    }
+
+    .shortcut-help {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .info-button {
+      width: 30px;
+      height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid #cfdeee;
+      background: #edf4fb;
+      color: var(--shell-navy);
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: help;
+      line-height: 1;
+    }
+
+    .shortcut-balloon {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      width: 290px;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid #d4dfeb;
+      border-radius: 14px;
+      background: #ffffff;
+      box-shadow: 0 18px 40px rgba(24, 54, 86, 0.14);
+      color: var(--shell-subtle);
+      font-size: 0.8rem;
+      line-height: 1.45;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-4px);
+      transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .shortcut-balloon strong {
+      color: var(--shell-navy);
+    }
+
+    .shortcut-help:hover .shortcut-balloon,
+    .shortcut-help:focus-within .shortcut-balloon {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .panel-body {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 0.9rem;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(247, 250, 253, 0.99));
+    }
+
+    .sidebar-stack,
+    .schema-stack,
+    .meta-row {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .template-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .template-chip {
+      cursor: pointer;
+      border: 1px solid #d2deeb;
+      border-radius: 999px;
+      background: #eff5fc;
+      color: var(--shell-navy);
+      padding: 0.34rem 0.65rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .browser-block {
+      border: 1px solid #dbe5ef;
+      border-radius: 14px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .browser-block header {
+      padding: 0.7rem 0.78rem;
+      border-bottom: 1px solid #e0e8f2;
+      background: #f5f9fd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .browser-block header h3 {
+      margin: 0;
+      font-size: 0.92rem;
+      color: var(--shell-navy);
+    }
+
+    .browser-content {
+      padding: 0.8rem;
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .table-card,
+    .relation-card {
+      border: 1px solid #d9e4ef;
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 0.72rem 0.78rem;
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .table-card strong,
+    .relation-card strong {
+      color: var(--shell-navy);
+    }
+
+    .copy-token {
+      cursor: pointer;
+    }
+
+    .table-card ul {
+      margin: 0;
+      padding-left: 1rem;
+      color: var(--shell-subtle);
+      font-size: 0.86rem;
+      display: grid;
+      gap: 0.2rem;
+    }
+
+    .column-name {
+      font-weight: 700;
+      color: var(--shell-navy);
+    }
+
+    .column-name.pk {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 2px;
+    }
+
+    .column-line.fk {
+      opacity: 0.72;
+    }
+
+    .key-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 0.38rem;
+      padding: 0.08rem 0.38rem;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      vertical-align: middle;
+    }
+
+    .key-pill.pk {
+      background: #eef4fb;
+      border: 1px solid #c8d8ea;
+      color: var(--shell-navy);
+    }
+
+    .key-pill.fk {
+      background: #f3f4f7;
+      border: 1px solid #d7dbe4;
+      color: #6b7380;
+    }
+
+    .editor-wrap {
+      height: auto;
+      display: grid;
+      align-content: start;
+      gap: 0.9rem;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .editor-toolbar .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .button-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-separator {
+      width: 1px;
+      height: 24px;
+      background: #d6e1ec;
+      display: inline-block;
+    }
+
+    .toolbar-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      border-radius: 10px;
+      border: 1px solid #cfdeee;
+      padding: 0.58rem 0.82rem;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      color: var(--shell-navy);
+      background: #edf4fb;
+      min-width: 96px;
+    }
+
+    .editor-area {
+      width: 100%;
+      min-height: 275px;
+      border: 1px solid #d1dceb;
+      border-radius: 14px;
+      background: #fff;
+      color: var(--shell-ink);
+      padding: 0.95rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      resize: vertical;
+    }
+
+    .editor-panel .panel-body {
+      overflow: visible;
+      padding: 1rem 1rem 1.15rem;
+    }
+
+    .run-hint {
+      color: var(--shell-subtle);
+      font-size: 0.82rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .execution-table {
+      width: 276px;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid #d5e0ec;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #f8fbfe;
+      font-size: 0.68rem;
+      line-height: 1.1;
+      color: var(--shell-subtle);
+      table-layout: fixed;
+      flex: 0 0 276px;
+    }
+
+    .execution-table th,
+    .execution-table td {
+      padding: 0.2rem 0.38rem;
+      border-right: 1px solid #dfe7f1;
+      width: 64px;
+      white-space: nowrap;
+      text-align: left;
+    }
+
+    .execution-table th:last-child,
+    .execution-table td:last-child {
+      border-right: 0;
+    }
+
+    .execution-table th {
+      background: #e8eff7;
+      color: var(--shell-navy);
+      font-weight: 800;
+    }
+
+    .execution-table td {
+      background: #fdfefe;
+      font-weight: 700;
+      color: var(--shell-navy);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .execution-table td.status-success {
+      color: #1f8a4c;
+    }
+
+    .execution-table td.status-failure {
+      color: #bf3342;
+    }
+
+    #run-query-btn {
+      min-width: 92px;
+    }
+
+    .results-table-wrap {
+      border: 1px solid #dbe4ee;
+      border-radius: 14px;
+      background: #fff;
+      overflow: auto;
+    }
+
+    .result-pagination {
+      margin-top: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .pagination-controls,
+    .pagination-size {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    .pagination-label {
+      color: var(--shell-subtle);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .pagination-select {
+      border: 1px solid #cfdaea;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--shell-ink);
+      padding: 0.48rem 0.6rem;
+      font: inherit;
+    }
+
+    .results-table {
+      width: 100%;
+      min-width: 640px;
+      border-collapse: collapse;
+    }
+
+    .results-table th,
+    .results-table td {
+      padding: 0.68rem 0.76rem;
+      border-bottom: 1px solid #e3ebf4;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .results-table th {
+      position: sticky;
+      top: 0;
+      background: #f5f9fd;
+      color: var(--shell-navy);
+      font-size: 0.88rem;
+      z-index: 1;
+    }
+
+    .results-table th small {
+      display: block;
+      margin-top: 0.12rem;
+      color: var(--shell-subtle);
+      font-size: 0.74rem;
+    }
+
+    .empty-state {
+      border: 1px dashed #cad9e9;
+      border-radius: 14px;
+      background: #f9fbfe;
+      color: var(--shell-subtle);
+      padding: 0.95rem;
+    }
+
+    .cell-json {
+      white-space: pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.82rem;
+      color: #35506a;
+    }
+
+    .cell-null {
+      color: #8d5b65;
+      font-style: italic;
+      font-weight: 700;
+    }
+
+    @media (max-width: 1100px) {
+      .connection-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .studio-grid {
+        height: auto;
+        min-height: 0;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+
+      .sidebar,
+      .editor-panel,
+      .result-panel {
+        grid-column: auto;
+        grid-row: auto;
+      }
+    }
+
+    @media (max-width: 720px) {
+
+      .connection-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .studio-wrap {
+        width: min(100%, 100%);
+      }
+
+      .panel,
+      .connection-drawer,
+      .connection-status-wrap {
+        justify-content: flex-start;
+      }
+
+      .connection-drawer summary {
+        grid-template-columns: 1fr;
+        justify-items: start;
+      }
+
+      .connection-meta {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="studio-header">
+    <div class="brand-wrap">
+      <img class="brand-logo" src="../../assets/gazi-university-logo-en.png" alt="Gazi University logo" />
+      <div>
+        <p class="brand-top">Gazi University • Department of Industrial Engineering</p>
+        <h1 class="brand-main">SQL Studio</h1>
+      </div>
+    </div>
+    <p class="term-note">Database Management Systems</p>
+  </header>
+
+  <main class="studio-wrap">
+    <details id="connection-drawer" class="connection-drawer" open>
+      <summary>
+        <a class="back-link" href="../index.html">Back to DBMS Page</a>
+        <div class="drawer-heading">
+
+          <div class="connection-status-wrap">
+            <span class="toolbar-separator" aria-hidden="true"></span>
+
+            <span id="connection-chip" class="status-chip">Not Connected</span>
+            <span id="connection-note" class="connection-note">Waiting for connection.</span>
+          </div>
+        </div>
+        <div class="connection-meta">
+          <button id="test-connection-btn" class="action-btn" type="button">Test Connection</button>
+          <button id="toggle-drawer-btn" class="ghost-btn" type="button">Close</button>
+          <span class="drawer-caret" aria-hidden="true"></span>
+        </div>
+      </summary>
+      <div class="drawer-body">
+        <div class="connection-grid">
+          <div class="field wide">
+            <div class="drawer-heading-text">
+              <span class="drawer-title">Enter Connection String Below</span>
+
+            </div>
+            <div class="protected-field">
+              <textarea id="connection-string"
+                placeholder="psql 'postgres://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require'"></textarea>
+              <button id="toggle-connection-visibility-btn" class="reveal-btn" type="button"
+                aria-label="Show connection string"></button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="student-id">Enter Your Student ID</label>
+            <div class="protected-field">
+              <input id="student-id" type="password" placeholder="e.g. 210123456" autocomplete="off" />
+              <button id="toggle-student-id-visibility-btn" class="reveal-btn" type="button"
+                aria-label="Show student ID"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <section class="studio-grid">
+      <aside class="panel sidebar">
+        <div class="panel-head">
+          <h2 class="panel-title">Browser</h2>
+          <button id="refresh-sidebar-btn" class="ghost-btn" type="button">Refresh</button>
+        </div>
+        <div class="panel-body">
+          <div class="sidebar-stack">
+            <section class="browser-block">
+              <header>
+                <h3>Tables</h3>
+                <span id="table-count" class="mini-chip">0</span>
+              </header>
+              <div id="table-browser" class="browser-content">
+                <div class="empty-state">No tables loaded.</div>
+              </div>
+            </section>
+
+            <section class="browser-block">
+              <header>
+                <h3>Relationships</h3>
+                <span id="relationship-count" class="mini-chip">0</span>
+              </header>
+              <div id="relationship-browser" class="browser-content">
+                <div class="empty-state">No relationships loaded.</div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </aside>
+
+      <section class="panel editor-panel">
+        <div class="panel-head">
+          <div class="panel-title-row">
+            <div class="editor-title-block">
+              <h2 class="panel-title">Editor</h2>
+              <button id="run-query-btn" class="action-btn" type="button">Run</button>
+              <div class="shortcut-help">
+                <button class="info-button" type="button" aria-label="Keyboard shortcuts">i</button>
+                <div class="shortcut-balloon" role="tooltip">
+                  <strong>Shift+Enter</strong> runs only the current SQL statement around the cursor.
+                  If the cursor is inside one command, the editor finds the nearest semicolons and runs just that part.
+                  <br /><br />
+                  <strong>Ctrl+Shift+Enter</strong> runs the full editor content as a script.
+                  Use this when you want to execute multiple statements together.
+                </div>
+              </div>
+            </div>
+            <div class="execution-slot">
+              <table class="execution-table" aria-label="Execution summary">
+                <tr>
+                  <th>Status</th>
+                  <th>Rows</th>
+                  <th>Time</th>
+                  <th>Scripts</th>
+                </tr>
+                <tr>
+                  <td id="meta-command">-</td>
+                  <td id="meta-rows">-</td>
+                  <td id="meta-duration">-</td>
+                  <td id="meta-script-count">-</td>
+                </tr>
+              </table>
+            </div>
+            <div class="editor-actions">
+              <button id="comment-line-btn" class="toolbar-button" type="button">Comment</button>
+              <span class="toolbar-separator" aria-hidden="true"></span>
+              <button class="toolbar-button" type="button"
+                data-template="SELECT current_database(), current_user, now();">Verify</button>
+              <span class="toolbar-separator" aria-hidden="true"></span>
+              <button id="clear-editor-btn" class="ghost-btn" type="button">Clear</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="editor-wrap">
+            <textarea id="sql-input" class="editor-area" placeholder="Write SQL here"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel result-panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Result</h2>
+          <button id="clear-results-btn" class="ghost-btn" type="button">Clear</button>
+        </div>
+        <div class="panel-body">
+          <div id="results-panel" class="empty-state">No result.</div>
+          <div id="result-pagination" class="result-pagination" hidden>
+            <div class="pagination-size">
+              <label class="pagination-label" for="page-size-select">Rows per page</label>
+              <select id="page-size-select" class="pagination-select">
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+            <div class="pagination-controls">
+              <button id="prev-page-btn" class="ghost-btn" type="button">Previous</button>
+              <span id="page-indicator" class="mini-chip">Page 1 / 1</span>
+              <button id="next-page-btn" class="ghost-btn" type="button">Next</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const RELAY_URL = "https://panel.ercanezin.com/sql-relay/";
+    const SCRIPT_RUNNER_URL = "https://panel.ercanezin.com/sql-relay/run-script.php";
+    const CONNECTION_POLL_MS = 30000;
+
+    const connectionDrawer = document.getElementById("connection-drawer");
+    const connectionChip = document.getElementById("connection-chip");
+    const connectionNote = document.getElementById("connection-note");
+
+    const connectionStringInput = document.getElementById("connection-string");
+    const studentIdInput = document.getElementById("student-id");
+    const toggleConnectionVisibilityBtn = document.getElementById("toggle-connection-visibility-btn");
+    const toggleStudentIdVisibilityBtn = document.getElementById("toggle-student-id-visibility-btn");
+    const testConnectionBtn = document.getElementById("test-connection-btn");
+    const toggleDrawerBtn = document.getElementById("toggle-drawer-btn");
+    const refreshSidebarBtn = document.getElementById("refresh-sidebar-btn");
+
+    const runQueryBtn = document.getElementById("run-query-btn");
+    const commentLineBtn = document.getElementById("comment-line-btn");
+    const clearEditorBtn = document.getElementById("clear-editor-btn");
+    const clearResultsBtn = document.getElementById("clear-results-btn");
+    const sqlInput = document.getElementById("sql-input");
+
+    const tableBrowser = document.getElementById("table-browser");
+    const relationshipBrowser = document.getElementById("relationship-browser");
+    const tableCount = document.getElementById("table-count");
+    const relationshipCount = document.getElementById("relationship-count");
+
+    const metaCommand = document.getElementById("meta-command");
+    const metaRows = document.getElementById("meta-rows");
+    const metaDuration = document.getElementById("meta-duration");
+    const metaScriptCount = document.getElementById("meta-script-count");
+    const resultsPanel = document.getElementById("results-panel");
+    const resultPagination = document.getElementById("result-pagination");
+    const pageSizeSelect = document.getElementById("page-size-select");
+    const prevPageBtn = document.getElementById("prev-page-btn");
+    const nextPageBtn = document.getElementById("next-page-btn");
+    const pageIndicator = document.getElementById("page-indicator");
+
+    const templateButtons = Array.from(document.querySelectorAll("[data-template]"));
+    let currentResult = null;
+    let currentPage = 1;
+    let connectionPollTimer = null;
+    let connectionPollInFlight = false;
+    let hasVerifiedConnection = false;
+    let connectionStringVisible = false;
+    let rawConnectionString = connectionStringInput.value;
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function maskConnectionString(value) {
+      return value.replace(
+        /(postgres(?:ql)?:\/\/[^:\s'"]+:)([^@'"\s]+)(@)/i,
+        (_, prefix, secret, suffix) => `${prefix}${"*".repeat(Math.max(8, secret.length))}${suffix}`
+      );
+    }
+
+    function visibilityIconMarkup(isVisible) {
+      return isVisible
+        ? `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.58 10.58a2 2 0 0 0 2.83 2.83"></path><path d="M9.88 5.09A9.77 9.77 0 0 1 12 4.8c5.45 0 9.27 4.6 10 5.6-.35.5-1.44 1.9-3.13 3.2"></path><path d="M6.61 6.61C4.35 8 2.85 10.05 2 11.2c.73 1 4.55 5.6 10 5.6 1.76 0 3.3-.48 4.61-1.17"></path></svg>`
+        : `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7.2 10-7.2S22 12 22 12s-3.6 7.2-10 7.2S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+    }
+
+    function syncConnectionStringField() {
+      connectionStringInput.value = connectionStringVisible
+        ? rawConnectionString
+        : maskConnectionString(rawConnectionString);
+      toggleConnectionVisibilityBtn.innerHTML = visibilityIconMarkup(connectionStringVisible);
+      toggleConnectionVisibilityBtn.setAttribute(
+        "aria-label",
+        connectionStringVisible ? "Hide connection string" : "Show connection string"
+      );
+    }
+
+    class RelayError extends Error {
+      constructor(message, errorCode = "UNEXPECTED_RELAY_FAILURE", retryAfterSeconds = null, extra = {}) {
+        super(message);
+        this.name = "RelayError";
+        this.errorCode = errorCode;
+        this.retryAfterSeconds = retryAfterSeconds;
+        this.failedStatementNumber = extra.failedStatementNumber ?? null;
+        this.failedCommand = extra.failedCommand ?? "";
+        this.failedStatementPreview = extra.failedStatementPreview ?? "";
+        this.detail = extra.detail ?? "";
+      }
+    }
+
+    function setConnectionState(state, text) {
+      connectionChip.className = `status-chip ${state}`.trim();
+      connectionChip.textContent = text;
+    }
+
+    function resetVerifiedConnection() {
+      hasVerifiedConnection = false;
+    }
+
+    function setStatus(text) {
+      connectionNote.classList.remove("error");
+      connectionNote.textContent = text;
+    }
+
+    function setStatusError(text) {
+      connectionNote.classList.add("error");
+      connectionNote.textContent = text;
+    }
+
+    function updateDrawerToggleLabel() {
+      toggleDrawerBtn.textContent = connectionDrawer.open ? "Close" : "Open";
+    }
+
+    function stopConnectionPolling() {
+      if (connectionPollTimer !== null) {
+        window.clearInterval(connectionPollTimer);
+        connectionPollTimer = null;
+      }
+    }
+
+    function scheduleConnectionPolling() {
+      stopConnectionPolling();
+      connectionPollTimer = window.setInterval(async () => {
+        if (connectionPollInFlight) {
+          return;
+        }
+
+        connectionPollInFlight = true;
+        try {
+          await requestRelay("SELECT 1;");
+          setConnectionState("connected", "Connected");
+          setStatus("Connection healthy.");
+        } catch (error) {
+          stopConnectionPolling();
+          resetVerifiedConnection();
+          setConnectionState("failed", "Failed");
+          setStatusError(describeRelayError(error, "connection"));
+        } finally {
+          connectionPollInFlight = false;
+        }
+      }, CONNECTION_POLL_MS);
+    }
+
+    function formatRetryAfter(seconds) {
+      if (!Number.isFinite(seconds) || seconds <= 0) {
+        return "";
+      }
+
+      if (seconds < 60) {
+        return `${seconds} second${seconds === 1 ? "" : "s"}`;
+      }
+
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      if (remainingSeconds === 0) {
+        return `${minutes} minute${minutes === 1 ? "" : "s"}`;
+      }
+
+      return `${minutes}m ${remainingSeconds}s`;
+    }
+
+    function describeRelayError(error, phase) {
+      if (!(error instanceof RelayError)) {
+        return phase === "connection"
+          ? "Connection could not be prepared. Check the pasted connection string."
+          : "Request could not be prepared. Check the connection details and try again.";
+      }
+
+      const retryText = error.retryAfterSeconds ? ` Wait ${formatRetryAfter(error.retryAfterSeconds)} and try again.` : "";
+      const map = {
+        METHOD_NOT_ALLOWED: "The relay is configured for POST requests only.",
+        INVALID_JSON_BODY: "The website sent an invalid request to the relay.",
+        MISSING_CONNECTION_PAYLOAD: "Connection details were not sent correctly.",
+        MISSING_CONNECTION_FIELDS: "Enter a valid PostgreSQL connection string before continuing.",
+        STUDENT_ID_REQUIRED: "Enter your student ID before using the SQL relay.",
+        STUDENT_ID_NOT_FOUND: "The student ID was not found in the approved class list. Check it and try again.",
+        STUDENT_RATE_LIMIT_EXCEEDED: `This student ID has sent too many requests in a short time.${retryText}`,
+        STUDENT_TEMPORARILY_BLOCKED: `This student ID is temporarily blocked after too many failed requests.${retryText}`,
+        NETWORK_REQUEST_FAILED: "The browser could not reach the relay. Check the page URL, HTTPS certificate, and CORS settings for this site.",
+        QUERY_REQUIRED: "Enter a SQL query before running it.",
+        QUERY_TOO_LONG: "The query is too long for this teaching relay. Shorten it and try again.",
+        MULTIPLE_STATEMENTS_DISABLED: "Only one SQL statement is allowed at a time. Remove extra semicolons and try again.",
+        USER_RATE_LIMIT_EXCEEDED: `Too many requests were sent for this database username.${retryText}`,
+        USER_TEMPORARILY_BLOCKED: `This database username is temporarily blocked after repeated failed requests.${retryText}`,
+        DATABASE_AUTH_FAILED: "The PostgreSQL username or password was rejected. Check the credentials and try again.",
+        DATABASE_NOT_FOUND: "The target database could not be found. Check the database name and try again.",
+        DATABASE_PERMISSION_DENIED: "This database user does not have permission to run that query.",
+        QUERY_TIMEOUT: "The query took too long and was stopped. Try a smaller query or add a tighter filter.",
+        DATABASE_CONNECTION_FAILED: "The relay could not connect to PostgreSQL. Check host, port, SSL mode, and server status.",
+        DATABASE_QUERY_FAILED: "PostgreSQL rejected the query. Check the syntax, table names, and permissions.",
+        RATE_LIMIT_STORAGE_UNAVAILABLE: "The relay security layer is temporarily unavailable. Please try again in a moment.",
+        RATE_LIMIT_STORAGE_LOCK_FAILED: "The relay could not secure the request safely. Please try again.",
+        UNEXPECTED_RELAY_FAILURE: "The relay failed before the request could finish. Please try again."
+      };
+
+      return map[error.errorCode] || error.message || "Request failed.";
+    }
+
+    function buildRelayErrorStatus(error, phase) {
+      const baseMessage = describeRelayError(error, phase);
+      if (!(error instanceof RelayError)) {
+        return baseMessage;
+      }
+
+      const extras = [];
+      if (error.failedStatementNumber !== null) {
+        extras.push(`Statement ${error.failedStatementNumber}`);
+      }
+      if (error.failedCommand) {
+        extras.push(error.failedCommand);
+      }
+      if (error.failedStatementPreview) {
+        extras.push(`Preview: ${error.failedStatementPreview}`);
+      }
+
+      return extras.length ? `${baseMessage} ${extras.join(" | ")}` : baseMessage;
+    }
+
+    function parseConnectionString() {
+      const raw = rawConnectionString.trim();
+      if (!raw) {
+        setStatus("Enter a connection string.");
+        return null;
+      }
+
+      const match = raw.match(/postgres(?:ql)?:\/\/[^'"\s]+/i);
+      const candidate = match ? match[0] : raw.replace(/^psql\s+/, "").replace(/^['"]|['"]$/g, "");
+
+      try {
+        const parsed = new URL(candidate);
+        return {
+          host: parsed.hostname,
+          port: Number(parsed.port || 5432),
+          database: parsed.pathname.replace(/^\/+/, ""),
+          user: decodeURIComponent(parsed.username || ""),
+          password: decodeURIComponent(parsed.password || ""),
+          sslMode: parsed.searchParams.get("sslmode") || "require"
+        };
+      } catch (error) {
+        setStatus("Could not parse connection string.");
+        return null;
+      }
+    }
+
+    function ensureConnection() {
+      const connection = parseConnectionString();
+      if (!connection) {
+        throw new RelayError("The connection string could not be parsed.", "MISSING_CONNECTION_FIELDS");
+      }
+      if (!connection.host || !connection.port || !connection.database || !connection.user || !connection.password) {
+        throw new RelayError("Missing connection detail.", "MISSING_CONNECTION_FIELDS");
+      }
+      return connection;
+    }
+
+    function ensureStudentId() {
+      const studentId = studentIdInput.value.trim();
+      if (!studentId) {
+        setStatus("Enter your student ID before continuing.");
+        throw new RelayError("Missing student ID.", "MISSING_CONNECTION_FIELDS");
+      }
+      return studentId;
+    }
+
+    function requireVerifiedConnection(actionLabel) {
+      if (hasVerifiedConnection) {
+        return true;
+      }
+
+      setStatusError(`Test Connection must succeed before you can ${actionLabel}.`);
+      return false;
+    }
+
+    function isConnectionIssue(error) {
+      return error instanceof RelayError && [
+        "NETWORK_REQUEST_FAILED",
+        "DATABASE_CONNECTION_FAILED",
+        "DATABASE_AUTH_FAILED"
+      ].includes(error.errorCode);
+    }
+
+    async function requestRelay(query) {
+      let response;
+      try {
+        response = await fetch(RELAY_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            studentId: ensureStudentId(),
+            connection: ensureConnection(),
+            query
+          })
+        });
+      } catch (error) {
+        throw new RelayError(
+          "The browser could not reach the relay.",
+          "NETWORK_REQUEST_FAILED"
+        );
+      }
+
+      const text = await response.text();
+      let payload;
+
+      try {
+        payload = JSON.parse(text);
+      } catch (error) {
+        throw new RelayError("The relay returned an invalid response.", "UNEXPECTED_RELAY_FAILURE");
+      }
+
+      if (!response.ok || payload.success === false) {
+        throw new RelayError(
+          payload.error || payload.message || `HTTP ${response.status}`,
+          payload.errorCode || "UNEXPECTED_RELAY_FAILURE",
+          Number.isFinite(payload.retryAfterSeconds) ? payload.retryAfterSeconds : null,
+          {
+            failedStatementNumber: payload.failedStatementNumber,
+            failedCommand: payload.failedCommand,
+            failedStatementPreview: payload.failedStatementPreview,
+            detail: payload.detail
+          }
+        );
+      }
+
+      return payload;
+    }
+
+    async function requestScriptRelay(script) {
+      let response;
+      try {
+        response = await fetch(SCRIPT_RUNNER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            studentId: ensureStudentId(),
+            connection: ensureConnection(),
+            script
+          })
+        });
+      } catch (error) {
+        throw new RelayError(
+          "The browser could not reach the script runner relay.",
+          "NETWORK_REQUEST_FAILED"
+        );
+      }
+
+      const text = await response.text();
+      let payload;
+
+      try {
+        payload = JSON.parse(text);
+      } catch (error) {
+        throw new RelayError("The script runner returned an invalid response.", "UNEXPECTED_RELAY_FAILURE");
+      }
+
+      if (!response.ok || payload.success === false) {
+        throw new RelayError(
+          payload.error || payload.message || `HTTP ${response.status}`,
+          payload.errorCode || "UNEXPECTED_RELAY_FAILURE",
+          Number.isFinite(payload.retryAfterSeconds) ? payload.retryAfterSeconds : null,
+          {
+            failedStatementNumber: payload.failedStatementNumber,
+            failedCommand: payload.failedCommand,
+            failedStatementPreview: payload.failedStatementPreview,
+            detail: payload.detail
+          }
+        );
+      }
+
+      return payload;
+    }
+
+    function extractCurrentStatement(value, caretStart, caretEnd) {
+      const selection = value.slice(caretStart, caretEnd).trim();
+      if (selection) {
+        return selection;
+      }
+
+      const beforeCaret = value.slice(0, caretStart);
+      const afterCaret = value.slice(caretEnd);
+
+      const statementStartIndex = beforeCaret.lastIndexOf(";");
+      const statementEndRelative = afterCaret.indexOf(";");
+
+      const start = statementStartIndex === -1 ? 0 : statementStartIndex + 1;
+      const end = statementEndRelative === -1 ? value.length : caretEnd + statementEndRelative + 1;
+
+      return value.slice(start, end).trim();
+    }
+
+    function splitSqlStatements(value) {
+      const statements = [];
+      let current = "";
+      let inSingleQuote = false;
+      let inDoubleQuote = false;
+      let inLineComment = false;
+      let inBlockComment = false;
+      let dollarTag = null;
+
+      for (let index = 0; index < value.length; index += 1) {
+        const char = value[index];
+        const next = value[index + 1] || "";
+
+        if (inLineComment) {
+          current += char;
+          if (char === "\n") {
+            inLineComment = false;
+          }
+          continue;
+        }
+
+        if (inBlockComment) {
+          current += char;
+          if (char === "*" && next === "/") {
+            current += next;
+            index += 1;
+            inBlockComment = false;
+          }
+          continue;
+        }
+
+        if (dollarTag !== null) {
+          current += char;
+          if (value.startsWith(dollarTag, index)) {
+            const remaining = dollarTag.slice(1);
+            current += remaining;
+            index += dollarTag.length - 1;
+            dollarTag = null;
+          }
+          continue;
+        }
+
+        if (!inSingleQuote && !inDoubleQuote && char === "-" && next === "-") {
+          current += char + next;
+          index += 1;
+          inLineComment = true;
+          continue;
+        }
+
+        if (!inSingleQuote && !inDoubleQuote && char === "/" && next === "*") {
+          current += char + next;
+          index += 1;
+          inBlockComment = true;
+          continue;
+        }
+
+        if (!inSingleQuote && !inDoubleQuote && char === "$") {
+          const match = value.slice(index).match(/^\$[A-Za-z0-9_]*\$/);
+          if (match) {
+            dollarTag = match[0];
+            current += dollarTag;
+            index += dollarTag.length - 1;
+            continue;
+          }
+        }
+
+        if (char === "'" && !inDoubleQuote) {
+          if (inSingleQuote && next === "'") {
+            current += "''";
+            index += 1;
+            continue;
+          }
+          inSingleQuote = !inSingleQuote;
+          current += char;
+          continue;
+        }
+
+        if (char === "\"" && !inSingleQuote) {
+          inDoubleQuote = !inDoubleQuote;
+          current += char;
+          continue;
+        }
+
+        if (char === ";" && !inSingleQuote && !inDoubleQuote) {
+          const statement = `${current}${char}`.trim();
+          if (statement) {
+            statements.push(statement);
+          }
+          current = "";
+          continue;
+        }
+
+        current += char;
+      }
+
+      const trailing = current.trim();
+      if (trailing) {
+        statements.push(trailing);
+      }
+
+      return statements;
+    }
+
+    function inferTypeFromValues(values) {
+      const sample = values.find((item) => item !== null && item !== undefined);
+      if (sample === undefined) {
+        return "unknown";
+      }
+      if (Array.isArray(sample)) {
+        return "array";
+      }
+      if (typeof sample === "object") {
+        return "json/object";
+      }
+      return typeof sample;
+    }
+
+    function normalizeFields(fields, rows) {
+      if (Array.isArray(fields) && fields.length) {
+        return fields.map((field, index) => ({
+          name: field.name || `column_${index + 1}`,
+          dataTypeName: field.dataTypeName || field.dataType || field.type || ""
+        }));
+      }
+
+      if (!Array.isArray(rows) || !rows.length || typeof rows[0] !== "object" || rows[0] === null) {
+        return [];
+      }
+
+      return Object.keys(rows[0]).map((key) => ({
+        name: key,
+        dataTypeName: inferTypeFromValues(rows.map((row) => row[key]))
+      }));
+    }
+
+    function normalizeResponse(payload) {
+      const rows = Array.isArray(payload.rows)
+        ? payload.rows
+        : payload.result && Array.isArray(payload.result.rows)
+          ? payload.result.rows
+          : [];
+
+      const fields = normalizeFields(
+        Array.isArray(payload.fields) ? payload.fields : payload.result?.fields || [],
+        rows
+      );
+
+      return {
+        command: payload.command || payload.result?.command || "",
+        rowCount: payload.rowCount ?? payload.result?.rowCount ?? rows.length,
+        durationMs: payload.durationMs ?? payload.result?.durationMs ?? "",
+        rows,
+        fields
+      };
+    }
+
+    function formatCell(value) {
+      if (value === null || value === undefined) {
+        return '<span class="cell-null">NULL</span>';
+      }
+      if (Array.isArray(value) || typeof value === "object") {
+        return `<div class="cell-json">${escapeHtml(JSON.stringify(value, null, 2))}</div>`;
+      }
+      return escapeHtml(String(value));
+    }
+
+    function updatePagination(totalRows) {
+      const pageSize = Number(pageSizeSelect.value || 20);
+      const totalPages = Math.max(1, Math.ceil(totalRows / pageSize));
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+
+      pageIndicator.textContent = `Page ${currentPage} / ${totalPages}`;
+      prevPageBtn.disabled = currentPage <= 1;
+      nextPageBtn.disabled = currentPage >= totalPages;
+      resultPagination.hidden = totalRows <= pageSize;
+    }
+
+    function renderResults(result) {
+      currentResult = result;
+      setExecutionState("Success", "success");
+      metaRows.textContent = String(result.rowCount ?? result.rows.length);
+      metaDuration.textContent = result.durationMs === "" ? "-" : `${result.durationMs} ms`;
+      metaScriptCount.textContent = "1";
+
+      if (!result.rows.length) {
+        resultsPanel.className = "empty-state";
+        resultsPanel.innerHTML = "Query completed.";
+        resultPagination.hidden = true;
+        return;
+      }
+
+      const fields = result.fields.length ? result.fields : Object.keys(result.rows[0]).map((key) => ({ name: key, dataTypeName: "" }));
+      const pageSize = Number(pageSizeSelect.value || 20);
+      const totalRows = result.rows.length;
+      const totalPages = Math.max(1, Math.ceil(totalRows / pageSize));
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+      const startIndex = (currentPage - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      const visibleRows = result.rows.slice(startIndex, endIndex);
+      const headerHtml = fields.map((field) => `<th>${escapeHtml(field.name)}<small>${escapeHtml(field.dataTypeName || "")}</small></th>`).join("");
+      const bodyHtml = visibleRows.map((row) => {
+        const values = Array.isArray(row) ? row : fields.map((field) => row[field.name]);
+        return `<tr>${values.map((value) => `<td>${formatCell(value)}</td>`).join("")}</tr>`;
+      }).join("");
+
+      resultsPanel.className = "results-table-wrap";
+      resultsPanel.innerHTML = `<table class="results-table"><thead><tr>${headerHtml}</tr></thead><tbody>${bodyHtml}</tbody></table>`;
+      updatePagination(totalRows);
+    }
+
+    function renderScriptResults(payload) {
+      currentResult = null;
+      resultPagination.hidden = true;
+      setExecutionState("Success", "success");
+      const results = Array.isArray(payload.results) ? payload.results : [];
+      const totalRows = results.reduce((sum, item) => sum + (Number(item.rowCount) || 0), 0);
+      metaRows.textContent = String(totalRows);
+      metaDuration.textContent = payload.durationMs === undefined ? "-" : `${payload.durationMs} ms`;
+      metaScriptCount.textContent = String(payload.statementCount ?? results.length ?? 0);
+
+      if (!results.length) {
+        resultsPanel.className = "empty-state";
+        resultsPanel.textContent = "Script completed.";
+        return;
+      }
+
+      const rowsHtml = results.map((item) => `
+        <tr>
+          <td>${escapeHtml(String(item.statementNumber ?? "-"))}</td>
+          <td>${escapeHtml(String(item.command ?? "-"))}</td>
+          <td>${escapeHtml(String(item.rowCount ?? "-"))}</td>
+          <td>${escapeHtml(String(item.durationMs ?? "-"))}</td>
+        </tr>
+      `).join("");
+
+      resultsPanel.className = "results-table-wrap";
+      resultsPanel.innerHTML = `
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Statement</th>
+              <th>Command</th>
+              <th>Rows</th>
+              <th>Duration (ms)</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      `;
+    }
+
+    function resetResults() {
+      currentResult = null;
+      currentPage = 1;
+      setExecutionState("-", "");
+      metaRows.textContent = "-";
+      metaDuration.textContent = "-";
+      metaScriptCount.textContent = "-";
+      resultsPanel.className = "empty-state";
+      resultsPanel.textContent = "No result.";
+      resultPagination.hidden = true;
+      pageIndicator.textContent = "Page 1 / 1";
+      prevPageBtn.disabled = true;
+      nextPageBtn.disabled = true;
+    }
+
+    function setExecutionState(label, state) {
+      metaCommand.textContent = label;
+      metaCommand.classList.remove("status-success", "status-failure");
+      if (state === "success") {
+        metaCommand.classList.add("status-success");
+      } else if (state === "failure") {
+        metaCommand.classList.add("status-failure");
+      }
+    }
+
+    function setExecutionFailure(statementCount = "-") {
+      setExecutionState("Failed", "failure");
+      metaRows.textContent = "-";
+      metaDuration.textContent = "-";
+      metaScriptCount.textContent = String(statementCount);
+    }
+
+    function renderTables(rows) {
+      if (!rows.length) {
+        tableCount.textContent = "0";
+        tableBrowser.innerHTML = '<div class="empty-state">No tables loaded.</div>';
+        return;
+      }
+
+      const grouped = new Map();
+      rows.forEach((row) => {
+        const key = `${row.table_schema}.${row.table_name}`;
+        if (!grouped.has(key)) {
+          grouped.set(key, { name: key, rowCount: Number(row.row_count) || 0, columns: [] });
+        }
+        grouped.get(key).columns.push({
+          columnName: row.column_name,
+          dataType: row.data_type,
+          isPrimaryKey: row.is_primary_key === true || row.is_primary_key === "true" || row.is_primary_key === "t",
+          isForeignKey: row.is_foreign_key === true || row.is_foreign_key === "true" || row.is_foreign_key === "t"
+        });
+      });
+
+      const tables = Array.from(grouped.values());
+      tableCount.textContent = String(tables.length);
+      tableBrowser.innerHTML = tables.map((table) => `
+        <article class="table-card">
+          <strong class="copy-token" data-copy-value="${escapeHtml(table.name)}">${escapeHtml(`${table.name} (${table.rowCount})`)}</strong>
+          <ul>${table.columns.slice(0, 6).map((column) => `
+            <li class="column-line ${column.isForeignKey ? "fk" : ""}">
+              <span class="column-name copy-token ${column.isPrimaryKey ? "pk" : ""}" data-copy-value="${escapeHtml(column.columnName)}">${escapeHtml(column.columnName)}</span>
+              ${column.isPrimaryKey ? '<span class="key-pill pk">PK</span>' : ""}
+              ${column.isForeignKey ? '<span class="key-pill fk">FK</span>' : ""}
+              ${escapeHtml(` ${column.dataType}`)}
+            </li>
+          `).join("")}</ul>
+        </article>
+      `).join("");
+    }
+
+    function renderRelationships(rows) {
+      if (!rows.length) {
+        relationshipCount.textContent = "0";
+        relationshipBrowser.innerHTML = '<div class="empty-state">No relationships loaded.</div>';
+        return;
+      }
+
+      relationshipCount.textContent = String(rows.length);
+      relationshipBrowser.innerHTML = rows.map((row) => `
+        <article class="relation-card">
+          <strong>${escapeHtml(row.source_table)} → ${escapeHtml(row.target_table)}</strong>
+          <span>${escapeHtml(row.source_column)} → ${escapeHtml(row.target_column)}</span>
+        </article>
+      `).join("");
+    }
+
+    async function loadBrowserData() {
+      const tableQuery = `
+        SELECT
+          c.table_schema,
+          c.table_name,
+          c.column_name,
+          c.data_type,
+          COALESCE(s.n_live_tup, 0)::bigint AS row_count,
+          EXISTS (
+            SELECT 1
+            FROM information_schema.table_constraints tc
+            JOIN information_schema.key_column_usage kcu
+              ON tc.constraint_name = kcu.constraint_name
+             AND tc.table_schema = kcu.table_schema
+            WHERE tc.constraint_type = 'PRIMARY KEY'
+              AND tc.table_schema = c.table_schema
+              AND tc.table_name = c.table_name
+              AND kcu.column_name = c.column_name
+          ) AS is_primary_key,
+          EXISTS (
+            SELECT 1
+            FROM information_schema.table_constraints tc
+            JOIN information_schema.key_column_usage kcu
+              ON tc.constraint_name = kcu.constraint_name
+             AND tc.table_schema = kcu.table_schema
+            WHERE tc.constraint_type = 'FOREIGN KEY'
+              AND tc.table_schema = c.table_schema
+              AND tc.table_name = c.table_name
+              AND kcu.column_name = c.column_name
+          ) AS is_foreign_key
+        FROM information_schema.columns c
+        LEFT JOIN pg_stat_user_tables s
+          ON s.schemaname = c.table_schema
+         AND s.relname = c.table_name
+        WHERE c.table_schema NOT IN ('pg_catalog', 'information_schema')
+        ORDER BY table_schema, table_name, ordinal_position;
+      `;
+
+      const relationshipQuery = `
+        SELECT
+          tc.table_schema || '.' || tc.table_name AS source_table,
+          kcu.column_name AS source_column,
+          ccu.table_schema || '.' || ccu.table_name AS target_table,
+          ccu.column_name AS target_column
+        FROM information_schema.table_constraints tc
+        JOIN information_schema.key_column_usage kcu
+          ON tc.constraint_name = kcu.constraint_name
+         AND tc.table_schema = kcu.table_schema
+        JOIN information_schema.constraint_column_usage ccu
+          ON ccu.constraint_name = tc.constraint_name
+         AND ccu.table_schema = tc.table_schema
+        WHERE tc.constraint_type = 'FOREIGN KEY'
+        ORDER BY source_table, source_column;
+      `;
+
+      const [tablePayload, relationshipPayload] = await Promise.all([
+        requestRelay(tableQuery),
+        requestRelay(relationshipQuery)
+      ]);
+
+      renderTables(normalizeResponse(tablePayload).rows);
+      renderRelationships(normalizeResponse(relationshipPayload).rows);
+    }
+
+    async function testConnection() {
+      testConnectionBtn.disabled = true;
+      testConnectionBtn.textContent = "Testing...";
+
+      try {
+        const payload = await requestRelay("SELECT current_database(), current_user, now();");
+        currentPage = 1;
+        renderResults(normalizeResponse(payload));
+        await loadBrowserData();
+        hasVerifiedConnection = true;
+        setConnectionState("connected", "Connected");
+        setStatus("Connected.");
+        connectionDrawer.open = false;
+        updateDrawerToggleLabel();
+        scheduleConnectionPolling();
+      } catch (error) {
+        stopConnectionPolling();
+        resetVerifiedConnection();
+        setConnectionState("failed", "Failed");
+        setExecutionFailure();
+        setStatusError(buildRelayErrorStatus(error, "connection"));
+      } finally {
+        testConnectionBtn.disabled = false;
+        testConnectionBtn.textContent = "Test Connection";
+      }
+    }
+
+    async function runQuery(queryOverride = null) {
+      if (!requireVerifiedConnection("run SQL")) {
+        setExecutionFailure();
+        return;
+      }
+
+      const isEventObject = queryOverride && typeof queryOverride === "object" && "type" in queryOverride;
+      const querySource = isEventObject ? sqlInput.value : (queryOverride ?? sqlInput.value);
+      const query = String(querySource).trim();
+      if (!query) {
+        setStatus("Write SQL first.");
+        return;
+      }
+
+      runQueryBtn.disabled = true;
+      runQueryBtn.textContent = "Running...";
+
+      try {
+        const payload = await requestRelay(query);
+        currentPage = 1;
+        renderResults(normalizeResponse(payload));
+        setConnectionState("connected", "Connected");
+        setStatus("Done.");
+      } catch (error) {
+        if (isConnectionIssue(error)) {
+          stopConnectionPolling();
+          resetVerifiedConnection();
+          setConnectionState("failed", "Failed");
+        }
+        setExecutionFailure();
+        setStatusError(buildRelayErrorStatus(error, "query"));
+      } finally {
+        runQueryBtn.disabled = false;
+        runQueryBtn.textContent = "Run";
+      }
+    }
+
+    async function runEditorContent() {
+      const content = sqlInput.value.trim();
+      if (!content) {
+        setStatus("Write SQL first.");
+        return;
+      }
+
+      const statements = splitSqlStatements(content);
+      if (statements.length > 1) {
+        await runScript(content);
+        return;
+      }
+
+      await runQuery(content);
+    }
+
+    async function runScript(scriptOverride = null) {
+      if (!requireVerifiedConnection("run a script")) {
+        setExecutionFailure(splitSqlStatements(String(scriptOverride ?? sqlInput.value)).length || "-");
+        return;
+      }
+
+      const script = String(scriptOverride ?? sqlInput.value).trim();
+      if (!script) {
+        setStatus("Write SQL first.");
+        return;
+      }
+
+      runQueryBtn.disabled = true;
+      runQueryBtn.textContent = "Running...";
+
+      try {
+        const payload = await requestScriptRelay(script);
+        renderScriptResults(payload);
+        setConnectionState("connected", "Connected");
+        setStatus(`Script completed. ${payload.statementCount ?? 0} statement(s) executed.`);
+      } catch (error) {
+        if (isConnectionIssue(error)) {
+          stopConnectionPolling();
+          resetVerifiedConnection();
+          setConnectionState("failed", "Failed");
+        }
+        setExecutionFailure(splitSqlStatements(script).length || "-");
+        setStatusError(buildRelayErrorStatus(error, "query"));
+      } finally {
+        runQueryBtn.disabled = false;
+        runQueryBtn.textContent = "Run";
+      }
+    }
+
+    async function refreshBrowser() {
+      if (!requireVerifiedConnection("refresh the table browser")) {
+        return;
+      }
+
+      try {
+        await loadBrowserData();
+        setConnectionState("connected", "Connected");
+        setStatus("Browser refreshed.");
+      } catch (error) {
+        if (isConnectionIssue(error)) {
+          stopConnectionPolling();
+          resetVerifiedConnection();
+          setConnectionState("failed", "Failed");
+        }
+        setExecutionFailure();
+        setStatusError(buildRelayErrorStatus(error, "browser"));
+      }
+    }
+
+    testConnectionBtn.addEventListener("click", testConnection);
+    runQueryBtn.addEventListener("click", runEditorContent);
+    refreshSidebarBtn.addEventListener("click", refreshBrowser);
+    toggleDrawerBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      connectionDrawer.open = !connectionDrawer.open;
+      updateDrawerToggleLabel();
+    });
+    connectionDrawer.addEventListener("toggle", updateDrawerToggleLabel);
+    toggleConnectionVisibilityBtn.addEventListener("click", () => {
+      connectionStringVisible = !connectionStringVisible;
+      syncConnectionStringField();
+    });
+    connectionStringInput.addEventListener("focus", () => {
+      if (!connectionStringVisible) {
+        connectionStringVisible = true;
+        syncConnectionStringField();
+      }
+    });
+    connectionStringInput.addEventListener("input", () => {
+      rawConnectionString = connectionStringInput.value;
+    });
+    connectionStringInput.addEventListener("blur", () => {
+      if (!connectionStringVisible) {
+        syncConnectionStringField();
+      }
+    });
+    toggleStudentIdVisibilityBtn.addEventListener("click", () => {
+      const isHidden = studentIdInput.type === "password";
+      studentIdInput.type = isHidden ? "text" : "password";
+      toggleStudentIdVisibilityBtn.innerHTML = visibilityIconMarkup(isHidden);
+      toggleStudentIdVisibilityBtn.setAttribute(
+        "aria-label",
+        isHidden ? "Hide student ID" : "Show student ID"
+      );
+    });
+
+    clearEditorBtn.addEventListener("click", () => {
+      sqlInput.value = "";
+      sqlInput.focus();
+    });
+
+    tableBrowser.addEventListener("click", (event) => {
+      const trigger = event.target.closest("[data-copy-value]");
+      if (!trigger) {
+        return;
+      }
+
+      if (!event.shiftKey) {
+        setStatus("Hold Shift and click a table or column name to copy it into the editor.");
+        return;
+      }
+
+      event.preventDefault();
+      const value = trigger.dataset.copyValue || "";
+      if (!value) {
+        return;
+      }
+
+      const needsSpace = sqlInput.value && !/\s$/.test(sqlInput.value);
+      sqlInput.value = `${sqlInput.value}${needsSpace ? " " : ""}${value}`;
+      sqlInput.focus();
+      sqlInput.selectionStart = sqlInput.value.length;
+      sqlInput.selectionEnd = sqlInput.value.length;
+      setStatus(`Copied ${value} to the editor.`);
+    });
+
+    sqlInput.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") {
+        return;
+      }
+
+      if ((event.ctrlKey || event.metaKey) && event.shiftKey) {
+        event.preventDefault();
+        runScript(sqlInput.value);
+        return;
+      }
+
+      if (event.shiftKey) {
+        event.preventDefault();
+        const statement = extractCurrentStatement(
+          sqlInput.value,
+          sqlInput.selectionStart,
+          sqlInput.selectionEnd
+        );
+        runQuery(statement);
+        return;
+      }
+
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+        runScript(sqlInput.value);
+      }
+    });
+
+    commentLineBtn.addEventListener("click", () => {
+      const value = sqlInput.value;
+      const start = sqlInput.selectionStart;
+      const end = sqlInput.selectionEnd;
+
+      const lineStart = value.lastIndexOf("\n", Math.max(0, start - 1)) + 1;
+      const lineEndIndex = value.indexOf("\n", end);
+      const lineEnd = lineEndIndex === -1 ? value.length : lineEndIndex;
+      const selectedBlock = value.slice(lineStart, lineEnd);
+      const commentedBlock = selectedBlock
+        .split("\n")
+        .map((line) => `-- ${line}`)
+        .join("\n");
+
+      sqlInput.value = `${value.slice(0, lineStart)}${commentedBlock}${value.slice(lineEnd)}`;
+      sqlInput.focus();
+      sqlInput.selectionStart = lineStart;
+      sqlInput.selectionEnd = lineStart + commentedBlock.length;
+    });
+
+    clearResultsBtn.addEventListener("click", resetResults);
+
+    pageSizeSelect.addEventListener("change", () => {
+      currentPage = 1;
+      if (currentResult) {
+        renderResults(currentResult);
+      }
+    });
+
+    prevPageBtn.addEventListener("click", () => {
+      if (!currentResult || currentPage <= 1) {
+        return;
+      }
+      currentPage -= 1;
+      renderResults(currentResult);
+    });
+
+    nextPageBtn.addEventListener("click", () => {
+      if (!currentResult) {
+        return;
+      }
+      const pageSize = Number(pageSizeSelect.value || 20);
+      const totalPages = Math.max(1, Math.ceil(currentResult.rows.length / pageSize));
+      if (currentPage >= totalPages) {
+        return;
+      }
+      currentPage += 1;
+      renderResults(currentResult);
+    });
+
+    templateButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const sql = button.dataset.template || "";
+        sqlInput.value = sqlInput.value.trim() ? `${sqlInput.value.trim()}\n\n${sql}` : sql;
+        sqlInput.focus();
+      });
+    });
+
+    resetResults();
+    updateDrawerToggleLabel();
+    syncConnectionStringField();
+    toggleStudentIdVisibilityBtn.innerHTML = visibilityIconMarkup(false);
+  </script>
+</body>
+
+</html>
