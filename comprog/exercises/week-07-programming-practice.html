@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IE104 Week 7 Programming Exercises | Gazi University IE</title>
+  <link rel="icon" type="image/png" href="../../assets/gazi-university-logo-en.png" />
+  <style>
+    :root {
+      --gazi-red: #c8102e;
+      --gazi-deep-red: #9f0f25;
+      --gazi-navy: #003366;
+      --ink: #1a2a3a;
+      --line: #d1dbe6;
+      --panel: #ffffff;
+      --soft: #f6f9fd;
+      --hint: #fff8e7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans", "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(0, 51, 102, 0.14), transparent 32%),
+        radial-gradient(circle at 92% 12%, rgba(200, 16, 46, 0.14), transparent 34%),
+        linear-gradient(170deg, #f8fbff 0%, #f2f7fc 58%, #edf3fa 100%);
+      min-height: 100vh;
+    }
+
+    .site-header {
+      background: linear-gradient(108deg, var(--gazi-red), var(--gazi-navy));
+      color: #fff;
+      padding: 1rem clamp(1rem, 4vw, 3.5rem);
+      border-bottom: 4px solid #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      padding: 4px;
+    }
+
+    .brand-top,
+    .term-note,
+    .brand-main {
+      margin: 0;
+    }
+
+    .brand-main {
+      margin-top: 0.15rem;
+      font-size: clamp(1.05rem, 2.4vw, 1.7rem);
+      font-weight: 700;
+    }
+
+    .page-wrap {
+      width: min(1100px, 92%);
+      margin: 1.25rem auto 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 10px 22px rgba(0, 51, 102, 0.08);
+    }
+
+    .top-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      padding: 0.95rem 1rem;
+    }
+
+    .back-link {
+      border: 1px solid #cad9ea;
+      border-radius: 9px;
+      padding: 0.56rem 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      background: #eaf2fb;
+      color: var(--gazi-navy);
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.92rem;
+    }
+
+    .intro {
+      padding: 1rem;
+      line-height: 1.45;
+    }
+
+    .intro p {
+      margin: 0;
+    }
+
+    .release-panel {
+      padding: 1rem;
+      border: 1px solid #ead39a;
+      background: #fff8e8;
+      color: #6a4b00;
+      line-height: 1.5;
+    }
+
+    .release-panel strong {
+      color: var(--gazi-navy);
+    }
+
+    .release-panel[hidden] {
+      display: none;
+    }
+
+    .question-list {
+      padding: 0.2rem 0.8rem 1rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .question-card {
+      border: 1px solid #dce6f2;
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 0.85rem;
+    }
+
+    .question-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 0.8rem;
+      align-items: stretch;
+    }
+
+    .q-head {
+      margin-bottom: 0.55rem;
+    }
+
+    .q-text {
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .editor-panel {
+      border: 1px solid #dbe7f4;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 0.6rem;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .editor-title {
+      margin: 0 0 0.45rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--gazi-navy);
+    }
+
+    .answer-area {
+      width: 100%;
+      min-height: 220px;
+      resize: vertical;
+      border-radius: 9px;
+      border: 1px solid #cfddee;
+      background: #fff;
+      padding: 0.55rem;
+      font: inherit;
+      flex: 1;
+    }
+
+    .btn-row {
+      margin-top: 0.55rem;
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 0.5rem 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-show {
+      background: #eff5fc;
+      border-color: #c8d9eb;
+      color: var(--gazi-navy);
+    }
+
+    .hint-box,
+    .example-box,
+    .answer-box {
+      border: 1px solid #dbe7f4;
+      border-radius: 9px;
+      padding: 0.58rem 0.66rem;
+      background: var(--soft);
+      font-size: 0.92rem;
+      line-height: 1.42;
+      margin-top: 0.55rem;
+    }
+
+    .answer-box.show {
+      display: block;
+    }
+
+    .hint-box {
+      background: var(--hint);
+      border-color: #e8d8ad;
+    }
+
+    .example-box {
+      background: #f1f7ff;
+      border-color: #c8d9eb;
+    }
+
+    .answer-box {
+      display: none;
+    }
+
+    .answer-box b {
+      color: var(--gazi-navy);
+    }
+
+    .code-block {
+      margin-top: 0.5rem;
+      border: 1px solid #d6e2f0;
+      border-radius: 8px;
+      background: #fff;
+      padding: 0.55rem;
+      white-space: pre-wrap;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 0.86rem;
+    }
+
+    @media (max-width: 720px) {
+      .top-panel {
+        align-items: flex-start;
+      }
+
+      .question-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .answer-area {
+        min-height: 160px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="brand-wrap">
+      <img class="brand-logo" src="../../assets/gazi-university-logo-en.png" alt="Gazi University logo" />
+      <div>
+        <p class="brand-top">Gazi University • Department of Industrial Engineering</p>
+        <h1 class="brand-main">IE104 Week 7 Programming Exercise Set</h1>
+      </div>
+    </div>
+    <p class="term-note">Computer Programming I</p>
+  </header>
+
+  <main class="page-wrap">
+    <section class="panel top-panel">
+      <a class="back-link" href="../index.html">Back to Programming Page</a>
+    </section>
+
+    <section class="panel intro">
+      <p>
+        Questions below are based on <b>comprog/slides/week7-prog.pdf</b>. Each exercise is adapted from a week 7
+        example or rule slide about <b>if</b> and <b>switch-case</b>. Try your own version in the editor first, then
+        use <b>Show Me Answer</b> for a model solution.
+      </p>
+    </section>
+
+    <section id="release-panel" class="panel release-panel" hidden>
+      <strong>Answer Review Locked.</strong> Model answers will be available on <strong>24 March 2026</strong>.
+      <span id="release-countdown"></span>
+    </section>
+
+    <section class="panel">
+      <div class="question-list" id="question-list"></div>
+    </section>
+  </main>
+
+  <script>
+    const ANSWER_RELEASE_AT = new Date(2026, 2, 24, 0, 0, 0, 0);
+    const questions = [
+      {
+        id: 1,
+        text: "Start from the slide's sign example and write a C# program that reads one integer from the keyboard, then prints whether it is negative, zero, or positive.",
+        hint: "The slide already shows `if (n < 0)` and `else`. Insert a middle branch for zero so all three outcomes are covered.",
+        example: "int n = -7;\nif (n < 0)\n  printf(\"Negative\");\nelse\n  printf(\"Not Negative\");",
+        explanation: "This exercise extends the lecture example by separating zero from the general not-negative branch.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    int n;\n    System.Console.Write(\"Enter an integer: \");\n    n = Convert.ToInt32(System.Console.ReadLine());\n\n    if (n < 0)\n      System.Console.WriteLine(\"Negative\");\n    else if (n == 0)\n      System.Console.WriteLine(\"Zero\");\n    else\n      System.Console.WriteLine(\"Positive\");\n  }\n}",
+        sourceRef: "week7-prog.pdf - Page 5 (IF example with zero extension)"
+      },
+      {
+        id: 2,
+        text: "Write a C# program that reads three numbers from the keyboard and prints the largest one.",
+        hint: "Use an if / else if / else chain. A number is the largest only if it is greater than both of the others.",
+        example: "if (n < 0)\n  System.Console.WriteLine(\"Negative\");\nelse if (n == 0)\n  System.Console.WriteLine(\"Zero\");\nelse\n  System.Console.WriteLine(\"Positive\");",
+        explanation: "The slide asks for the largest of three inputs, so the program compares each candidate against the other two.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    int a, b, c;\n\n    System.Console.Write(\"Enter first number: \");\n    a = Convert.ToInt32(System.Console.ReadLine());\n    System.Console.Write(\"Enter second number: \");\n    b = Convert.ToInt32(System.Console.ReadLine());\n    System.Console.Write(\"Enter third number: \");\n    c = Convert.ToInt32(System.Console.ReadLine());\n\n    if (a >= b && a >= c)\n      System.Console.WriteLine(\"Largest number = \" + a);\n    else if (b >= a && b >= c)\n      System.Console.WriteLine(\"Largest number = \" + b);\n    else\n      System.Console.WriteLine(\"Largest number = \" + c);\n  }\n}",
+        sourceRef: "week7-prog.pdf - Page 6 (Largest among 3 numbers)"
+      },
+      {
+        id: 3,
+        text: "Write a C# program that reads one integer and prints whether it is even or odd.",
+        hint: "Follow the slide example: compute the remainder after division by 2, then use an if statement on that remainder.",
+        example: "int num1, rem1;\nnum1 = Convert.ToInt32(Console.ReadLine());\nrem1 = num1 % 2;\nif (rem1 == 0)\n  Console.WriteLine(\"even\");\nelse\n  Console.WriteLine(\"odd\");",
+        explanation: "A number is even when `number % 2` equals zero; otherwise it is odd.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    int num1, rem1;\n\n    System.Console.Write(\"Input an integer: \");\n    num1 = Convert.ToInt32(System.Console.ReadLine());\n    rem1 = num1 % 2;\n\n    if (rem1 == 0)\n      System.Console.WriteLine(num1 + \" is an even integer.\");\n    else\n      System.Console.WriteLine(num1 + \" is an odd integer.\");\n  }\n}",
+        sourceRef: "week7-prog.pdf - Page 7 (Even or odd example)"
+      },
+      {
+        id: 4,
+        text: "Write a menu-driven calculator using `if / else if`. Let the user choose 1-Addition, 2-Subtraction, 3-Multiplication, 4-Division, 5-Mod. Reject invalid choices and protect division and modulus from a zero divisor.",
+        hint: "Validate the action first. Only ask for the two numbers if the action is between 1 and 5.",
+        example: "System.Console.WriteLine(\"Press 1 for Addition\");\nSystem.Console.WriteLine(\"Press 2 for Subtraction\");\nint action = Convert.ToInt32(System.Console.ReadLine());\nif (action > 0 && action < 6)\n{\n  // read inputs here\n}\nelse\n  System.Console.WriteLine(\"Wrong choice.\");",
+        explanation: "This is the full week 7 if-else calculator example, including safe handling of division and modulus.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    int action;\n    int input1 = 0, input2 = 0;\n\n    System.Console.WriteLine(\"Press 1 for Addition\");\n    System.Console.WriteLine(\"Press 2 for Subtraction\");\n    System.Console.WriteLine(\"Press 3 for Multiplication\");\n    System.Console.WriteLine(\"Press 4 for Division\");\n    System.Console.WriteLine(\"Press 5 for Mod Operation\");\n    System.Console.Write(\"What is your choice?: \");\n\n    action = Convert.ToInt32(System.Console.ReadLine());\n\n    if (action > 0 && action < 6)\n    {\n      System.Console.Write(\"Enter first input: \");\n      input1 = Convert.ToInt32(System.Console.ReadLine());\n      System.Console.Write(\"Enter second input: \");\n      input2 = Convert.ToInt32(System.Console.ReadLine());\n\n      if (action == 1)\n        System.Console.WriteLine(\"Addition Result = \" + (input1 + input2));\n      else if (action == 2)\n        System.Console.WriteLine(\"Subtraction Result = \" + (input1 - input2));\n      else if (action == 3)\n        System.Console.WriteLine(\"Multiplication Result = \" + (input1 * input2));\n      else if (action == 4)\n      {\n        if (input2 == 0)\n          System.Console.WriteLine(\"Divider cannot be zero.\");\n        else\n          System.Console.WriteLine(\"Division Result = \" + ((float)input1 / (float)input2));\n      }\n      else if (action == 5)\n      {\n        if (input2 == 0)\n          System.Console.WriteLine(\"Divider cannot be zero.\");\n        else\n          System.Console.WriteLine(\"The remainder of division = \" + (input1 % input2));\n      }\n    }\n    else\n      System.Console.WriteLine(\"Wrong choice. Try again later.\");\n  }\n}",
+        sourceRef: "week7-prog.pdf - Page 8 (Simple calculator with if-else)"
+      },
+      {
+        id: 5,
+        text: "Write the same menu-driven calculator again, but this time solve it with a `switch` statement instead of `if / else if`.",
+        hint: "You can keep the same menu and same five actions. After validating input, move the operation logic into `case 1` through `case 5` and use `default` for invalid choices.",
+        example: "switch (day)\n{\n  case 1:\n    Console.WriteLine(\"Monday\");\n    break;\n  default:\n    Console.WriteLine(\"Invalid\");\n    break;\n}",
+        explanation: "This exercise helps students compare when a switch-case structure is cleaner than a long if-else chain.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    int action;\n    int input1 = 0, input2 = 0;\n\n    System.Console.WriteLine(\"Press 1 for Addition\");\n    System.Console.WriteLine(\"Press 2 for Subtraction\");\n    System.Console.WriteLine(\"Press 3 for Multiplication\");\n    System.Console.WriteLine(\"Press 4 for Division\");\n    System.Console.WriteLine(\"Press 5 for Mod Operation\");\n    System.Console.Write(\"What is your choice?: \");\n    action = Convert.ToInt32(System.Console.ReadLine());\n\n    if (action < 1 || action > 5)\n    {\n      System.Console.WriteLine(\"Wrong choice. Try again later.\");\n      return;\n    }\n\n    System.Console.Write(\"Enter first input: \");\n    input1 = Convert.ToInt32(System.Console.ReadLine());\n    System.Console.Write(\"Enter second input: \");\n    input2 = Convert.ToInt32(System.Console.ReadLine());\n\n    switch (action)\n    {\n      case 1:\n        System.Console.WriteLine(\"Addition Result = \" + (input1 + input2));\n        break;\n      case 2:\n        System.Console.WriteLine(\"Subtraction Result = \" + (input1 - input2));\n        break;\n      case 3:\n        System.Console.WriteLine(\"Multiplication Result = \" + (input1 * input2));\n        break;\n      case 4:\n        if (input2 == 0)\n          System.Console.WriteLine(\"Divider cannot be zero.\");\n        else\n          System.Console.WriteLine(\"Division Result = \" + ((float)input1 / (float)input2));\n        break;\n      case 5:\n        if (input2 == 0)\n          System.Console.WriteLine(\"Divider cannot be zero.\");\n        else\n          System.Console.WriteLine(\"The remainder of division = \" + (input1 % input2));\n        break;\n    }\n  }\n}",
+        sourceRef: "week7-prog.pdf - Pages 9-11 (Switch-case introduction and rules)"
+      },
+      {
+        id: 6,
+        text: "Write a C# program that asks the user for a number from 1 to 7 and prints the weekday name using a `switch` statement. Use `default` for invalid values.",
+        hint: "Use the weekday example from the slides as the model: 1-Monday through 7-Sunday.",
+        example: "switch (value)\n{\n  case 1:\n    System.Console.WriteLine(\"Monday\");\n    break;\n  default:\n    System.Console.WriteLine(\"Invalid input\");\n    break;\n}",
+        explanation: "The switch-case weekday example is the cleanest introduction to mapping one discrete value to one of many outputs.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    int day;\n\n    System.Console.Write(\"Which weekday would you like to be in?: \");\n    day = int.Parse(System.Console.ReadLine());\n\n    switch (day)\n    {\n      case 1:\n        System.Console.WriteLine(\"Monday\");\n        break;\n      case 2:\n        System.Console.WriteLine(\"Tuesday\");\n        break;\n      case 3:\n        System.Console.WriteLine(\"Wednesday\");\n        break;\n      case 4:\n        System.Console.WriteLine(\"Thursday\");\n        break;\n      case 5:\n        System.Console.WriteLine(\"Friday\");\n        break;\n      case 6:\n        System.Console.WriteLine(\"Saturday\");\n        break;\n      case 7:\n        System.Console.WriteLine(\"Sunday\");\n        break;\n      default:\n        System.Console.WriteLine(\"You are not from this planet.\");\n        break;\n    }\n  }\n}",
+        sourceRef: "week7-prog.pdf - Page 12 (Weekday switch-case example)"
+      },
+      {
+        id: 7,
+        text: "Write a two-stage switch-case program like the last slide example. First ask the user to enter a number between 1 and 3 and print a matching message. Then ask whether to `continue` or `quit`. Use `goto` labels so `continue` restarts the first prompt and invalid text asks again at the second prompt.",
+        hint: "The lecture example uses one label before the numeric prompt and another before the `continue/quit` prompt. Keep the numeric switch and the string switch separate.",
+        example: "begin:\nSystem.Console.Write(\"Enter a number between 1-3: \");\nvalue = int.Parse(System.Console.ReadLine());\nswitch (value)\n{\n  case 1:\n    System.Console.WriteLine(\"You entered 1\");\n    break;\n  default:\n    System.Console.WriteLine(\"Invalid\");\n    break;\n}",
+        explanation: "This exercise mirrors the final switch-case slide and gives students practice with string cases, default, and `goto` labels.",
+        sample: "class Program\n{\n  static void Main(string[] args)\n  {\n    string myinput;\n    int myint;\n\n    begin:\n    System.Console.Write(\"Please enter a number between 1-3 (inclusive): \");\n    myinput = System.Console.ReadLine();\n    myint = int.Parse(myinput);\n\n    switch (myint)\n    {\n      case 1:\n        System.Console.WriteLine(\"You have entered 1 as an input\");\n        break;\n      case 2:\n        System.Console.WriteLine(\"You have entered 2 as an input\");\n        break;\n      case 3:\n        System.Console.WriteLine(\"You have entered 3 as an input\");\n        break;\n      default:\n        System.Console.WriteLine(\"Your number is not between 1-3\");\n        break;\n    }\n\n    decide:\n    System.Console.Write(\"Type \\\"continue\\\" to go on or \\\"quit\\\" to stop: \");\n    myinput = System.Console.ReadLine();\n\n    switch (myinput)\n    {\n      case \"continue\":\n        goto begin;\n      case \"quit\":\n        System.Console.WriteLine(\"Goodbye!\");\n        break;\n      default:\n        System.Console.WriteLine(\"Incorrect input\");\n        goto decide;\n    }\n  }\n}",
+        sourceRef: "week7-prog.pdf - Page 13 (Switch-case with goto and string input)"
+      }
+    ];
+
+    const list = document.getElementById("question-list");
+    const releasePanel = document.getElementById("release-panel");
+    const releaseCountdown = document.getElementById("release-countdown");
+    let countdownTimer = null;
+    let releaseHandled = false;
+
+    function answersAreReleased() {
+      return new Date() >= ANSWER_RELEASE_AT;
+    }
+
+    function formatRemainingTime(ms) {
+      const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return `${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    function updateReleasePanel() {
+      if (answersAreReleased()) {
+        releasePanel.hidden = true;
+        if (countdownTimer !== null) {
+          window.clearInterval(countdownTimer);
+          countdownTimer = null;
+        }
+        if (!releaseHandled) {
+          releaseHandled = true;
+          render();
+        }
+        return;
+      }
+
+      releasePanel.hidden = false;
+      releaseCountdown.textContent = ` Time remaining: ${formatRemainingTime(ANSWER_RELEASE_AT - new Date())}.`;
+    }
+
+    function setupReleasePanel() {
+      updateReleasePanel();
+      if (!answersAreReleased()) {
+        countdownTimer = window.setInterval(updateReleasePanel, 1000);
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function render() {
+      list.innerHTML = "";
+      questions.forEach((item, idx) => {
+        const card = document.createElement("article");
+        card.className = "question-card";
+
+        const head = document.createElement("div");
+        head.className = "q-head";
+
+        const qText = document.createElement("p");
+        qText.className = "q-text";
+        qText.textContent = `${idx + 1}. ${item.text}`;
+        head.appendChild(qText);
+
+        const layout = document.createElement("div");
+        layout.className = "question-layout";
+
+        const leftCol = document.createElement("div");
+        const rightCol = document.createElement("div");
+        rightCol.className = "editor-panel";
+
+        const editorTitle = document.createElement("p");
+        editorTitle.className = "editor-title";
+        editorTitle.textContent = "Student Editor";
+
+        const input = document.createElement("textarea");
+        input.className = "answer-area";
+        input.placeholder = "Write your answer / pseudocode / C# code here...";
+        rightCol.appendChild(editorTitle);
+        rightCol.appendChild(input);
+
+        const hintBox = document.createElement("div");
+        hintBox.className = "hint-box";
+        hintBox.innerHTML = `<b>Hint:</b> ${escapeHtml(item.hint)}`;
+
+        const exampleBox = document.createElement("div");
+        exampleBox.className = "example-box";
+        exampleBox.innerHTML = `<b>Precursor Example Program:</b><div class="code-block">${escapeHtml(item.example)}</div>`;
+
+        const btnRow = document.createElement("div");
+        btnRow.className = "btn-row";
+
+        const showBtn = document.createElement("button");
+        showBtn.type = "button";
+        showBtn.className = "btn-show";
+        showBtn.textContent = answersAreReleased() ? "Show Me Answer" : "Available 24 March";
+        showBtn.disabled = !answersAreReleased();
+        btnRow.appendChild(showBtn);
+
+        const answerBox = document.createElement("div");
+        answerBox.className = "answer-box";
+        answerBox.innerHTML = `<b>Explanation:</b> ${escapeHtml(item.explanation)}<br><b>Slide Reference:</b> ${escapeHtml(item.sourceRef)}<div class="code-block">${escapeHtml(item.sample)}</div>`;
+
+        showBtn.addEventListener("click", () => {
+          if (!answersAreReleased()) {
+            return;
+          }
+          answerBox.classList.toggle("show");
+        });
+
+        leftCol.appendChild(head);
+        leftCol.appendChild(hintBox);
+        leftCol.appendChild(exampleBox);
+        leftCol.appendChild(btnRow);
+        leftCol.appendChild(answerBox);
+
+        layout.appendChild(leftCol);
+        layout.appendChild(rightCol);
+        card.appendChild(layout);
+        list.appendChild(card);
+      });
+    }
+
+    setupReleasePanel();
+    render();
+  </script>
+</body>
+
+</html>
