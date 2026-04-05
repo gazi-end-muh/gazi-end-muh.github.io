@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IE104 Week 9 MCQ Test | Gazi University IE</title>
+  <link rel="icon" type="image/png" href="../../assets/gazi-university-logo-en.png" />
+  <style>
+    :root {
+      --gazi-red: #c8102e;
+      --gazi-deep-red: #9f0f25;
+      --gazi-navy: #003366;
+      --ink: #1a2a3a;
+      --line: #d1dbe6;
+      --panel: #ffffff;
+      --ok: #1f7a3e;
+      --bad: #a0142a;
+      --soft-ok: #e8f7ee;
+      --soft-bad: #ffecef;
+      --soft-neutral: #f6f9fd;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans", "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(0, 51, 102, 0.14), transparent 32%),
+        radial-gradient(circle at 92% 12%, rgba(200, 16, 46, 0.14), transparent 34%),
+        linear-gradient(170deg, #f8fbff 0%, #f2f7fc 58%, #edf3fa 100%);
+      min-height: 100vh;
+    }
+
+    .site-header {
+      background: linear-gradient(108deg, var(--gazi-red), var(--gazi-navy));
+      color: #fff;
+      padding: 1rem clamp(1rem, 4vw, 3.5rem);
+      border-bottom: 4px solid #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      padding: 4px;
+    }
+
+    .brand-top,
+    .term-note,
+    .brand-main {
+      margin: 0;
+    }
+
+    .brand-main {
+      margin-top: 0.15rem;
+      font-size: clamp(1.05rem, 2.4vw, 1.7rem);
+      font-weight: 700;
+    }
+
+    .page-wrap {
+      width: min(1100px, 92%);
+      margin: 1.25rem auto 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 10px 22px rgba(0, 51, 102, 0.08);
+    }
+
+    .stats-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      padding: 0.95rem 1rem;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 0.6rem;
+      width: min(680px, 100%);
+    }
+
+    .stat {
+      border: 1px solid #d6e2f0;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 0.58rem 0.66rem;
+      text-align: center;
+    }
+
+    .stat .label {
+      display: block;
+      font-size: 0.78rem;
+      color: #4f5c6d;
+      margin-bottom: 0.2rem;
+    }
+
+    .stat .value {
+      font-weight: 700;
+      font-size: 1.08rem;
+      color: var(--gazi-navy);
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    button,
+    .back-link {
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 0.56rem 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 0.92rem;
+    }
+
+    .btn-reset {
+      background: var(--gazi-red);
+      color: #fff;
+    }
+
+    .btn-reset:hover {
+      background: var(--gazi-deep-red);
+    }
+
+    .back-link {
+      background: #eaf2fb;
+      color: var(--gazi-navy);
+      border-color: #cad9ea;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .intro {
+      padding: 1rem;
+      line-height: 1.45;
+    }
+
+    .intro p {
+      margin: 0;
+    }
+
+    .quiz-list {
+      padding: 0.2rem 0.8rem 0.9rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .question-card {
+      border: 1px solid #dce6f2;
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 0.85rem;
+    }
+
+    .q-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.8rem;
+      margin-bottom: 0.62rem;
+    }
+
+    .q-text {
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .btn-reveal {
+      background: #eff5fc;
+      color: var(--gazi-navy);
+      border-color: #c8d9eb;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .opt-list {
+      display: grid;
+      gap: 0.42rem;
+      margin-bottom: 0.58rem;
+    }
+
+    .opt {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      border: 1px solid #dce6f2;
+      background: #fff;
+      border-radius: 9px;
+      padding: 0.46rem 0.56rem;
+    }
+
+    .opt input {
+      margin-top: 0.2rem;
+    }
+
+    .opt.correct-opt {
+      border-color: #8bc8a2;
+      background: #f1fbf5;
+    }
+
+    .opt.wrong-opt {
+      border-color: #e8a3b0;
+      background: #fff4f6;
+    }
+
+    .feedback,
+    .answer-box {
+      border: 1px solid #dbe7f4;
+      border-radius: 9px;
+      padding: 0.5rem 0.62rem;
+      background: var(--soft-neutral);
+      font-size: 0.92rem;
+      line-height: 1.42;
+      display: none;
+      margin-top: 0.52rem;
+    }
+
+    .feedback.show,
+    .answer-box.show {
+      display: block;
+    }
+
+    .feedback.good {
+      background: var(--soft-ok);
+      border-color: #a9d7b9;
+      color: var(--ok);
+      font-weight: 600;
+    }
+
+    .feedback.bad {
+      background: var(--soft-bad);
+      border-color: #e9b4bf;
+      color: var(--bad);
+      font-weight: 600;
+    }
+
+    .answer-box b {
+      color: var(--gazi-navy);
+    }
+
+    @media (max-width: 720px) {
+      .stat-grid {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+      }
+
+      .q-head {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="brand-wrap">
+      <img class="brand-logo" src="../../assets/gazi-university-logo-en.png" alt="Gazi University logo" />
+      <div>
+        <p class="brand-top">Gazi University • Department of Industrial Engineering</p>
+        <h1 class="brand-main">IE104 Week 9 MCQ Test</h1>
+      </div>
+    </div>
+    <p class="term-note">Computer Programming I</p>
+  </header>
+
+  <main class="page-wrap">
+    <section class="panel stats-panel">
+      <div class="stat-grid">
+        <div class="stat"><span class="label">Questions</span><span class="value" id="total-count">14</span></div>
+        <div class="stat"><span class="label">Correct</span><span class="value" id="correct-count">0</span></div>
+        <div class="stat"><span class="label">Wrong</span><span class="value" id="wrong-count">0</span></div>
+        <div class="stat"><span class="label">Score (0-100)</span><span class="value" id="score-count">0</span></div>
+      </div>
+      <div class="actions">
+        <button id="reset-btn" class="btn-reset" type="button">Reset Test</button>
+        <a class="back-link" href="../index.html">Back to Programming Page</a>
+      </div>
+    </section>
+
+    <section class="panel intro">
+      <p>
+        This test is based strictly on <b>comprog/slides/week9-prog-untouched.pdf</b>. Questions focus on loop
+        structures, loop control, and jump statements introduced in the week 9 lecture.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="quiz-list" id="quiz-list"></div>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        q: "According to the lecture, how many loop structures are listed for C#?",
+        options: [
+          "Two",
+          "Three",
+          "Four",
+          "Five"
+        ],
+        answer: 2,
+        why: "The opening slide lists four loop structures: `for`, `foreach`, `while`, and `do while`.",
+        slide: 2
+      },
+      {
+        id: 2,
+        q: "Which loop header matches the general form shown in the `for` loop slide?",
+        options: [
+          "`for (expression; expression2; expression3)`",
+          "`for [expression, expression2, expression3]`",
+          "`for (condition only)`",
+          "`for { expression; expression2; expression3 }`"
+        ],
+        answer: 0,
+        why: "The syntax slide shows the `for` loop with three expressions separated by semicolons inside parentheses.",
+        slide: 3
+      },
+      {
+        id: 3,
+        q: "Which part of a `for` loop is usually executed only once?",
+        options: [
+          "The condition part",
+          "The increment/decrement part",
+          "The initialization part",
+          "The statement block"
+        ],
+        answer: 2,
+        why: "The lecture explains that the first expression is usually used to define or initialize the loop variable and is executed once.",
+        slide: 3
+      },
+      {
+        id: 4,
+        q: "What does `for(;;)` represent according to the slides?",
+        options: [
+          "A loop with three syntax errors",
+          "A loop that runs exactly once",
+          "A loop that skips the body",
+          "An infinite loop"
+        ],
+        answer: 3,
+        why: "The usage slide explicitly lists `for(;;)` as an infinite loop.",
+        slide: 4
+      },
+      {
+        id: 5,
+        q: "In a standard counted `for` loop, which part usually changes the loop variable?",
+        options: [
+          "The first expression",
+          "The second expression",
+          "The third expression",
+          "The loop body only"
+        ],
+        answer: 2,
+        why: "The slides state that the last expression usually changes the value of the loop variable.",
+        slide: 3
+      },
+      {
+        id: 6,
+        q: "What keeps a `while` loop running?",
+        options: [
+          "The body must contain a `return`",
+          "Its condition stays true",
+          "It always runs ten times",
+          "It has three expressions like `for`"
+        ],
+        answer: 1,
+        why: "The `while` slide says the loop continues to run as long as the specified condition is true.",
+        slide: 10
+      },
+      {
+        id: 7,
+        q: "Why does the lecture warn students about `while` loops?",
+        options: [
+          "They cannot read input",
+          "They work only with arrays",
+          "They may run infinitely if the condition never becomes false",
+          "They are slower than `foreach` in every case"
+        ],
+        answer: 2,
+        why: "The slide warns that if the condition never becomes false, the loop may run infinitely and freeze the program.",
+        slide: 10
+      },
+      {
+        id: 8,
+        q: "When is `do while` especially useful according to the lecture?",
+        options: [
+          "When the loop should never execute",
+          "When the loop should run at least once",
+          "When arrays must be modified",
+          "When only strings are allowed"
+        ],
+        answer: 1,
+        why: "The lecture says `do while` is used when the loop may need to run at least once.",
+        slide: 11
+      },
+      {
+        id: 9,
+        q: "If the condition of a `for` or `while` loop is false at the beginning, what happens?",
+        options: [
+          "The loop body still runs once",
+          "The loop body is not executed at all",
+          "The compiler changes it into a `do while` loop",
+          "Only `break` statements are executed"
+        ],
+        answer: 1,
+        why: "The important note on the slide says that if the condition is not satisfied, the loop statement block is not executed at all.",
+        slide: 11
+      },
+      {
+        id: 10,
+        q: "What is the main purpose of `foreach` in the lecture?",
+        options: [
+          "To declare classes",
+          "To step through collection-based objects element by element",
+          "To replace all `if` statements",
+          "To edit files on disk"
+        ],
+        answer: 1,
+        why: "The `foreach` slide explains that it provides step-by-step navigation through collection-based objects.",
+        slide: 15
+      },
+      {
+        id: 11,
+        q: "How are elements accessed in a `foreach` loop according to the slides?",
+        options: [
+          "They are fully editable inside the loop",
+          "They are read-only while being accessed one by one",
+          "They can only be accessed backwards",
+          "They can only be accessed with `goto`"
+        ],
+        answer: 1,
+        why: "The lecture explicitly states that elements accessed through `foreach` are read-only.",
+        slide: 15
+      },
+      {
+        id: 12,
+        q: "What does the `break` statement do in a loop?",
+        options: [
+          "Skips to the next iteration",
+          "Stops the running loop and continues after it",
+          "Restarts the loop from the beginning",
+          "Declares a new variable"
+        ],
+        answer: 1,
+        why: "The jump-statement slide says `break` stops the running loop and program execution continues after the loop.",
+        slide: 17
+      },
+      {
+        id: 13,
+        q: "What does the `continue` statement do?",
+        options: [
+          "Ends the whole program",
+          "Jumps to another labeled method",
+          "Moves the loop to the next iteration",
+          "Prints the current value"
+        ],
+        answer: 2,
+        why: "The lecture defines `continue` as a statement that allows the loop to move on to the next iteration.",
+        slide: 17
+      },
+      {
+        id: 14,
+        q: "Which statement is described as something that should generally be avoided in object-oriented programming except in limited cases such as `switch`?",
+        options: [
+          "`return`",
+          "`goto`",
+          "`break`",
+          "`foreach`"
+        ],
+        answer: 1,
+        why: "The slide says `goto` is not very common in object-oriented programming and should be avoided as much as possible, except in a switch statement.",
+        slide: 17
+      }
+    ];
+
+    const quizList = document.getElementById("quiz-list");
+    const totalCount = document.getElementById("total-count");
+    const correctCount = document.getElementById("correct-count");
+    const wrongCount = document.getElementById("wrong-count");
+    const scoreCount = document.getElementById("score-count");
+    const resetBtn = document.getElementById("reset-btn");
+
+    const state = {
+      selections: {}
+    };
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function updateStats() {
+      const total = questions.length;
+      let correct = 0;
+      let wrong = 0;
+
+      questions.forEach((question) => {
+        if (!(question.id in state.selections))
+          return;
+        if (state.selections[question.id] === question.answer)
+          correct++;
+        else
+          wrong++;
+      });
+
+      totalCount.textContent = String(total);
+      correctCount.textContent = String(correct);
+      wrongCount.textContent = String(wrong);
+      scoreCount.textContent = String(Math.round((correct / total) * 100));
+    }
+
+    function render() {
+      quizList.innerHTML = "";
+
+      questions.forEach((item, idx) => {
+        const card = document.createElement("article");
+        card.className = "question-card";
+
+        const head = document.createElement("div");
+        head.className = "q-head";
+
+        const qText = document.createElement("p");
+        qText.className = "q-text";
+        qText.textContent = `${idx + 1}. ${item.q}`;
+        head.appendChild(qText);
+
+        const revealBtn = document.createElement("button");
+        revealBtn.type = "button";
+        revealBtn.className = "btn-reveal";
+        revealBtn.textContent = "Reveal Answer";
+        head.appendChild(revealBtn);
+
+        const optList = document.createElement("div");
+        optList.className = "opt-list";
+
+        item.options.forEach((optionText, optionIdx) => {
+          const label = document.createElement("label");
+          label.className = "opt";
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `question-${item.id}`;
+          radio.value = String(optionIdx);
+
+          if (state.selections[item.id] === optionIdx)
+            radio.checked = true;
+
+          radio.addEventListener("change", () => {
+            state.selections[item.id] = optionIdx;
+            render();
+          });
+
+          const span = document.createElement("span");
+          span.innerHTML = escapeHtml(optionText);
+
+          label.appendChild(radio);
+          label.appendChild(span);
+
+          if (item.id in state.selections) {
+            if (optionIdx === item.answer)
+              label.classList.add("correct-opt");
+            if (state.selections[item.id] === optionIdx && optionIdx !== item.answer)
+              label.classList.add("wrong-opt");
+          }
+
+          optList.appendChild(label);
+        });
+
+        const feedback = document.createElement("div");
+        feedback.className = "feedback";
+
+        if (item.id in state.selections) {
+          const isCorrect = state.selections[item.id] === item.answer;
+          feedback.classList.add("show", isCorrect ? "good" : "bad");
+          feedback.textContent = isCorrect ? "Correct answer." : "Wrong answer.";
+        }
+
+        const answerBox = document.createElement("div");
+        answerBox.className = "answer-box";
+        answerBox.innerHTML = `<b>Correct Answer:</b> ${escapeHtml(item.options[item.answer])}<br><b>Explanation:</b> ${escapeHtml(item.why)}<br><b>Slide:</b> ${item.slide}`;
+
+        revealBtn.addEventListener("click", () => {
+          answerBox.classList.toggle("show");
+        });
+
+        card.appendChild(head);
+        card.appendChild(optList);
+        card.appendChild(feedback);
+        card.appendChild(answerBox);
+        quizList.appendChild(card);
+      });
+
+      updateStats();
+    }
+
+    resetBtn.addEventListener("click", () => {
+      state.selections = {};
+      render();
+    });
+
+    render();
+  </script>
+</body>
+
+</html>
