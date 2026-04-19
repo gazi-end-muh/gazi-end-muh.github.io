@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IE326 Week 11 SQL Practice | Gazi University IE</title>
+  <link rel="icon" type="image/png" href="../../assets/gazi-university-logo-en.png" />
+  <style>
+    :root {
+      --gazi-red: #c8102e;
+      --gazi-deep-red: #9f0f25;
+      --gazi-navy: #003366;
+      --ink: #1a2a3a;
+      --line: #d1dbe6;
+      --panel: #ffffff;
+      --soft: #f6f9fd;
+      --hint: #fff8e7;
+      --accent: #eef6ff;
+      --table-head: #e8f0fb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans", "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(0, 51, 102, 0.14), transparent 32%),
+        radial-gradient(circle at 92% 12%, rgba(200, 16, 46, 0.14), transparent 34%),
+        linear-gradient(170deg, #f8fbff 0%, #f2f7fc 58%, #edf3fa 100%);
+      min-height: 100vh;
+    }
+
+    .site-header {
+      background: linear-gradient(108deg, var(--gazi-red), var(--gazi-navy));
+      color: #fff;
+      padding: 1rem clamp(1rem, 4vw, 3.5rem);
+      border-bottom: 4px solid #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-wrap { display: flex; align-items: center; gap: 0.85rem; }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      padding: 4px;
+    }
+
+    .brand-top,
+    .term-note,
+    .brand-main { margin: 0; }
+
+    .brand-main {
+      margin-top: 0.15rem;
+      font-size: clamp(1.05rem, 2.4vw, 1.7rem);
+      font-weight: 700;
+    }
+
+    .page-wrap {
+      width: min(1180px, 94%);
+      margin: 1.25rem auto 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 10px 22px rgba(0, 51, 102, 0.08);
+    }
+
+    .top-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      padding: 0.95rem 1rem;
+    }
+
+    .back-link {
+      border: 1px solid #cad9ea;
+      border-radius: 9px;
+      padding: 0.56rem 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      background: #eaf2fb;
+      color: var(--gazi-navy);
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.92rem;
+    }
+
+    .intro {
+      padding: 1rem;
+      line-height: 1.5;
+    }
+
+    .intro p { margin: 0; }
+
+    .release-panel {
+      padding: 1rem;
+      border: 1px solid #ead39a;
+      background: #fff8e8;
+      color: #6a4b00;
+      line-height: 1.5;
+    }
+
+    .release-panel strong { color: var(--gazi-navy); }
+    .release-panel[hidden] { display: none; }
+
+    .dataset-grid {
+      padding: 1rem;
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+    }
+
+    .schema-box,
+    .cursor-box {
+      border: 1px solid #dce6f2;
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 0.9rem;
+    }
+
+    .section-title {
+      margin: 0 0 0.55rem;
+      color: var(--gazi-navy);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .caption {
+      margin: 0 0 0.7rem;
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid #d8e4f1;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 820px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid #e4edf7;
+      padding: 0.58rem 0.65rem;
+      text-align: left;
+      font-size: 0.92rem;
+      white-space: nowrap;
+    }
+
+    th {
+      background: var(--table-head);
+      color: var(--gazi-navy);
+      font-weight: 700;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .code-block,
+    .sql-output {
+      margin-top: 0.5rem;
+      border: 1px solid #d6e2f0;
+      border-radius: 8px;
+      background: #fff;
+      padding: 0.6rem;
+      white-space: pre-wrap;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    .question-list {
+      padding: 0.2rem 0.8rem 1rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .question-card {
+      border: 1px solid #dce6f2;
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 0.9rem;
+    }
+
+    .question-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .q-text {
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .tag-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0.28rem 0.58rem;
+      background: var(--accent);
+      color: var(--gazi-navy);
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid #d2e3f7;
+    }
+
+    .question-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+      gap: 0.8rem;
+      margin-top: 0.7rem;
+    }
+
+    .editor-panel {
+      border: 1px solid #dbe7f4;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 0.7rem;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .editor-title {
+      margin: 0 0 0.45rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--gazi-navy);
+    }
+
+    .answer-area {
+      width: 100%;
+      min-height: 210px;
+      resize: vertical;
+      border-radius: 9px;
+      border: 1px solid #cfddee;
+      background: #fff;
+      padding: 0.55rem;
+      font: inherit;
+      font-family: "Consolas", "Courier New", monospace;
+      flex: 1;
+    }
+
+    .hint-box,
+    .example-box,
+    .answer-box {
+      border: 1px solid #dbe7f4;
+      border-radius: 9px;
+      padding: 0.62rem 0.68rem;
+      background: var(--soft);
+      font-size: 0.92rem;
+      line-height: 1.45;
+      margin-top: 0.55rem;
+    }
+
+    .hint-box {
+      background: var(--hint);
+      border-color: #e8d8ad;
+    }
+
+    .example-box {
+      background: #f1f7ff;
+      border-color: #c8d9eb;
+    }
+
+    .answer-box { display: none; }
+    .answer-box.show { display: block; }
+    .answer-box b { color: var(--gazi-navy); }
+
+    .btn-row {
+      margin-top: 0.55rem;
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 0.5rem 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-show {
+      background: #eff5fc;
+      border-color: #c8d9eb;
+      color: var(--gazi-navy);
+    }
+
+    @media (max-width: 860px) {
+      .dataset-grid,
+      .question-layout { grid-template-columns: 1fr; }
+      .answer-area { min-height: 170px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="brand-wrap">
+      <img class="brand-logo" src="../../assets/gazi-university-logo-en.png" alt="Gazi University logo" />
+      <div>
+        <p class="brand-top">Gazi University • Department of Industrial Engineering</p>
+        <h1 class="brand-main">IE326 Week 11 SQL Practice</h1>
+      </div>
+    </div>
+    <p class="term-note">Database Management Systems</p>
+  </header>
+
+  <main class="page-wrap">
+    <section class="panel top-panel">
+      <a class="back-link" href="../index.html">Back to DBMS Page</a>
+    </section>
+
+    <section class="panel intro">
+      <p>
+        This page is based on <b>dbms/slides/Week11.pdf</b>. It focuses on <b>IN</b>, <b>NOT IN</b>, <b>BETWEEN</b>,
+        <b>LIKE</b>, <b>ILIKE</b>, and <b>IS NULL</b>. The questions are intentionally combined with weeks 9 and 10,
+        so students still need to use <b>SELECT</b>, aliases, expressions, <b>ORDER BY</b>, <b>DISTINCT</b>,
+        <b>LIMIT</b>, and <b>FETCH</b> where appropriate.
+      </p>
+    </section>
+
+    <section id="release-panel" class="panel release-panel" hidden>
+      <strong>Answer Review Locked.</strong> Model SQL answers will be available on <strong>21 April 2026, 23:59</strong>.
+      <span id="release-countdown"></span>
+    </section>
+
+    <section class="panel dataset-grid">
+      <div class="schema-box">
+        <h2 class="section-title">Reference Table: logistics_hubs</h2>
+        <p class="caption">Use this week 11 sample table for all questions below.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>hub_id</th>
+                <th>hub_name</th>
+                <th>city</th>
+                <th>region</th>
+                <th>capacity_teu</th>
+                <th>manager_note</th>
+                <th>operating_cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>North Star Terminal</td><td>Istanbul</td><td>Marmara</td><td>5000</td><td>Primary export gateway.</td><td>125000.00</td></tr>
+              <tr><td>2</td><td>Aegean Gate</td><td>Izmir</td><td>Aegean</td><td>3500</td><td>NULL</td><td>85000.50</td></tr>
+              <tr><td>3</td><td>Capital Logistics</td><td>Ankara</td><td>Central</td><td>2000</td><td>High-security inland hub.</td><td>92000.00</td></tr>
+              <tr><td>4</td><td>South Port A1</td><td>Antalya</td><td>Mediterranean</td><td>1500</td><td>Seasonal congestion expected.</td><td>45000.00</td></tr>
+              <tr><td>5</td><td>South Port B2</td><td>Mersin</td><td>Mediterranean</td><td>4200</td><td>'' (empty string)</td><td>110000.00</td></tr>
+              <tr><td>6</td><td>Eastern Link</td><td>Erzurum</td><td>East</td><td>800</td><td>Cold weather protocols active.</td><td>32000.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="cursor-box">
+        <h2 class="section-title">Cursor Example Query</h2>
+        <p class="caption">
+          Keep the same week 10 workflow: inspect a nearby example first, then solve the exercise.
+        </p>
+        <div class="code-block">SELECT hub_name, region, capacity_teu
+FROM logistics_hubs
+WHERE region IN ('Marmara', 'Aegean')
+ORDER BY capacity_teu DESC;</div>
+        <div class="sql-output">Expected idea:
+- Use IN for exact-list filtering
+- Select only requested columns
+- Keep output controlled with ORDER BY
+- Reuse prior weeks naturally inside the query</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="question-list" id="question-list"></div>
+    </section>
+  </main>
+
+  <script>
+    const ANSWER_RELEASE_AT = new Date(2026, 3, 21, 23, 59, 0, 0);
+    const questions = [
+      {
+        id: 1,
+        level: "Easy",
+        topic: "IN",
+        text: "Retrieve the `hub_name`, `region`, and `capacity_teu` for hubs located in the `Marmara`, `Aegean`, or `Central` regions. Sort the result by `capacity_teu` in descending order.",
+        hint: "Use the IN operator with three region values, then add ORDER BY.",
+        example: "SELECT film_id, title\nFROM film\nWHERE film_id IN (1, 2, 3);",
+        explanation: "This applies the new IN operator directly but still expects a proper ordered result like earlier weeks.",
+        sample: "SELECT hub_name, region, capacity_teu\nFROM logistics_hubs\nWHERE region IN ('Marmara', 'Aegean', 'Central')\nORDER BY capacity_teu DESC;",
+        sourceRef: "Week11.pdf - IN operator and final practice pattern"
+      },
+      {
+        id: 2,
+        level: "Difficult",
+        topic: "IN",
+        text: "Return the distinct `region` values for hubs whose `city` is in `Istanbul`, `Izmir`, or `Antalya` and whose `operating_cost` is greater than `40000`. Sort the regions alphabetically.",
+        hint: "Combine IN with DISTINCT and ORDER BY. This also checks previous-week output control.",
+        example: "SELECT title\nFROM film\nWHERE title IN ('Alien', 'Contact', 'Arrival')\nORDER BY title;",
+        explanation: "This question mixes list filtering with week 9 DISTINCT and ORDER BY rather than isolating IN alone.",
+        sample: "SELECT DISTINCT region\nFROM logistics_hubs\nWHERE city IN ('Istanbul', 'Izmir', 'Antalya')\n  AND operating_cost > 40000\nORDER BY region ASC;",
+        sourceRef: "Week11.pdf - IN operator with combined filtering"
+      },
+      {
+        id: 3,
+        level: "Easy",
+        topic: "BETWEEN",
+        text: "Retrieve the `hub_name`, `city`, and `operating_cost` for hubs whose `operating_cost` is between `40000` and `100000`. Order the result by `operating_cost` from low to high.",
+        hint: "Use BETWEEN on the numeric cost column, then add ORDER BY.",
+        example: "SELECT payment_id, amount\nFROM payment\nWHERE payment_id BETWEEN 17503 AND 17505\nORDER BY payment_id;",
+        explanation: "This is the direct BETWEEN pattern, adapted from payment IDs to operating costs.",
+        sample: "SELECT hub_name, city, operating_cost\nFROM logistics_hubs\nWHERE operating_cost BETWEEN 40000 AND 100000\nORDER BY operating_cost ASC;",
+        sourceRef: "Week11.pdf - BETWEEN examples"
+      },
+      {
+        id: 4,
+        level: "Difficult",
+        topic: "BETWEEN",
+        text: "Retrieve each hub's name as `hub_label` and cost per 1000 TEU as `cost_per_1000_teu` for hubs whose `capacity_teu` is between `1500` and `5000` and whose `operating_cost` is not between `30000` and `50000`. Sort by `cost_per_1000_teu` from highest to lowest.",
+        hint: "Use one arithmetic expression in the SELECT list, BETWEEN for capacity, and NOT BETWEEN for cost.",
+        example: "SELECT payment_id, amount\nFROM payment\nWHERE payment_id NOT BETWEEN 17503 AND 17505;",
+        explanation: "This combines week 11 range logic with week 9 expression-and-alias skills.",
+        sample: "SELECT hub_name AS hub_label,\n       operating_cost / (capacity_teu / 1000.0) AS cost_per_1000_teu\nFROM logistics_hubs\nWHERE capacity_teu BETWEEN 1500 AND 5000\n  AND operating_cost NOT BETWEEN 30000 AND 50000\nORDER BY cost_per_1000_teu DESC;",
+        sourceRef: "Week11.pdf - BETWEEN and NOT BETWEEN"
+      },
+      {
+        id: 5,
+        level: "Easy",
+        topic: "LIKE",
+        text: "Find the `hub_name` and `city` of hubs whose name contains the word `Port`, regardless of where it appears in the name.",
+        hint: "Use the `%` wildcard before and after the target word.",
+        example: "SELECT first_name, last_name\nFROM customer\nWHERE first_name LIKE '%er%'\nORDER BY first_name;",
+        explanation: "This is the standard contains-pattern query using LIKE with `%` wildcards.",
+        sample: "SELECT hub_name, city\nFROM logistics_hubs\nWHERE hub_name LIKE '%Port%';",
+        sourceRef: "Week11.pdf - LIKE operator"
+      },
+      {
+        id: 6,
+        level: "Difficult",
+        topic: "LIKE / ILIKE",
+        text: "Retrieve the top 2 hubs whose `hub_name` contains the word `port` in any capitalization and whose `operating_cost` is between `40000` and `120000`. Show `hub_name`, `city`, and `operating_cost`, sorted by `operating_cost` from high to low using the SQL-standard FETCH clause.",
+        hint: "Use ILIKE for case-insensitive matching, BETWEEN for the cost range, ORDER BY, and FETCH FIRST 2 ROWS ONLY.",
+        example: "SELECT first_name, last_name\nFROM customer\nWHERE first_name ILIKE 'BAR%';",
+        explanation: "This checks week 11 pattern matching together with week 10 FETCH and week 9 ordering control.",
+        sample: "SELECT hub_name, city, operating_cost\nFROM logistics_hubs\nWHERE hub_name ILIKE '%port%'\n  AND operating_cost BETWEEN 40000 AND 120000\nORDER BY operating_cost DESC\nFETCH FIRST 2 ROWS ONLY;",
+        sourceRef: "Week11.pdf - ILIKE and final practice style"
+      },
+      {
+        id: 7,
+        level: "Easy",
+        topic: "IS NULL",
+        text: "List all columns for hubs where the `manager_note` is missing (`NULL`) or was recorded as an empty string.",
+        hint: "You need to check both `IS NULL` and `= ''` together.",
+        example: "SELECT *\nFROM some_table\nWHERE address2 IS NULL;",
+        explanation: "The lecture explicitly distinguishes true NULL values from empty strings, so both cases should be checked.",
+        sample: "SELECT *\nFROM logistics_hubs\nWHERE manager_note IS NULL OR manager_note = '';",
+        sourceRef: "Week11.pdf - IS NULL and bad-practice note"
+      },
+      {
+        id: 8,
+        level: "Difficult",
+        topic: "IS NULL / Mixed Review",
+        text: "Return `hub_name`, `region`, and `capacity_teu` for hubs where `manager_note` is not NULL and not an empty string, while the region is not in `('East')`. Sort by `capacity_teu` from highest to lowest and show only the first 3 rows.",
+        hint: "Use `IS NOT NULL`, a check against the empty string, `NOT IN`, ORDER BY, and LIMIT.",
+        example: "SELECT film_id, title\nFROM film\nWHERE film_id NOT IN (1, 2, 3)\nORDER BY film_id;",
+        explanation: "This final exercise deliberately combines week 11 null handling with IN/NOT IN and earlier week 10 row limiting.",
+        sample: "SELECT hub_name, region, capacity_teu\nFROM logistics_hubs\nWHERE manager_note IS NOT NULL\n  AND manager_note <> ''\n  AND region NOT IN ('East')\nORDER BY capacity_teu DESC\nLIMIT 3;",
+        sourceRef: "Week11.pdf - NOT IN, IS NOT NULL, and combined review"
+      }
+    ];
+
+    const list = document.getElementById("question-list");
+    const releasePanel = document.getElementById("release-panel");
+    const releaseCountdown = document.getElementById("release-countdown");
+    let countdownTimer = null;
+    let releaseHandled = false;
+
+    function answersAreReleased() {
+      return new Date() >= ANSWER_RELEASE_AT;
+    }
+
+    function formatRemainingTime(ms) {
+      const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return `${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    function updateReleasePanel() {
+      if (answersAreReleased()) {
+        releasePanel.hidden = true;
+        if (countdownTimer !== null) {
+          window.clearInterval(countdownTimer);
+          countdownTimer = null;
+        }
+        if (!releaseHandled) {
+          releaseHandled = true;
+          render();
+        }
+        return;
+      }
+
+      releasePanel.hidden = false;
+      releaseCountdown.textContent = ` Time remaining: ${formatRemainingTime(ANSWER_RELEASE_AT - new Date())}.`;
+    }
+
+    function setupReleasePanel() {
+      updateReleasePanel();
+      if (!answersAreReleased())
+        countdownTimer = window.setInterval(updateReleasePanel, 1000);
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function render() {
+      list.innerHTML = "";
+      questions.forEach((item, idx) => {
+        const card = document.createElement("article");
+        card.className = "question-card";
+
+        const top = document.createElement("div");
+        top.className = "question-top";
+
+        const titleWrap = document.createElement("div");
+
+        const qText = document.createElement("p");
+        qText.className = "q-text";
+        qText.textContent = `${idx + 1}. ${item.text}`;
+        titleWrap.appendChild(qText);
+
+        const tags = document.createElement("div");
+        tags.className = "tag-row";
+        tags.innerHTML = `<span class="tag">${escapeHtml(item.topic)}</span><span class="tag">${escapeHtml(item.level)}</span>`;
+        titleWrap.appendChild(tags);
+
+        top.appendChild(titleWrap);
+
+        const layout = document.createElement("div");
+        layout.className = "question-layout";
+
+        const leftCol = document.createElement("div");
+        const rightCol = document.createElement("div");
+        rightCol.className = "editor-panel";
+
+        const editorTitle = document.createElement("p");
+        editorTitle.className = "editor-title";
+        editorTitle.textContent = "Student SQL Editor";
+
+        const input = document.createElement("textarea");
+        input.className = "answer-area";
+        input.placeholder = "Write your SQL query here...";
+        rightCol.appendChild(editorTitle);
+        rightCol.appendChild(input);
+
+        const hintBox = document.createElement("div");
+        hintBox.className = "hint-box";
+        hintBox.innerHTML = `<b>Hint:</b> ${escapeHtml(item.hint)}`;
+
+        const exampleBox = document.createElement("div");
+        exampleBox.className = "example-box";
+        exampleBox.innerHTML = `<b>Cursor Example:</b><div class="code-block">${escapeHtml(item.example)}</div>`;
+
+        const btnRow = document.createElement("div");
+        btnRow.className = "btn-row";
+
+        const showBtn = document.createElement("button");
+        showBtn.type = "button";
+        showBtn.className = "btn-show";
+        showBtn.textContent = "Show SQL Answer";
+        btnRow.appendChild(showBtn);
+
+        const answerBox = document.createElement("div");
+        answerBox.className = "answer-box";
+        answerBox.innerHTML = `<b>Explanation:</b> ${escapeHtml(item.explanation)}<br><b>Slide Reference:</b> ${escapeHtml(item.sourceRef)}<div class="code-block">${escapeHtml(item.sample)}</div>`;
+
+        if (answersAreReleased()) {
+          showBtn.addEventListener("click", () => {
+            answerBox.classList.toggle("show");
+          });
+        } else {
+          showBtn.disabled = true;
+          showBtn.title = "Answers will be available on 21 April 2026 at 23:59.";
+        }
+
+        leftCol.appendChild(top);
+        leftCol.appendChild(hintBox);
+        leftCol.appendChild(exampleBox);
+        leftCol.appendChild(btnRow);
+        leftCol.appendChild(answerBox);
+
+        layout.appendChild(leftCol);
+        layout.appendChild(rightCol);
+        card.appendChild(layout);
+        list.appendChild(card);
+      });
+    }
+
+    setupReleasePanel();
+    render();
+  </script>
+</body>
+
+</html>
