@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IE104 Week 11 Programming Exercises | Gazi University IE</title>
+  <link rel="icon" type="image/png" href="../../assets/gazi-university-logo-en.png" />
+  <style>
+    :root {
+      --gazi-red: #c8102e;
+      --gazi-deep-red: #9f0f25;
+      --gazi-navy: #003366;
+      --ink: #1a2a3a;
+      --line: #d1dbe6;
+      --panel: #ffffff;
+      --soft: #f6f9fd;
+      --hint: #fff8e7;
+      --accent: #edf5ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans", "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(0, 51, 102, 0.14), transparent 32%),
+        radial-gradient(circle at 92% 12%, rgba(200, 16, 46, 0.14), transparent 34%),
+        linear-gradient(170deg, #f8fbff 0%, #f2f7fc 58%, #edf3fa 100%);
+      min-height: 100vh;
+    }
+
+    .site-header {
+      background: linear-gradient(108deg, var(--gazi-red), var(--gazi-navy));
+      color: #fff;
+      padding: 1rem clamp(1rem, 4vw, 3.5rem);
+      border-bottom: 4px solid #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      padding: 4px;
+    }
+
+    .brand-top,
+    .term-note,
+    .brand-main {
+      margin: 0;
+    }
+
+    .brand-main {
+      margin-top: 0.15rem;
+      font-size: clamp(1.05rem, 2.4vw, 1.7rem);
+      font-weight: 700;
+    }
+
+    .page-wrap {
+      width: min(1120px, 92%);
+      margin: 1.25rem auto 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 10px 22px rgba(0, 51, 102, 0.08);
+    }
+
+    .top-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      padding: 0.95rem 1rem;
+    }
+
+    .back-link {
+      border: 1px solid #cad9ea;
+      border-radius: 9px;
+      padding: 0.56rem 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      background: #eaf2fb;
+      color: var(--gazi-navy);
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.92rem;
+    }
+
+    .intro,
+    .methods-panel {
+      padding: 1rem;
+      line-height: 1.5;
+    }
+
+    .intro p,
+    .methods-panel p {
+      margin: 0;
+    }
+
+    .methods-grid {
+      margin-top: 0.9rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: 0.8rem;
+    }
+
+    .methods-box {
+      border: 1px solid #dbe7f4;
+      border-radius: 10px;
+      padding: 0.75rem;
+      background: var(--accent);
+    }
+
+    .methods-title {
+      margin: 0 0 0.45rem;
+      color: var(--gazi-navy);
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .question-list {
+      padding: 0.2rem 0.8rem 1rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .release-panel {
+      padding: 1rem;
+      border: 1px solid #ead39a;
+      background: #fff8e8;
+      color: #6a4b00;
+      line-height: 1.5;
+    }
+
+    .release-panel strong {
+      color: var(--gazi-navy);
+    }
+
+    .release-panel[hidden] {
+      display: none;
+    }
+
+    .question-card {
+      border: 1px solid #dce6f2;
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 0.85rem;
+    }
+
+    .question-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 0.8rem;
+      align-items: stretch;
+    }
+
+    .q-head {
+      margin-bottom: 0.55rem;
+    }
+
+    .q-text {
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .editor-panel {
+      border: 1px solid #dbe7f4;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 0.6rem;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .editor-title {
+      margin: 0 0 0.45rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--gazi-navy);
+    }
+
+    .answer-area {
+      width: 100%;
+      min-height: 220px;
+      resize: vertical;
+      border-radius: 9px;
+      border: 1px solid #cfddee;
+      background: #fff;
+      padding: 0.55rem;
+      font: inherit;
+      flex: 1;
+    }
+
+    .btn-row {
+      margin-top: 0.55rem;
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 0.5rem 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-show {
+      background: #eff5fc;
+      border-color: #c8d9eb;
+      color: var(--gazi-navy);
+    }
+
+    .hint-box,
+    .example-box,
+    .answer-box {
+      border: 1px solid #dbe7f4;
+      border-radius: 9px;
+      padding: 0.58rem 0.66rem;
+      background: var(--soft);
+      font-size: 0.92rem;
+      line-height: 1.42;
+      margin-top: 0.55rem;
+    }
+
+    .hint-box {
+      background: var(--hint);
+      border-color: #e8d8ad;
+    }
+
+    .example-box {
+      background: #f1f7ff;
+      border-color: #c8d9eb;
+    }
+
+    .answer-box {
+      display: none;
+    }
+
+    .answer-box.show {
+      display: block;
+    }
+
+    .answer-box b {
+      color: var(--gazi-navy);
+    }
+
+    .code-block {
+      margin-top: 0.5rem;
+      border: 1px solid #d6e2f0;
+      border-radius: 8px;
+      background: #fff;
+      padding: 0.55rem;
+      white-space: pre-wrap;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 0.86rem;
+    }
+
+    @media (max-width: 760px) {
+      .methods-grid,
+      .question-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .answer-area {
+        min-height: 170px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="brand-wrap">
+      <img class="brand-logo" src="../../assets/gazi-university-logo-en.png" alt="Gazi University logo" />
+      <div>
+        <p class="brand-top">Gazi University • Department of Industrial Engineering</p>
+        <h1 class="brand-main">IE104 Week 11 Programming Exercise Set</h1>
+      </div>
+    </div>
+    <p class="term-note">Computer Programming I</p>
+  </header>
+
+  <main class="page-wrap">
+    <section class="panel top-panel">
+      <a class="back-link" href="../index.html">Back to Programming Page</a>
+    </section>
+
+    <section class="panel intro">
+      <p>
+        Questions below are based on <b>comprog/slides/week11-prog.pdf</b>. This week focuses on methods, parameters,
+        return values, static and non-static calls, and array parameters. The exercises follow the same structure as
+        Week 10 with a shared example block and delayed answer release.
+      </p>
+    </section>
+
+    <section id="release-panel" class="panel release-panel" hidden>
+      <strong>Answer Review Locked.</strong> Model answers will be available on <strong>20 April 2026, 23:59</strong>.
+      <span id="release-countdown"></span>
+    </section>
+
+    <section class="panel methods-panel">
+      <p>
+        <b>Extra Methods Example:</b> The slides explain how parameters and return values work, but students usually
+        need one compact full example before solving mixed questions.
+      </p>
+      <div class="methods-grid">
+        <div class="methods-box">
+          <p class="methods-title">Example Program</p>
+          <div class="code-block">class Program
+{
+  static int Sum(int a, int b)
+  {
+    return a + b;
+  }
+
+  static void PrintLine(string label, int value)
+  {
+    System.Console.WriteLine(label + value);
+  }
+
+  static void Main(string[] args)
+  {
+    int result = Sum(4, 7);
+    PrintLine("Result = ", result);
+  }
+}</div>
+        </div>
+        <div class="methods-box">
+          <p class="methods-title">What To Notice</p>
+          <div class="code-block">- Each method belongs to the class
+- Sum returns an int value
+- PrintLine is void because it only prints
+- Parameter count, order, and types must match
+- Main can call static methods directly in the same class</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="question-list" id="question-list"></div>
+    </section>
+  </main>
+
+  <script>
+    const ANSWER_RELEASE_AT = new Date(2026, 3, 20, 23, 59, 0, 0);
+    const questions = [
+      {
+        id: 1,
+        text: "Write a static method named `ShowGreeting` that takes a `string name` parameter and prints `Hello, <name>`. Call it from `Main` for the name `Ece`.",
+        hint: "This is a `void` method because it only prints. Define the method above or below `Main` inside the same class.",
+        example: "static void PrintLine(string label, int value)\n{\n  System.Console.WriteLine(label + value);\n}",
+        explanation: "A printing helper uses `void`, receives a string parameter, and is invoked from `Main` with one argument.",
+        sample: "class Program\n{\n  static void ShowGreeting(string name)\n  {\n    System.Console.WriteLine(\"Hello, \" + name);\n  }\n\n  static void Main(string[] args)\n  {\n    ShowGreeting(\"Ece\");\n  }\n}",
+        sourceRef: "week11-prog.pdf - Methods structure, parameters, and void methods"
+      },
+      {
+        id: 2,
+        text: "Write a static method `Square(int n)` that returns the square of a number. In `Main`, call the method for `6` and print the returned value.",
+        hint: "Use return type `int`, not `void`. Store the returned value in a variable inside `Main`.",
+        example: "static int Sum(int a, int b)\n{\n  return a + b;\n}",
+        explanation: "This follows the standard return-value method pattern: accept input, compute, return, then capture result in `Main`.",
+        sample: "class Program\n{\n  static int Square(int n)\n  {\n    return n * n;\n  }\n\n  static void Main(string[] args)\n  {\n    int result = Square(6);\n    System.Console.WriteLine(result);\n  }\n}",
+        sourceRef: "week11-prog.pdf - Return values and method declaration"
+      },
+      {
+        id: 3,
+        text: "Write a static method `FindGreater(int a, int b)` that returns the greater of two numbers. Call it from `Main` using values `15` and `22`.",
+        hint: "A simple `if` statement is enough. Return one of the parameters.",
+        example: "static int MaxOfTwo(int x, int y)\n{\n  if (x > y)\n    return x;\n  return y;\n}",
+        explanation: "This combines decision logic with a returned value from a method call.",
+        sample: "class Program\n{\n  static int FindGreater(int a, int b)\n  {\n    if (a > b)\n      return a;\n    return b;\n  }\n\n  static void Main(string[] args)\n  {\n    int answer = FindGreater(15, 22);\n    System.Console.WriteLine(answer);\n  }\n}",
+        sourceRef: "week11-prog.pdf - Method exercise: greatest value and return rules"
+      },
+      {
+        id: 4,
+        text: "Write a method `FindFastest(int s1, int s2, int s3)` that returns the fastest speed among three cars. Call it from `Main` and print the result.",
+        hint: "Start with one variable as the current fastest, then compare the others.",
+        example: "static int MaxOfTwo(int x, int y)\n{\n  if (x > y)\n    return x;\n  return y;\n}",
+        explanation: "This mirrors the slide exercise idea: compare multiple inputs and return the best one.",
+        sample: "class Program\n{\n  static int FindFastest(int s1, int s2, int s3)\n  {\n    int fastest = s1;\n    if (s2 > fastest)\n      fastest = s2;\n    if (s3 > fastest)\n      fastest = s3;\n    return fastest;\n  }\n\n  static void Main(string[] args)\n  {\n    System.Console.WriteLine(FindFastest(140, 165, 152));\n  }\n}",
+        sourceRef: "week11-prog.pdf - Method exercise: find the fastest car"
+      },
+      {
+        id: 5,
+        text: "Create a non-static method `PrintMessage()` inside a class, then create an object in `Main` and call that method to print `Methods are useful`.",
+        hint: "For non-static methods, create an object first: `ClassName obj = new ClassName();`",
+        example: "MyClass obj = new MyClass();\nobj.Show();",
+        explanation: "Non-static methods belong to an object, so `Main` must create an instance before using the dot operator.",
+        sample: "class Program\n{\n  public void PrintMessage()\n  {\n    System.Console.WriteLine(\"Methods are useful\");\n  }\n\n  static void Main(string[] args)\n  {\n    Program obj = new Program();\n    obj.PrintMessage();\n  }\n}",
+        sourceRef: "week11-prog.pdf - Method statement and non-static method example"
+      },
+      {
+        id: 6,
+        text: "Write a method `PrintArray(int[] values)` that prints all elements of an integer array on one line. Call it from `Main` with `{ 4, 9, 2, 7 }`.",
+        hint: "Array parameters use square brackets in the parameter list. Use a `for` loop or `foreach` loop.",
+        example: "static void PrintNumber(int x)\n{\n  System.Console.WriteLine(x);\n}",
+        explanation: "The slide extends normal parameters to array parameters. The method receives the whole array and iterates through it.",
+        sample: "class Program\n{\n  static void PrintArray(int[] values)\n  {\n    foreach (int item in values)\n      System.Console.Write(item + \" \");\n  }\n\n  static void Main(string[] args)\n  {\n    int[] data = { 4, 9, 2, 7 };\n    PrintArray(data);\n  }\n}",
+        sourceRef: "week11-prog.pdf - Method parameters as arrays"
+      },
+      {
+        id: 7,
+        text: "Write a method `SumArray(int[] values)` that returns the total of all array elements. In `Main`, call it for `{ 3, 5, 8, 1 }` and print the sum.",
+        hint: "Combine array parameters with a return value. Keep a local variable like `sum` inside the method.",
+        example: "static int Sum(int a, int b)\n{\n  return a + b;\n}",
+        explanation: "This mixes two core ideas from the week: local variables inside methods and returning a computed value.",
+        sample: "class Program\n{\n  static int SumArray(int[] values)\n  {\n    int sum = 0;\n    foreach (int item in values)\n      sum += item;\n    return sum;\n  }\n\n  static void Main(string[] args)\n  {\n    int[] data = { 3, 5, 8, 1 };\n    int result = SumArray(data);\n    System.Console.WriteLine(result);\n  }\n}",
+        sourceRef: "week11-prog.pdf - Local variables and array parameters"
+      },
+      {
+        id: 8,
+        text: "Write a method `GreatestOfThree(int a, int b, int c)` that returns the greatest value. Call it twice from `Main` with different inputs and print both returned results.",
+        hint: "This tests method reuse. The same method should be called more than once with different arguments.",
+        example: "int max = FindGreater(10, 20);\nSystem.Console.WriteLine(max);",
+        explanation: "One purpose of methods is reuse. The method is defined once and invoked multiple times with new parameter values.",
+        sample: "class Program\n{\n  static int GreatestOfThree(int a, int b, int c)\n  {\n    int greatest = a;\n    if (b > greatest)\n      greatest = b;\n    if (c > greatest)\n      greatest = c;\n    return greatest;\n  }\n\n  static void Main(string[] args)\n  {\n    System.Console.WriteLine(GreatestOfThree(5, 9, 2));\n    System.Console.WriteLine(GreatestOfThree(14, 7, 21));\n  }\n}",
+        sourceRef: "week11-prog.pdf - Method reuse and greatest-of-three exercise"
+      }
+    ];
+
+    const list = document.getElementById("question-list");
+    const releasePanel = document.getElementById("release-panel");
+    const releaseCountdown = document.getElementById("release-countdown");
+    let countdownTimer = null;
+    let releaseHandled = false;
+
+    function answersAreReleased() {
+      return new Date() >= ANSWER_RELEASE_AT;
+    }
+
+    function formatRemainingTime(ms) {
+      const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return `${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    function updateReleasePanel() {
+      if (answersAreReleased()) {
+        releasePanel.hidden = true;
+        if (countdownTimer !== null) {
+          window.clearInterval(countdownTimer);
+          countdownTimer = null;
+        }
+        if (!releaseHandled) {
+          releaseHandled = true;
+          render();
+        }
+        return;
+      }
+
+      releasePanel.hidden = false;
+      releaseCountdown.textContent = ` Time remaining: ${formatRemainingTime(ANSWER_RELEASE_AT - new Date())}.`;
+    }
+
+    function setupReleasePanel() {
+      updateReleasePanel();
+      if (!answersAreReleased())
+        countdownTimer = window.setInterval(updateReleasePanel, 1000);
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function render() {
+      list.innerHTML = "";
+      questions.forEach((item, idx) => {
+        const card = document.createElement("article");
+        card.className = "question-card";
+
+        const head = document.createElement("div");
+        head.className = "q-head";
+
+        const qText = document.createElement("p");
+        qText.className = "q-text";
+        qText.textContent = `${idx + 1}. ${item.text}`;
+        head.appendChild(qText);
+
+        const layout = document.createElement("div");
+        layout.className = "question-layout";
+
+        const leftCol = document.createElement("div");
+        const rightCol = document.createElement("div");
+        rightCol.className = "editor-panel";
+
+        const editorTitle = document.createElement("p");
+        editorTitle.className = "editor-title";
+        editorTitle.textContent = "Student Editor";
+
+        const input = document.createElement("textarea");
+        input.className = "answer-area";
+        input.placeholder = "Write your C# solution here...";
+        rightCol.appendChild(editorTitle);
+        rightCol.appendChild(input);
+
+        const hintBox = document.createElement("div");
+        hintBox.className = "hint-box";
+        hintBox.innerHTML = `<b>Hint:</b> ${escapeHtml(item.hint)}`;
+
+        const exampleBox = document.createElement("div");
+        exampleBox.className = "example-box";
+        exampleBox.innerHTML = `<b>Precursor Example Program:</b><div class="code-block">${escapeHtml(item.example)}</div>`;
+
+        const btnRow = document.createElement("div");
+        btnRow.className = "btn-row";
+
+        const showBtn = document.createElement("button");
+        showBtn.type = "button";
+        showBtn.className = "btn-show";
+        showBtn.textContent = "Show Me Answer";
+        btnRow.appendChild(showBtn);
+
+        const answerBox = document.createElement("div");
+        answerBox.className = "answer-box";
+        answerBox.innerHTML = `<b>Explanation:</b> ${escapeHtml(item.explanation)}<br><b>Slide Reference:</b> ${escapeHtml(item.sourceRef)}<div class="code-block">${escapeHtml(item.sample)}</div>`;
+
+        if (answersAreReleased()) {
+          showBtn.addEventListener("click", () => {
+            answerBox.classList.toggle("show");
+          });
+        } else {
+          showBtn.disabled = true;
+          showBtn.title = "Answers will be available on 20 April 2026 at 23:59.";
+        }
+
+        leftCol.appendChild(head);
+        leftCol.appendChild(hintBox);
+        leftCol.appendChild(exampleBox);
+        leftCol.appendChild(btnRow);
+        leftCol.appendChild(answerBox);
+
+        layout.appendChild(leftCol);
+        layout.appendChild(rightCol);
+        card.appendChild(layout);
+        list.appendChild(card);
+      });
+    }
+
+    setupReleasePanel();
+    render();
+  </script>
+</body>
+
+</html>
