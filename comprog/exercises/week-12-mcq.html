@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IE104 Week 12 MCQ Test | Gazi University IE</title>
+  <link rel="icon" type="image/png" href="../../assets/gazi-university-logo-en.png" />
+  <style>
+    :root {
+      --gazi-red: #c8102e;
+      --gazi-deep-red: #9f0f25;
+      --gazi-navy: #003366;
+      --ink: #1a2a3a;
+      --line: #d1dbe6;
+      --panel: #ffffff;
+      --ok: #1f7a3e;
+      --bad: #a0142a;
+      --soft-ok: #e8f7ee;
+      --soft-bad: #ffecef;
+      --soft-neutral: #f6f9fd;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans", "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(0, 51, 102, 0.14), transparent 32%),
+        radial-gradient(circle at 92% 12%, rgba(200, 16, 46, 0.14), transparent 34%),
+        linear-gradient(170deg, #f8fbff 0%, #f2f7fc 58%, #edf3fa 100%);
+      min-height: 100vh;
+    }
+
+    .site-header {
+      background: linear-gradient(108deg, var(--gazi-red), var(--gazi-navy));
+      color: #fff;
+      padding: 1rem clamp(1rem, 4vw, 3.5rem);
+      border-bottom: 4px solid #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-wrap { display: flex; align-items: center; gap: 0.85rem; }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      padding: 4px;
+    }
+
+    .brand-top,
+    .term-note,
+    .brand-main { margin: 0; }
+
+    .brand-main {
+      margin-top: 0.15rem;
+      font-size: clamp(1.05rem, 2.4vw, 1.7rem);
+      font-weight: 700;
+    }
+
+    .page-wrap {
+      width: min(1100px, 92%);
+      margin: 1.25rem auto 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 10px 22px rgba(0, 51, 102, 0.08);
+    }
+
+    .stats-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      padding: 0.95rem 1rem;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 0.6rem;
+      width: min(680px, 100%);
+    }
+
+    .stat {
+      border: 1px solid #d6e2f0;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 0.58rem 0.66rem;
+      text-align: center;
+    }
+
+    .stat .label {
+      display: block;
+      font-size: 0.78rem;
+      color: #4f5c6d;
+      margin-bottom: 0.2rem;
+    }
+
+    .stat .value {
+      font-weight: 700;
+      font-size: 1.08rem;
+      color: var(--gazi-navy);
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    button,
+    .back-link {
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 0.56rem 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 0.92rem;
+    }
+
+    .btn-reset {
+      background: var(--gazi-red);
+      color: #fff;
+    }
+
+    .btn-reset:hover { background: var(--gazi-deep-red); }
+
+    .back-link {
+      background: #eaf2fb;
+      color: var(--gazi-navy);
+      border-color: #cad9ea;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .intro {
+      padding: 1rem;
+      line-height: 1.45;
+    }
+
+    .intro p { margin: 0; }
+
+    .quiz-list {
+      padding: 0.2rem 0.8rem 0.9rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .release-panel {
+      padding: 1rem;
+      border: 1px solid #ead39a;
+      background: #fff8e8;
+      color: #6a4b00;
+      line-height: 1.5;
+    }
+
+    .release-panel strong { color: var(--gazi-navy); }
+    .release-panel[hidden] { display: none; }
+
+    .question-card {
+      border: 1px solid #dce6f2;
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 0.85rem;
+    }
+
+    .q-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.8rem;
+      margin-bottom: 0.62rem;
+    }
+
+    .q-text {
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .btn-reveal {
+      background: #eff5fc;
+      color: var(--gazi-navy);
+      border-color: #c8d9eb;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .opt-list {
+      display: grid;
+      gap: 0.42rem;
+      margin-bottom: 0.58rem;
+    }
+
+    .opt {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      border: 1px solid #dce6f2;
+      background: #fff;
+      border-radius: 9px;
+      padding: 0.46rem 0.56rem;
+    }
+
+    .opt input { margin-top: 0.2rem; }
+    .opt.correct-opt { border-color: #8bc8a2; background: #f1fbf5; }
+    .opt.wrong-opt { border-color: #e8a3b0; background: #fff4f6; }
+
+    .feedback,
+    .answer-box {
+      border: 1px solid #dbe7f4;
+      border-radius: 9px;
+      padding: 0.5rem 0.62rem;
+      background: var(--soft-neutral);
+      font-size: 0.92rem;
+      line-height: 1.42;
+      display: none;
+      margin-top: 0.52rem;
+    }
+
+    .feedback.show,
+    .answer-box.show { display: block; }
+
+    .feedback.good {
+      background: var(--soft-ok);
+      border-color: #a9d7b9;
+      color: var(--ok);
+      font-weight: 600;
+    }
+
+    .feedback.bad {
+      background: var(--soft-bad);
+      border-color: #e9b4bf;
+      color: var(--bad);
+      font-weight: 600;
+    }
+
+    .answer-box b { color: var(--gazi-navy); }
+
+    @media (max-width: 720px) {
+      .stat-grid { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+      .q-head { flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="brand-wrap">
+      <img class="brand-logo" src="../../assets/gazi-university-logo-en.png" alt="Gazi University logo" />
+      <div>
+        <p class="brand-top">Gazi University • Department of Industrial Engineering</p>
+        <h1 class="brand-main">IE104 Week 12 MCQ Test</h1>
+      </div>
+    </div>
+    <p class="term-note">Computer Programming I</p>
+  </header>
+
+  <main class="page-wrap">
+    <section class="panel stats-panel">
+      <div class="stat-grid">
+        <div class="stat"><span class="label">Questions</span><span class="value" id="total-count">14</span></div>
+        <div class="stat"><span class="label">Correct</span><span class="value" id="correct-count">0</span></div>
+        <div class="stat"><span class="label">Wrong</span><span class="value" id="wrong-count">0</span></div>
+        <div class="stat"><span class="label">Score (0-100)</span><span class="value" id="score-count">0</span></div>
+      </div>
+      <div class="actions">
+        <button id="reset-btn" class="btn-reset" type="button">Reset Test</button>
+        <a class="back-link" href="../index.html">Back to Programming Page</a>
+      </div>
+    </section>
+
+    <section class="panel intro">
+      <p>
+        This test is based strictly on <b>comprog/slides/week12-prog.pdf</b>. Questions focus on file handling,
+        `System.IO`, path management, existence checks, and exception handling with `try`, `catch`, `finally`, and
+        `throw`.
+      </p>
+    </section>
+
+    <section id="release-panel" class="panel release-panel" hidden>
+      <strong>Answer Review Locked.</strong> Correct answers will be available on <strong>28 April 2026, 23:59</strong>.
+      <span id="release-countdown"></span>
+    </section>
+
+    <section class="panel">
+      <div class="quiz-list" id="quiz-list"></div>
+    </section>
+  </main>
+
+  <script>
+    const ANSWER_RELEASE_AT = new Date(2026, 3, 28, 23, 59, 0, 0);
+    const questions = [
+      {
+        id: 1,
+        q: "Which namespace does C# use for file and directory operations according to the lecture?",
+        options: [
+          "`System.Text`",
+          "`System.IO`",
+          "`System.Data`",
+          "`System.Net`"
+        ],
+        answer: 1,
+        why: "The file handling section explicitly says C# uses the `System.IO` namespace for file and directory operations.",
+        slide: 3
+      },
+      {
+        id: 2,
+        q: "Which class provides static methods for creating, copying, deleting, moving, and opening files?",
+        options: [
+          "`File`",
+          "`FileInfo`",
+          "`StreamReader`",
+          "`Path`"
+        ],
+        answer: 0,
+        why: "The lecture classifies `File` as the class with static methods for general file operations.",
+        slide: 3
+      },
+      {
+        id: 3,
+        q: "What is the difference highlighted between `File.WriteAllLines` and `File.WriteAllText`?",
+        options: [
+          "They are identical in every case",
+          "`WriteAllLines` writes an array of strings as lines, while `WriteAllText` writes one string as given",
+          "`WriteAllText` can only write numbers",
+          "`WriteAllLines` always appends instead of overwriting"
+        ],
+        answer: 1,
+        why: "The creating-a-file slide contrasts writing an array of lines with writing one exact string.",
+        slide: 4
+      },
+      {
+        id: 4,
+        q: "What does the `using` keyword do in the file-writing and reading examples?",
+        options: [
+          "It sorts file contents",
+          "It automatically closes the object when the block finishes",
+          "It creates a directory",
+          "It catches exceptions automatically"
+        ],
+        answer: 1,
+        why: "The slide says `using` ensures the object is automatically closed once the block ends.",
+        slide: 5
+      },
+      {
+        id: 5,
+        q: "Which pair is specifically mentioned for reading and writing text files?",
+        options: [
+          "`BinaryReader` and `BinaryWriter`",
+          "`StreamReader` and `StreamWriter`",
+          "`Directory` and `DirectoryInfo`",
+          "`FileInfo` and `Path`"
+        ],
+        answer: 1,
+        why: "The file handling classes slide lists `StreamReader` and `StreamWriter` for text files.",
+        slide: 3
+      },
+      {
+        id: 6,
+        q: "What is the main idea of appending to a file?",
+        options: [
+          "It deletes the old file and makes a new one",
+          "It adds data without deleting existing content",
+          "It can be used only once",
+          "It works only for binary files"
+        ],
+        answer: 1,
+        why: "The appending slide explicitly states that appending adds data without deleting existing content.",
+        slide: 7
+      },
+      {
+        id: 7,
+        q: "Which class is emphasized for manipulating file and directory paths?",
+        options: [
+          "`Path`",
+          "`Console`",
+          "`Random`",
+          "`Array`"
+        ],
+        answer: 0,
+        why: "The managing-file-paths slide points to the `System.IO.Path` class.",
+        slide: 8
+      },
+      {
+        id: 8,
+        q: "Which method checks whether a file exists at a given path?",
+        options: [
+          "`Directory.Exists`",
+          "`File.Exists`",
+          "`Path.Exists`",
+          "`FileInfo.Open`"
+        ],
+        answer: 1,
+        why: "The existence-check slide shows `System.IO.File.Exists` for files.",
+        slide: 10
+      },
+      {
+        id: 9,
+        q: "Which method checks whether a directory exists?",
+        options: [
+          "`Directory.Exists`",
+          "`Path.GetDirectoryName`",
+          "`File.Exists`",
+          "`Directory.CreateDirectory`"
+        ],
+        answer: 0,
+        why: "The lecture presents `System.IO.Directory.Exists` for directory checks.",
+        slide: 11
+      },
+      {
+        id: 10,
+        q: "What is exception handling described as in the lecture?",
+        options: [
+          "A way to make loops faster",
+          "A controlled response to runtime anomalies so the program does not crash unexpectedly",
+          "A replacement for file handling",
+          "A method for sorting arrays"
+        ],
+        answer: 1,
+        why: "The exception-handling section defines it as responding to runtime anomalies in a controlled way.",
+        slide: 12
+      },
+      {
+        id: 11,
+        q: "Why does the division example use a variable in the denominator?",
+        options: [
+          "To force a compile-time error",
+          "To create a runtime error that try-catch can handle",
+          "To avoid any exception",
+          "To write to a file"
+        ],
+        answer: 1,
+        why: "The slide explains that using a variable causes the error at runtime so the try-catch block can handle it.",
+        slide: 13
+      },
+      {
+        id: 12,
+        q: "Which exception is explicitly named in the division-by-zero example?",
+        options: [
+          "`IOException`",
+          "`NullReferenceException`",
+          "`DivideByZeroException`",
+          "`FormatException`"
+        ],
+        answer: 2,
+        why: "The lecture directly refers to `DivideByZeroException` in the example discussion.",
+        slide: 13
+      },
+      {
+        id: 13,
+        q: "In the week 12 exercise scaffold, which exception type is used in the catch block for disk-access problems?",
+        options: [
+          "`IndexOutOfRangeException`",
+          "`IOException`",
+          "`ArgumentException`",
+          "`OverflowException`"
+        ],
+        answer: 1,
+        why: "The scaffold says to add a catch block specifically for `IOException`.",
+        slide: 18
+      },
+      {
+        id: 14,
+        q: "Which combined skill set from earlier weeks is most naturally reused in the final week 12 scaffold?",
+        options: [
+          "Only switch-case and goto",
+          "Arrays, loops, methods, and string input",
+          "Only multidimensional matrices",
+          "Only random numbers"
+        ],
+        answer: 1,
+        why: "The scaffold asks students to create an array, loop for input collection, build a method, and process strings line by line.",
+        slide: 18
+      }
+    ];
+
+    const quizList = document.getElementById("quiz-list");
+    const totalCount = document.getElementById("total-count");
+    const correctCount = document.getElementById("correct-count");
+    const wrongCount = document.getElementById("wrong-count");
+    const scoreCount = document.getElementById("score-count");
+    const resetBtn = document.getElementById("reset-btn");
+    const releasePanel = document.getElementById("release-panel");
+    const releaseCountdown = document.getElementById("release-countdown");
+
+    const state = { selections: {} };
+    let countdownTimer = null;
+    let releaseHandled = false;
+
+    function answersAreReleased() {
+      return new Date() >= ANSWER_RELEASE_AT;
+    }
+
+    function formatRemainingTime(ms) {
+      const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return `${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    function updateReleasePanel() {
+      if (answersAreReleased()) {
+        releasePanel.hidden = true;
+        if (countdownTimer !== null) {
+          window.clearInterval(countdownTimer);
+          countdownTimer = null;
+        }
+        if (!releaseHandled) {
+          releaseHandled = true;
+          renderQuiz();
+        }
+        return;
+      }
+
+      releasePanel.hidden = false;
+      releaseCountdown.textContent = ` Time remaining: ${formatRemainingTime(ANSWER_RELEASE_AT - new Date())}.`;
+    }
+
+    function setupReleasePanel() {
+      updateReleasePanel();
+      if (!answersAreReleased())
+        countdownTimer = window.setInterval(updateReleasePanel, 1000);
+    }
+
+    function renderQuiz() {
+      totalCount.textContent = String(questions.length);
+      quizList.innerHTML = "";
+
+      questions.forEach((item, idx) => {
+        const card = document.createElement("article");
+        card.className = "question-card";
+
+        const head = document.createElement("div");
+        head.className = "q-head";
+
+        const qText = document.createElement("p");
+        qText.className = "q-text";
+        qText.textContent = `${idx + 1}. ${item.q}`;
+
+        const revealBtn = document.createElement("button");
+        revealBtn.type = "button";
+        revealBtn.className = "btn-reveal";
+        revealBtn.textContent = "Show Answer";
+
+        head.appendChild(qText);
+        head.appendChild(revealBtn);
+
+        const optList = document.createElement("div");
+        optList.className = "opt-list";
+
+        item.options.forEach((optText, optIdx) => {
+          const optionLabel = document.createElement("label");
+          optionLabel.className = "opt";
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `q-${item.id}`;
+          radio.value = String(optIdx);
+          if (state.selections[item.id] === optIdx)
+            radio.checked = true;
+
+          radio.addEventListener("change", () => {
+            state.selections[item.id] = optIdx;
+            renderQuiz();
+          });
+
+          const span = document.createElement("span");
+          span.textContent = optText;
+
+          if (item.id in state.selections) {
+            if (optIdx === item.answer)
+              optionLabel.classList.add("correct-opt");
+            else if (state.selections[item.id] === optIdx)
+              optionLabel.classList.add("wrong-opt");
+          }
+
+          optionLabel.appendChild(radio);
+          optionLabel.appendChild(span);
+          optList.appendChild(optionLabel);
+        });
+
+        const feedback = document.createElement("div");
+        feedback.className = "feedback";
+        if (item.id in state.selections) {
+          const correct = state.selections[item.id] === item.answer;
+          feedback.classList.add("show", correct ? "good" : "bad");
+          feedback.textContent = correct ? "Correct answer." : "Wrong answer.";
+        }
+
+        const answerBox = document.createElement("div");
+        answerBox.className = "answer-box";
+        answerBox.innerHTML = `<b>Correct Answer:</b> ${item.options[item.answer]}<br><b>Explanation:</b> ${item.why}<br><b>Slide Reference:</b> Slide ${item.slide}`;
+
+        if (answersAreReleased()) {
+          revealBtn.addEventListener("click", () => {
+            answerBox.classList.toggle("show");
+          });
+        } else {
+          revealBtn.disabled = true;
+          revealBtn.title = "Answers will be available on 28 April 2026 at 23:59.";
+        }
+
+        card.appendChild(head);
+        card.appendChild(optList);
+        card.appendChild(feedback);
+        card.appendChild(answerBox);
+        quizList.appendChild(card);
+      });
+
+      let correct = 0;
+      let wrong = 0;
+      Object.entries(state.selections).forEach(([id, value]) => {
+        const question = questions.find((item) => item.id === Number(id));
+        if (!question)
+          return;
+        if (question.answer === value)
+          correct++;
+        else
+          wrong++;
+      });
+
+      correctCount.textContent = String(correct);
+      wrongCount.textContent = String(wrong);
+      scoreCount.textContent = String(Math.round((correct / questions.length) * 100));
+    }
+
+    resetBtn.addEventListener("click", () => {
+      state.selections = {};
+      renderQuiz();
+    });
+
+    setupReleasePanel();
+    renderQuiz();
+  </script>
+</body>
+
+</html>
