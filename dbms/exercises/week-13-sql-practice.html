@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Week 13 SQL Practice | Database Management Systems</title>
+    <link rel="icon" type="image/png" href="../../assets/gazi-university-logo-en.png" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <style>
+        .practice-container {
+            background: #ffffff;
+            border: 1px solid #d1dbe6;
+            border-radius: 14px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 22px rgba(0, 51, 102, 0.08);
+        }
+
+        .setup-block {
+            background: #f7fbff;
+            border: 1px solid #d8e4f1;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .exercise-block {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eaf2fb;
+        }
+
+        .exercise-block:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .exercise-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #c8102e;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-block {
+            background: #0a0f16;
+            color: #bfffd1;
+            font-family: "Consolas", "Courier New", monospace;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .setup-block .code-block {
+            display: block;
+        }
+
+        .btn-toggle {
+            background: #eaf2fb;
+            color: #003366;
+            border: 1px solid #cad9ea;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .btn-toggle:hover {
+            background: #d8e4f1;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header inner">
+        <div class="brand-wrap">
+            <img class="brand-logo" src="../../assets/gazi-university-logo-en.png" alt="Gazi University logo" />
+            <div>
+                <p class="brand-top">Gazi University • Department of Industrial Engineering</p>
+                <h1 class="brand-main">Database Management Systems</h1>
+            </div>
+        </div>
+        <div class="header-actions">
+            <a class="action-link subtle" href="../index.html">Back to Course Page</a>
+        </div>
+    </header>
+
+    <main class="page-wrap" style="width: min(900px, 92%); margin: 2rem auto;">
+        <div class="practice-container">
+            <h2 style="margin-top: 0; color: #003366;">Week 13: SQL Practice Exercises</h2>
+
+            <!-- Setup Script -->
+            <div class="setup-block">
+                <h3 style="margin-top: 0; color: #003366;">Local Table Setup Script</h3>
+                <p>Run the following script in SQL Studio or pgAdmin to create the environment required for the
+                    exercises.</p>
+                <div class="code-block">-- Cleanup existing schema
+                    DROP TABLE IF EXISTS order_details;
+                    DROP TABLE IF EXISTS orders;
+                    DROP TABLE IF EXISTS products;
+
+                    -- 1. Create Tables
+                    CREATE TABLE products (
+                    product_id SERIAL PRIMARY KEY,
+                    product_name VARCHAR(100) NOT NULL,
+                    category VARCHAR(50),
+                    unit_price NUMERIC(10, 2)
+                    );
+
+                    CREATE TABLE orders (
+                    order_id SERIAL PRIMARY KEY,
+                    customer_id INT NOT NULL,
+                    order_date DATE DEFAULT CURRENT_DATE,
+                    status VARCHAR(20)
+                    );
+
+                    CREATE TABLE order_details (
+                    detail_id SERIAL PRIMARY KEY,
+                    order_id INT REFERENCES orders(order_id) ON DELETE CASCADE,
+                    product_id INT REFERENCES products(product_id),
+                    quantity INT CHECK (quantity > 0)
+                    );
+
+                    -- 2. Insert Seed Data
+                    INSERT INTO products (product_name, category, unit_price) VALUES
+                    ('Steel Sheet', 'Raw Material', 100.00),
+                    ('Copper Wire', 'Raw Material', 50.00),
+                    ('Gear Assembly', 'Component', 250.00),
+                    ('Motor', 'Component', 500.00),
+                    ('Welding Rod', 'Consumable', 15.00);
+
+                    INSERT INTO orders (customer_id, order_date, status) VALUES
+                    (501, '2024-01-10', 'Shipped'),
+                    (502, '2024-01-12', 'Pending'),
+                    (501, '2024-01-15', 'Shipped'),
+                    (503, '2024-02-01', 'Shipped');
+
+                    INSERT INTO order_details (order_id, product_id, quantity) VALUES
+                    (1, 1, 10), (1, 3, 2),
+                    (2, 4, 1),
+                    (3, 2, 20), (3, 3, 5),
+                    (4, 5, 100);</div>
+            </div>
+
+            <!-- Exercise 1 -->
+            <div class="exercise-block">
+                <div class="exercise-title">Q1. Basic Update</div>
+                <p>Write a query to change the status of order <code>101</code> (or <code>1</code> in our local table)
+                    to 'Delivered'.</p>
+                <button class="btn-toggle" onclick="toggleAnswer(this)">Show SQL</button>
+                <div class="code-block">UPDATE orders
+                    SET status = 'Delivered'
+                    WHERE order_id = 1;</div>
+            </div>
+
+            <!-- Exercise 2 -->
+            <div class="exercise-block">
+                <div class="exercise-title">Q2. Conditional Mass Update</div>
+                <p>Adjust the <code>unit_price</code> of all 'Raw Material' products by subtracting 5.00 from their
+                    current price.</p>
+                <button class="btn-toggle" onclick="toggleAnswer(this)">Show SQL</button>
+                <div class="code-block">UPDATE products
+                    SET unit_price = unit_price - 5.00
+                    WHERE category = 'Raw Material';</div>
+            </div>
+
+            <!-- Exercise 3 -->
+            <div class="exercise-block">
+                <div class="exercise-title">Q3. Multi-column Update with Verification</div>
+                <p>Change the <code>product_name</code> to 'Heavy Motor' and <code>unit_price</code> to 600.00 for the
+                    product with <code>product_id = 4</code>. Return the updated row data.</p>
+                <button class="btn-toggle" onclick="toggleAnswer(this)">Show SQL</button>
+                <div class="code-block">UPDATE products
+                    SET product_name = 'Heavy Motor',
+                    unit_price = 600.00
+                    WHERE product_id = 4
+                    RETURNING *;</div>
+            </div>
+
+            <!-- Exercise 4 -->
+            <div class="exercise-block">
+                <div class="exercise-title">Q4. Basic Delete</div>
+                <p>Write a query to delete the product with <code>product_id = 3</code>.</p>
+                <button class="btn-toggle" onclick="toggleAnswer(this)">Show SQL</button>
+                <div class="code-block">DELETE FROM products
+                    WHERE product_id = 3;</div>
+            </div>
+
+            <!-- Exercise 5 -->
+            <div class="exercise-block">
+                <div class="exercise-title">Q5. Filtered Delete</div>
+                <p>Remove all orders that have a status of 'Cancelled'.</p>
+                <button class="btn-toggle" onclick="toggleAnswer(this)">Show SQL</button>
+                <div class="code-block">DELETE FROM orders
+                    WHERE status = 'Cancelled';</div>
+            </div>
+
+            <!-- Exercise 6 -->
+            <div class="exercise-block">
+                <div class="exercise-title">Q6. Delete with Using</div>
+                <p>Delete all rows from the <code>order_details</code> table that are associated with
+                    <code>customer_id = 501</code>. <em>(Note: <code>customer_id</code> is in the <code>orders</code>
+                        table).</em></p>
+                <button class="btn-toggle" onclick="toggleAnswer(this)">Show SQL</button>
+                <div class="code-block">DELETE FROM order_details
+                    USING orders
+                    WHERE order_details.order_id = orders.order_id
+                    AND orders.customer_id = 501;</div>
+            </div>
+
+            <!-- Exercise 7 -->
+            <div class="exercise-block">
+                <div class="exercise-title">Q7. Using GROUP BY and HAVING</div>
+                <p>Write a query using the <code>GROUP BY</code> and <code>HAVING</code> clauses to find the total sum
+                    of the unit_price of products grouped by their category. Only return groups where the total sum is
+                    greater than 100.</p>
+                <button class="btn-toggle" onclick="toggleAnswer(this)">Show SQL</button>
+                <div class="code-block">SELECT category, SUM(unit_price)
+                    FROM products
+                    GROUP BY category
+                    HAVING SUM(unit_price) > 100;</div>
+            </div>
+
+            <!-- Exercise 8 -->
+            <div class="exercise-block">
+                <div class="exercise-title">Q8. Transaction Rollback</div>
+                <p>Write a transaction block that attempts to update a product price to an incorrect amount, and then
+                    completely cancels the transaction using a Rollback.</p>
+                <button class="btn-toggle" onclick="toggleAnswer(this)">Show SQL</button>
+                <div class="code-block">BEGIN;
+
+                    UPDATE products
+                    SET unit_price = unit_price * 10
+                    WHERE category = 'Component';
+
+                    ROLLBACK;</div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function toggleAnswer(btn) {
+            var codeBlock = btn.nextElementSibling;
+            if (codeBlock.style.display === "block") {
+                codeBlock.style.display = "none";
+                btn.textContent = "Show SQL";
+            } else {
+                codeBlock.style.display = "block";
+                btn.textContent = "Hide SQL";
+            }
+        }
+    </script>
+</body>
+
+</html>

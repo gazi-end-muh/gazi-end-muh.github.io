@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Week 13 MCQ | Database Management Systems</title>
+    <link rel="icon" type="image/png" href="../../assets/gazi-university-logo-en.png" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <style>
+        .mcq-container {
+            background: #ffffff;
+            border: 1px solid #d1dbe6;
+            border-radius: 14px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 22px rgba(0, 51, 102, 0.08);
+        }
+
+        .question-block {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eaf2fb;
+        }
+
+        .question-block:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #003366;
+            margin-bottom: 1rem;
+        }
+
+        .options-list {
+            list-style-type: lower-alpha;
+            padding-left: 1.5rem;
+        }
+
+        .options-list li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .answer-block {
+            margin-top: 1rem;
+            display: none;
+            background: #f7fbff;
+            border-left: 4px solid #003366;
+            padding: 1rem;
+            border-radius: 4px;
+        }
+
+        .answer-block strong {
+            color: #c8102e;
+        }
+
+        .btn-toggle {
+            background: #eaf2fb;
+            color: #003366;
+            border: 1px solid #cad9ea;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
+        .btn-toggle:hover {
+            background: #d8e4f1;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header inner">
+        <div class="brand-wrap">
+            <img class="brand-logo" src="../../assets/gazi-university-logo-en.png" alt="Gazi University logo" />
+            <div>
+                <p class="brand-top">Gazi University • Department of Industrial Engineering</p>
+                <h1 class="brand-main">Database Management Systems</h1>
+            </div>
+        </div>
+        <div class="header-actions">
+            <a class="action-link subtle" href="../index.html">Back to Course Page</a>
+        </div>
+    </header>
+
+    <main class="page-wrap" style="width: min(900px, 92%); margin: 2rem auto;">
+        <div class="mcq-container">
+            <h2 style="margin-top: 0; color: #003366;">Week 13: Multiple Choice Questions</h2>
+            <p>Test your knowledge on Grouping Data (GROUP BY, HAVING) and Modifying Data (INSERT, UPDATE, DELETE,
+                TRANSACTIONS).</p>
+
+            <!-- Question 1 -->
+            <div class="question-block">
+                <div class="question-text">1. PostgreSQL evaluates the `HAVING` clause AFTER which of the following
+                    clauses?</div>
+                <ul class="options-list">
+                    <li>SELECT and DISTINCT</li>
+                    <li>ORDER BY and LIMIT</li>
+                    <li>FROM, WHERE, and GROUP BY</li>
+                    <li>Only the FROM clause</li>
+                </ul>
+                <button class="btn-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer-block">
+                    <strong>Answer: c) FROM, WHERE, and GROUP BY</strong><br>
+                    PostgreSQL evaluates the HAVING clause after the FROM, WHERE, and GROUP BY clauses, and before the
+                    DISTINCT, SELECT, ORDER BY, and LIMIT clauses.
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="question-block">
+                <div class="question-text">2. Why can't you use column aliases defined in the `SELECT` clause within the
+                    `HAVING` clause?</div>
+                <ul class="options-list">
+                    <li>Because column aliases are not supported in PostgreSQL.</li>
+                    <li>Because the HAVING clause is evaluated before the SELECT clause.</li>
+                    <li>Because the HAVING clause only works with the COUNT() function.</li>
+                    <li>Because column aliases can only be used in the WHERE clause.</li>
+                </ul>
+                <button class="btn-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer-block">
+                    <strong>Answer: b) Because the HAVING clause is evaluated before the SELECT clause.</strong><br>
+                    At the point of HAVING clause evaluation, the column aliases specified in the SELECT clause are not
+                    yet available.
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="question-block">
+                <div class="question-text">3. What happens if you omit the `WHERE` clause in an `UPDATE` statement?
+                </div>
+                <ul class="options-list">
+                    <li>The statement throws a syntax error.</li>
+                    <li>Only the first row in the table is updated.</li>
+                    <li>All rows in the table will be updated.</li>
+                    <li>No rows are updated.</li>
+                </ul>
+                <button class="btn-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer-block">
+                    <strong>Answer: c) All rows in the table will be updated.</strong><br>
+                    The WHERE clause targets specific rows. If it is omitted, the condition applies to all rows in the
+                    table.
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="question-block">
+                <div class="question-text">4. Which PostgreSQL-specific feature allows you to return the data generated
+                    by an insert (such as an auto-incremented ID) without requiring a separate SELECT query?</div>
+                <ul class="options-list">
+                    <li>OUTPUT clause</li>
+                    <li>YIELD clause</li>
+                    <li>RETURNING clause</li>
+                    <li>FETCH NEXT clause</li>
+                </ul>
+                <button class="btn-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer-block">
+                    <strong>Answer: c) RETURNING clause</strong><br>
+                    The RETURNING clause immediately returns the inserted, updated, or deleted rows.
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="question-block">
+                <div class="question-text">5. What does the hidden `ctid` column in PostgreSQL represent?</div>
+                <ul class="options-list">
+                    <li>The creation timestamp of the row.</li>
+                    <li>The physical location of the row version.</li>
+                    <li>The transaction ID that last modified the row.</li>
+                    <li>The primary key of the table.</li>
+                </ul>
+                <button class="btn-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer-block">
+                    <strong>Answer: b) The physical location of the row version.</strong><br>
+                    It is the simplest way to distinguish between two rows that have identical data, making it highly
+                    useful for deleting duplicate rows.
+                </div>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="question-block">
+                <div class="question-text">6. Which command is used to undo all changes made since the `BEGIN` command
+                    in a transaction?</div>
+                <ul class="options-list">
+                    <li>COMMIT</li>
+                    <li>SAVEPOINT</li>
+                    <li>REVERT</li>
+                    <li>ROLLBACK</li>
+                </ul>
+                <button class="btn-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer-block">
+                    <strong>Answer: d) ROLLBACK</strong><br>
+                    ROLLBACK cancels the entire process to prevent partial data entry when an error occurs or a mistake
+                    is recognized.
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function toggleAnswer(btn) {
+            var answerBlock = btn.nextElementSibling;
+            if (answerBlock.style.display === "block") {
+                answerBlock.style.display = "none";
+                btn.textContent = "Show Answer";
+            } else {
+                answerBlock.style.display = "block";
+                btn.textContent = "Hide Answer";
+            }
+        }
+    </script>
+</body>
+
+</html>
